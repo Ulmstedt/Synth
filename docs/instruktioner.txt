@@ -1,0 +1,112 @@
+XXXXXX XX XXXX XXXX XXXX XXXX XXXX XXXX
+OP                   Data/adress --->                    
+STATUSFLAGGOR:
+Overflow, Zero, Carry, Negative, Read Ready Midi, Read Ready Touch
+
+16 allmänna regs.
+16 extra regs.
+
+ADRESSERINGSMODER:
+-
+
+adresser 11bitar
+
+Destination skrivs direkt efter OP koden, source i slutet
+
+--- Instruktioner ---
+NOP
+00000 XX XXXX XXXX XXXX XXXX XXXX XXXX
+
+TRAP
+00001 XX XXXX XXXX XXXX XXXX XXXX XXXX
+
+STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adress och data)
+11000 AAAA AAAA AAA DDDD DDDD DDDD DDDD
+
+STORE.r (from register)
+11001 AAAA AAAA AAA XXX XXXX XXXX RRRR
+
+STORE.wo (from register with constant offset)
+11010 AAAA AAAA AAA CCC CCCC CCCC RRRR
+
+STORE.wofr (from register with constant offset from register)
+11011 AAAA AAAA AAA XXXX XXX OOOO RRRR
+		(O = Register with offset data)
+LOAD.a
+11100 RRRR XXX XXXX XXXX AAA AAAA AAAA
+
+LOAD.c
+11101 RRRR XX XXXX DDDD DDDD DDDD DDDD
+
+LOAD.wo (with offset)
+11110 RRRR CCC CCCC CCCC AAA AAAA AAAA
+
+LOAD.wro (with offset in register)
+11111 RRRR XXX XXXX OOOO AAA AAAA AAAA
+
+MOVE
+00100 RRRR XX XXXX XXXX XXXX XXXX RRRR
+
+---------------------------------------------
+
+BRANCH(till adress)
+01000 XXX XXXX XXXX XXXX AAA AAAA AAAA
+
+BRANCH(offset i register)
+01001 XX XXXX XXXX XXXX XXXX XXXX RRRR
+
+BRANCH(offset från där man står)
+01010 XX XXXX XXXX XXXX XXOO OOOO OOOO 
+
+BCC
+10000 SSSS XXX XXXX XXXX AAA AAAA AAAA
+(S = status flag)
+
+BCC(offset från där man står)
+10001 SSSS XX XXXX XXXX XXOO OOOO OOOO
+
+BCC(offset i reg)
+10010 SSSS XX XXXX XXXX XXXX XXXX RRRR
+
+BNCC
+10100 SSSS XXX XXXX XXXX AAA AAAA AAAA
+(S = status flag)
+
+BNCC(offset från där man står)
+10101 SSSS XX XXXX XXXX XXOO OOOO OOOO
+
+BNCC(offset i reg)
+10110 SSSS XX XXXX XXXX XXXX XXXX RRRR
+
+---------- ALU -------------------------
+
+ALUINST.r
+00101 OOOOO RRRR X XXXX XXXX XXXX RRRR
+
+ALUINST.c
+00110 OOOOO RRRR X DDDD DDDD DDDD DDDD
+
+O = Operation
+
+00000:  do nothing
+00001:  ADD unsigned
+00010:  ADD signed
+00011:  SUB unsigned
+00100:  SUB signed
+00101:  MUL (fixed point)
+00110:  bitshift right
+00111:  bitshift left
+
+01000:  AND
+01001:  OR
+01010:  XOR
+01011:  NOT
+01100:  EQUAL
+01101:  LESSTHAN
+01110:  MORETHAN
+
+01111:  BITTEST
+
+-----------------------------------------
+
+
