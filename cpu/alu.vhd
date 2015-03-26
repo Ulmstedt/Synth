@@ -11,6 +11,7 @@ entity ALU is
       left_In  : in std_logic_vector(REG_WIDTH-1 downto 0);
       right_In : in std_logic_vector(REG_WIDTH-1 downto 0);
       alu_Out  : out std_logic_vector(REG_WIDTH-1 down to 0);
+      ir2_ALU_instr  : in std_logic_vector(4 down to 0);
       
       clk      : in std_logic;
       

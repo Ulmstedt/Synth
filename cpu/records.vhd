@@ -9,7 +9,9 @@ package Records is
       n        : std_logic; -- negative
       o        : std_logic; -- overflow
       c        : std_logic; -- carry
-      unused   : std_logic_vector(0 to 4);
+      rrm      : std_logic; -- read ready midi
+      rrt      : std_logic; -- read ready touch
+      unused   : std_logic_vector(0 to 9);
 	end record;
 	
    type Instr_r is
