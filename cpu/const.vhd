@@ -4,4 +4,5 @@ package Constants is
     constant PMEM_HEIGHT   : natural := 1024;
     constant REG_NUM       : natural := 32;
     constant REG_BITS      : natural := 5;
+    constant REG_WIDTH : natural := 16;
 end Constants;
