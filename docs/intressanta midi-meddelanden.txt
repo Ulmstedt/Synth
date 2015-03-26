@@ -1,0 +1,44 @@
+=== Note Off ===
+
+-- Status --
+1000nnnn
+
+-- Data Bytes --
+0kkkkkkk	k = key number
+0vvvvvvv	v = velocity
+
+
+
+
+=== Note On ===
+
+-- Status --
+1001nnnn
+
+-- Data Bytes --
+0kkkkkkk	k = key number
+0vvvvvvv	v = velocity
+
+
+
+
+=== Control Change === (eventuellt)
+
+-- Status --
+1011nnnn
+
+-- Data Bytes --
+0ccccccc	c = controller number (0-119)
+0vvvvvvv	v = controller value (0-127)
+
+
+
+
+=== Pitch Bend Change === (eventuellt)
+
+-- Status --
+1110nnnn
+
+-- Data Bytes --
+0lllllll	l = controller number (0-119)
+0mmmmmmm	m = controller value (0-127)
