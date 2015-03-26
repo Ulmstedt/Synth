@@ -101,9 +101,16 @@ O = Operation
 01001:  OR
 01010:  XOR
 01011:  NOT
+
+/*
+(ALL THESE ARE COMPARE, replacing these with CMP only)
 01100:  EQUAL
 01101:  LESSTHAN
 01110:  MORETHAN
+*/
+
+01100:  CMP
+
 
 01111:  BITTEST
 
