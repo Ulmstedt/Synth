@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 
+use work.constants.all;
 
 package Records is
    type SR_r is
