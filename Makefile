@@ -39,6 +39,10 @@ midi_input.%: S=midiinput/midi_area.vhd midiinput/midi_check_msg.vhd midiinput/m
 midi_input.%: T=midi_tb.vhd
 midi_input.%: U=midi.ucf
 
+pmem.%: S=pmemArea.vhd ir1.vhd ir2.vhd jmp.vhd pcreg.vhd pmem.vhd reg.vhd records.vhd const.vhd
+pmem.%: T=pmem_tb.vhd
+pmem.%: U=pmem.ucf
+
 
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är

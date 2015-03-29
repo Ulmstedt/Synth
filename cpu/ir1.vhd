@@ -4,6 +4,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.constants.all;
 
 entity IR1 is
    port(
@@ -35,7 +36,7 @@ architecture Behaviorial of IR1 is
    signal irOut      : std_logic_vector(PMEM_WIDTH - 1 downto 0);
 begin
    ir1   : Reg
-      generic map(regWidth => PMEM_WIDTH);
+      generic map(regWidth => PMEM_WIDTH)
       port map(
                doRead => clk,
                input => muxOutput,
