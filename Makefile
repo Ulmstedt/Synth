@@ -39,7 +39,9 @@ midi_input.%: S=midiinput/midi_area.vhd midiinput/midi_check_msg.vhd midiinput/m
 midi_input.%: T=midi_tb.vhd
 midi_input.%: U=midi.ucf
 
-
+alu.%: S=cpu/alu.vhd cpu/const.vhd
+alu.%: T=cpu/alutb.vhd
+alu.%: U=alu.ucf
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
