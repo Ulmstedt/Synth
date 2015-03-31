@@ -16,7 +16,7 @@ entity MidiArea is
    );
 end MidiArea;
 
-architecture Behaviorial of MidiArea is
+architecture Behavioral of MidiArea is
 
 component MidiInput is
    port(
@@ -35,7 +35,7 @@ component CheckMsg is
       msgReady : in std_logic; -- 1 when there is a msg ready in tmpReg
       outReady : in std_logic; -- 1 when message is ready to be transfered from tmpReg to mreg#
       muxCtr   : in std_logic_vector(1 downto 0);
-      tmpReg   : in std_logic_vector(MIDI_WIDTH - 1 downto 0)
+      tmpReg   : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg1    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg2    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg3    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
@@ -78,7 +78,7 @@ begin
       msgReady => msgReady,
       outReady => outReady,
       muxCtr => muxCtr,
-      tmpReg => tmpReg,
+      tmpReg => tmpRegS,
       mreg1 => mreg1,
       mreg2 => mreg2,
       mreg3 => mreg3,

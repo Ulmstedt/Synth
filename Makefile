@@ -36,7 +36,7 @@ PART=xc6slx16-3-csg324
 
 
 midi_input.%: S=midiinput/midi_area.vhd midiinput/midi_check_msg.vhd midiinput/midi_mux_counter.vhd midiinput/midi_uart_input.vhd midiinput/midi_constants.vhd
-midi_input.%: T=midi_tb.vhd
+midi_input.%: T=midiinput/midi_tb.vhd
 midi_input.%: U=midi.ucf
 
 

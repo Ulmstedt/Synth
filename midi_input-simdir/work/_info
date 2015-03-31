@@ -2,16 +2,190 @@ m255
 K3
 13
 cModel Technology
-Z0 d/edu/matul773/datorkonst/projekt/synthgit/Synth/midi_input-simdir
+d/edu/matul773/datorkonst/projekt/synthgit/Synth/midi_input-simdir
+Ebus_tb
+Z0 w1427386968
+Z1 DPx4 work 14 midi_constants 0 22 oNfTVITHi<f>;N6X0K=563
+Z2 DPx4 ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z4 d/edu/matul773/datorkonst/projekt/Synth/midi_input-simdir
+Z5 8../midiinput/midi_tb.vhd
+Z6 F../midiinput/midi_tb.vhd
+l0
+L9
+Vc6H:k<neZG?B^YYS2]z1Q0
+!s100 PcV1gE7;D3CoR7^>3Z?XP1
+Z7 OE;C;6.5c;42
+32
+o+acc
+Z8 tExplicit 1
+Abehavior
+R1
+R2
+R3
+Z9 DEx4 work 6 bus_tb 0 22 c6H:k<neZG?B^YYS2]z1Q0
+l36
+L12
+Z10 Vd4j^kT6OU:W<l:VnzVmDd3
+Z11 !s100 d=UDWFA5;l0E`Ola9XFS12
+R7
+32
+Z12 Mx3 4 ieee 14 std_logic_1164
+Z13 Mx2 4 ieee 11 numeric_std
+Z14 Mx1 4 work 14 midi_constants
+o+acc
+R8
+Echeckmsg
+Z15 w1427634329
+R1
+R2
+R3
+R4
+Z16 8../midiinput/midi_check_msg.vhd
+Z17 F../midiinput/midi_check_msg.vhd
+l0
+L7
+VV9;3<k@e<ZBe;CF@BagC51
+R7
+32
+o+acc
+R8
+!s100 QMR?jU57z:3<HGQLeYfoY2
+Abehavioral
+R1
+R2
+R3
+DEx4 work 8 checkmsg 0 22 V9;3<k@e<ZBe;CF@BagC51
+l29
+L23
+V<XLNO@g2B:aV]bO0hEU>J3
+!s100 X=Ff9WUOiZ0BA1kcn73eG0
+R7
+32
+R12
+R13
+R14
+o+acc
+R8
+Pmidi_constants
+w1427630342
+R4
+Z18 8../midiinput/midi_constants.vhd
+Z19 F../midiinput/midi_constants.vhd
+l0
+L1
+VoNfTVITHi<f>;N6X0K=563
+R7
+32
+o+acc
+R8
+!s100 J>jT^8e:4OHQCG:Fm=zH:2
+Emidiarea
+Z20 w1427634119
+R1
+R2
+R3
+R4
+Z21 8../midiinput/midi_area.vhd
+Z22 F../midiinput/midi_area.vhd
+l0
+L7
+VoCY?LbZH>EWT_XB0DLLK`2
+R7
+32
+o+acc
+R8
+!s100 9Oaf>P5H2m;0aTUa24fWX2
+Abehavioral
+R1
+R2
+R3
+DEx4 work 8 midiarea 0 22 oCY?LbZH>EWT_XB0DLLK`2
+l65
+L19
+V3iGcPhahV;BCg`hV``DC<1
+!s100 U557l;4Iodl9QJKmQ_0]U3
+R7
+32
+R12
+R13
+R14
+o+acc
+R8
 Pmidiconstants
 w1427381590
-8../midiinput/midi_constants.vhd
-F../midiinput/midi_constants.vhd
+R4
+R18
+R19
 l0
 L1
 V;`Fi9DD5iW121YSnJeE]g1
-!s100 fL]ibM^7Za6=h`]mBj5`13
-Z1 OE;C;6.5c;42
+R7
 32
 o+acc
-Z2 tExplicit 1
+R8
+!s100 fL]ibM^7Za6=h`]mBj5`13
+Emidiinput
+Z23 w1427633733
+R1
+R2
+R3
+R4
+Z24 8../midiinput/midi_uart_input.vhd
+Z25 F../midiinput/midi_uart_input.vhd
+l0
+L7
+VjhBLM:h:90@b;XOMT_`iM0
+R7
+32
+o+acc
+R8
+!s100 mJVX72XMViS_DLSi_kXg]0
+Abehavioral
+R1
+R2
+R3
+DEx4 work 9 midiinput 0 22 jhBLM:h:90@b;XOMT_`iM0
+l23
+L17
+Vi9jlT`F7I]z_?XlMAc2X73
+!s100 CYlhY?A3WR1BcM_M`437L3
+R7
+32
+R12
+R13
+R14
+o+acc
+R8
+Emuxcounter
+Z26 w1427633858
+R1
+R2
+R3
+R4
+Z27 8../midiinput/midi_mux_counter.vhd
+Z28 F../midiinput/midi_mux_counter.vhd
+l0
+L7
+VHm3iGVfmZZz]SlS2azdNQ3
+R7
+32
+o+acc
+R8
+!s100 >1CENUZ49W1M0n4>^G@DN1
+Abehavioral
+R1
+R2
+R3
+DEx4 work 10 muxcounter 0 22 Hm3iGVfmZZz]SlS2azdNQ3
+l23
+L18
+VY<]PVFM;TS=MR^naNa@2M0
+!s100 YW1XPECR1geKX34e?U0]20
+R7
+32
+R12
+R13
+R14
+o+acc
+R8
