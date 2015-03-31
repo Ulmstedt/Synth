@@ -45,7 +45,7 @@ begin
                --ADD unsigned
                
                --variable is set instantly
-               reg := std_logic_vector(unsigned(rightIn) + unsigned(leftIn));
+               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) + to_integer(unsigned(leftIn)), REG_WIDTH+1));
                --set out
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
@@ -63,7 +63,7 @@ begin
                   
             when ("00010") =>
                --ADD signed
-               reg := std_logic_vector(signed(rightIn) + signed(leftIn));
+               reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) + signed(leftIn));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(signed(reg)) = 0 then
@@ -73,7 +73,7 @@ begin
                end if;
                
                --check signbit
-               if reg(REG_WIDTH*2-1) = '1' then
+               if reg(REG_WIDTH-1) = '1' then
                   sRN <= '1';
                else
                   sRN <= '0';
@@ -89,11 +89,12 @@ begin
                
             when ("00011") =>
                --SUB unsigned
-               reg := std_logic_vector(unsigned(rightIn) - unsigned(leftIn));
+               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) - to_integer(unsigned(leftIn)), REG_WIDTH+1));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                --makes no sense checking if negative flag should be set when dealing with unsigned
-               if to_integer(unsigned(reg)) = 0 then
+               --REPORT "REG VALUE: " & integer'image(to_integer(unsigned(reg)));
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -107,7 +108,7 @@ begin
                
             when ("00100") =>
                --SUB signed
-               reg := std_logic_vector(signed(rightIn) - signed(leftIn));
+               reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) - signed(leftIn));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(signed(reg)) = 0 then
@@ -161,7 +162,7 @@ begin
                end if;
             when("00110") =>
                --bitshift right
-               reg := std_logic_vector(unsigned(rightIn) srl to_integer(unsigned(leftIn)));
+               reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) srl to_integer(unsigned(leftIn)));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(unsigned(reg)) = 0 then
@@ -184,7 +185,7 @@ begin
                
             when("00111") =>
                --bitshift left
-               reg := std_logic_vector(unsigned(rightIn) sll to_integer(unsigned(leftIn)));
+               reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) sll to_integer(unsigned(leftIn)));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(unsigned(reg)) = 0 then
@@ -207,7 +208,7 @@ begin
                
             when("01000") =>
                --AND
-               reg := rightIn and leftIn;
+               reg(REG_WIDTH-1 downto 0) := rightIn and leftIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(unsigned(reg)) = 0 then
@@ -223,7 +224,7 @@ begin
                end if;
             when("01001") =>
                --OR
-               reg := rightIn or leftIn;
+               reg(REG_WIDTH-1 downto 0) := rightIn or leftIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(unsigned(reg)) = 0 then
@@ -240,7 +241,7 @@ begin
                
             when("01010") =>
                --XOR
-               reg := rightIn xor leftIn;
+               reg(REG_WIDTH-1 downto 0) := rightIn xor leftIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(unsigned(reg)) = 0 then
@@ -257,7 +258,7 @@ begin
                
             when("01011") =>
                --NOT
-               reg := not rightIn;
+               reg(REG_WIDTH-1 downto 0) := not rightIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
                if to_integer(unsigned(reg)) = 0 then

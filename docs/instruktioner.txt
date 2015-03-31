@@ -86,7 +86,7 @@ BNCC(offset från där man står)
 
 ALUINST.r
 
-00101 OOOOO RRRR R XXXX XXXX XXXX RRRR
+00101 OOOOO RRRR R XXXX XXXX XXXR RRRR
 
 
 ALUINST.c
@@ -146,7 +146,7 @@ O  :  1 om (x-y) < 0 om x > 0 och y < 0 eller (x-y) > 0 om x < 0 och y > 0annars
 RRM:  IF
 RRT:  IF
 
-00101:  MUL (fixed point)
+00101:  MUL signed(fixed point)
 
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0

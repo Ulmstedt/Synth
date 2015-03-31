@@ -41,8 +41,8 @@ midi_input.%: U=main.ucf
 
 
 alu.%: S=cpu/alu.vhd cpu/const.vhd
-alu.%: T=cpu/alutb.vhd
-alu.%: U=alu.ucf
+alu.%: T=cpu/alu_tb.vhd
+alu.%: U=main.ucf
 
 pmem.%: S=pmemArea.vhd ir1.vhd ir2.vhd jmp.vhd pcreg.vhd pmem.vhd reg.vhd records.vhd const.vhd
 pmem.%: T=pmem_tb.vhd
