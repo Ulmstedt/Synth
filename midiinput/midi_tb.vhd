@@ -6,10 +6,10 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 use work.midi_constants.all;
 
-ENTITY bus_tb IS
-END bus_tb;
+ENTITY midi_tb IS
+END midi_tb;
 
-ARCHITECTURE behavior OF bus_tb IS 
+ARCHITECTURE behavior OF midi_tb IS 
 
   -- Component Declaration
 component MidiArea is

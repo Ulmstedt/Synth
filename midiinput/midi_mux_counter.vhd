@@ -22,43 +22,46 @@ signal outReadyS  : std_logic := '0';
 
 begin
 
-process(clk) is
-   if rising_edge(clk) rst = '0' then
-      if validMsg = '1' and msgReady = '1' then
-         case count is
-            when "00" =>
-                        count <= "01";
-                        outReadyS <= '1';
-            when "01" =>
-                        count <= "10";
-                        outReadyS <= '1';
-            when "10" =>
-                        count <= "00";
-                        outReadyS <= '1';
-            when others => null;
-         end case;
-      elsif validMsg = '0' then
-         count <= "00";
-      end if;                 
-   end if;
-end process;
+	process(clk) is
+	begin
+	   if rising_edge(clk) and rst = '0' then
+		  if validMsg = '1' and msgReady = '1' then
+			 case count is
+				when "00" =>
+							count <= "01";
+							outReadyS <= '1';
+				when "01" =>
+							count <= "10";
+							outReadyS <= '1';
+				when "10" =>
+							count <= "00";
+							outReadyS <= '1';
+				when others => null;
+			 end case;
+		  elsif validMsg = '0' then
+			 count <= "00";
+		  end if;                 
+	   end if;
+	end process;
 
-muxCtr <= count;
+	muxCtr <= count;
 
--- Out ready should only be 1 for 1 clk
-process(clk) is
-   if rising_edge(clk) and outReadyS = '1' then
-      outReadyS <= '0';
-   end if;
-end process;
+	-- Out ready should only be 1 for 1 clk
+	process(clk) is
+	begin
+	   if rising_edge(clk) and outReadyS = '1' then
+		  outReadyS <= '0';
+	   end if;
+	end process;
 
-outReady <= outReadyS;
+	outReady <= outReadyS;
 
--- Reset
-process(clk) is
-   if rising_edge(clk) and rst = '1' then
-      count <= "00";
-   end if;
-end process;
+	-- Reset
+	process(clk) is
+	begin
+	   if rising_edge(clk) and rst = '1' then
+		  count <= "00";
+	   end if;
+	end process;
 
 end Behavioral;
