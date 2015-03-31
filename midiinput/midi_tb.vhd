@@ -11,7 +11,7 @@ END midi_tb;
 
 ARCHITECTURE behavior OF midi_tb IS 
 
-  -- Component Declaration
+   -- Component Declaration
 component MidiArea is
    port(
       clk      : in std_logic;
@@ -24,14 +24,15 @@ component MidiArea is
    );
 end component;
 	
-  SIGNAL clk 		   : std_logic	:= '0';
-  SIGNAL rst 		   : std_logic	:= '0';
-  signal uart        : std_logic;
-  signal mreg1       : std_logic_vector(MIDI_WIDTH - 1 downto 0);
-  signal mreg2       : std_logic_vector(MIDI_WIDTH - 1 downto 0);
-  signal mreg3       : std_logic_vector(MIDI_WIDTH - 1 downto 0);
-  signal readRdy     : std_logic;
-  signal tb_running	: boolean 	:= true;
+   SIGNAL clk 		      : std_logic	:= '0';
+   SIGNAL rst 		      : std_logic	:= '0';
+   signal uart          : std_logic := '1';
+   signal mreg1         : std_logic_vector(MIDI_WIDTH - 1 downto 0);
+   signal mreg2         : std_logic_vector(MIDI_WIDTH - 1 downto 0);
+   signal mreg3         : std_logic_vector(MIDI_WIDTH - 1 downto 0);
+   signal readRdy       : std_logic;
+   signal tb_running    : boolean 	:= true;
+   signal midi_msg      : std_logic_vector(0 to 34) := "11111" & B"0_1001_0000_1" & B"0_1011_0111_1" & B"0_1000_0011_1";
 
 BEGIN
 
@@ -47,41 +48,50 @@ BEGIN
    );
 
 
-  clk_gen : process
-  begin
-    while tb_running loop
-      clk <= '0';
-      wait for 5 ns;
-      clk <= '1';
-      wait for 5 ns;
-    end loop;
-    wait;
-  end process;
+   clk_gen : process
+   begin
+      while tb_running loop
+         clk <= '0';
+         wait for 5 ns;
+         clk <= '1';
+         wait for 5 ns;
+      end loop;
+      wait;
+   end process;
 
   
 
-  stimuli_generator : process
-    variable i : integer;
-  begin
-    -- Aktivera reset ett litet tag.
-    rst <= '1';
-    wait for 500 ns;
+   stimuli_generator : process
+      variable i : integer;
+      variable n : integer := 0;
+   begin
+      -- Aktivera reset ett litet tag.
+      rst <= '1';
+      wait for 500 ns;
 
-    wait until rising_edge(clk);        -- se till att reset släpps synkront
+      wait until rising_edge(clk);        -- se till att reset släpps synkront
                                         -- med klockan
-    rst <= '0';
-    report "Reset released" severity note;
+      rst <= '0';
+      report "Reset released" severity note;
+	
 	
 	
 
-    for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
-      wait until rising_edge(clk);
-    end loop;  -- i
+      for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
+         wait until rising_edge(clk);
+         -- Send midi message
+         if i mod UART_CLK_PERIOD = 0 and n < 35 then
+            uart <= midi_msg(n);
+            -- report "Midi_msg(n): " & std_logic'image(midi_msg(n));
+            --report "(n): " & integer'image(n);
+            n := n+1;
+         end if;
+      end loop;  -- i
 	
-    tb_running <= false;                -- Stanna klockan (vilket medför att inga
+      tb_running <= false;                -- Stanna klockan (vilket medför att inga
                                         -- nya event genereras vilket stannar
                                         -- simuleringen).
-    wait;
-  end process;
+      wait;
+   end process;
       
 END;

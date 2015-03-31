@@ -5,6 +5,7 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 use work.records.all;
+use work.pmemContent.all;
 
 entity Memory is
    port(
@@ -15,7 +16,7 @@ entity Memory is
 end Memory;
 
 architecture Behavioral of Memory is
-   signal  mem : pmem_t; --:= NÅGOT;
+   signal  mem : pmem_t := pmemc;
 begin
    process(clk) is
    begin
