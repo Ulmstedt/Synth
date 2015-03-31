@@ -1,10 +1,12 @@
 XXXXXX XX XXXX XXXX XXXX XXXX XXXX XXXX
 OP                   Data/adress --->                    
 STATUSFLAGGOR:
-Overflow, Zero, Carry, Negative, Read Ready Midi, Read Ready Touch
+Zero, Negative, Carry, Overflow, Read Ready Midi, Read Ready Touch
 
 16 allmänna regs.
 16 extra regs.
+
+IF = Ingen förändring
 
 ADRESSERINGSMODER:
 -
@@ -94,31 +96,126 @@ ALUINST.c
 
 O = Operation
 
-
 00000:  do nothing
+
+Påverkade statusflaggor:
+Z  :  IF
+N  :  IF
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
 
 00001:  ADD unsigned
 
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  IF
+C  :  1 om additionen orsakar carry, annars 0
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 00010:  ADD signed
+
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  1 om två positiva tal resulterar i ett tal med signbit 1(eller vice versa med 2 negativa tal), annars 0
+RRM:  IF
+RRT:  IF
 
 00011:  SUB unsigned
 
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  IF
+C  :  1 om additionen orsakar carry, annars 0
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 00100:  SUB signed
+
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  1 om (x-y) < 0 om x > 0 och y < 0 eller (x-y) > 0 om x < 0 och y > 0annars 0
+RRM:  IF
+RRT:  IF
 
 00101:  MUL (fixed point)
 
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  1 om multiplikationen orsakat någon bit utöver REG_WIDTH att bli satt
+RRM:  IF
+RRT:  IF
+
 00110:  bitshift right
 
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  =sista biten som shiftades ut
+RRM:  IF
+RRT:  IF
+
 00111:  bitshift left
+
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  =sista biten som shiftades ut
+RRM:  IF
+RRT:  IF
 
 
 01000:  AND
 
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 01001:  OR
+
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
 
 01010:  XOR
 
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 01011:  NOT
+
+Påverkade statusflaggor:
+Z  :  1 om resultatet är 0 annars 0
+N  :  1 om resultatets sign bit är satt, annars 0
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
 
 
 /*
@@ -130,9 +227,25 @@ O = Operation
 
 01100:  CMP
 
+Påverkade statusflaggor:
+Z  :  1 om x-y=0 annars 0
+N  :  1 om x < y annars 0
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 
 
 01111:  BITTEST
+(tar in unsigned)
+Påverkade statusflaggor:
+Z  :  1 om biten är 0, 0 annars eller om talet som skickas in är >=REG_WIDTH
+N  :  IF
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
 
 -----------------------------------------
 
