@@ -2,6 +2,8 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.constants.all;
+
 -- 
 -- nextPCType
 --  00 : incr
@@ -13,8 +15,8 @@ entity PCReg is
    port(
       nextPCType  : in std_logic_vector(1 downto 0);
       nextPC      : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      clk         : in std_logic_vector;
-      curPC       : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      clk         : in std_logic;
+      curPC       : out std_logic_vector(ADDR_WIDTH - 1 downto 0)
    );
 end PCReg;
 
@@ -25,7 +27,7 @@ begin
    begin
       if rising_edge(clk) then
          if nextPCType = "00" then
-            pc <= std_logic_vector(to_unsigned(pc) + 1);
+            pc <= std_logic_vector(unsigned(pc) + 1);
          elsif nextPCType = "01" then
             pc <= nextPC;
          elsif nextPCType = "10" then

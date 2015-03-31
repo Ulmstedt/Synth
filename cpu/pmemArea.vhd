@@ -2,9 +2,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.constants.all;
+
 entity PMemArea is
    port(
-      memOut   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      IR1out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      IR2out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
       regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
       rst      : in std_logic;
@@ -18,16 +21,26 @@ architecture Behaviorial of PMemArea is
       port(
          nextPCType  : in std_logic_vector(1 downto 0);
          nextPC      : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         clk         : in std_logic_vector;
-         curPC       : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         clk         : in std_logic;
+         curPC       : out std_logic_vector(ADDR_WIDTH - 1 downto 0)
       );
    end component;
    
    component Memory is
       port(
-         addr     : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
          instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         clk      : in std_logic;
+         clk      : in std_logic
+      );
+   end component;
+   
+   component IR2 is
+      port(
+         input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         stall    : in std_logic;
+         rst      : in std_logic;
+         clk      : in std_logic
       );
    end component;
    
@@ -65,11 +78,12 @@ architecture Behaviorial of PMemArea is
       );
    end component;
    
+   signal memOut     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal nextPCType : std_logic_vector(1 downto 0);
    signal nextPC     : std_logic_vector(ADDR_WIDTH - 1 downto 0);
    signal pcAddr     : std_logic_vector(ADDR_WIDTH - 1 downto 0);
    signal pc1out     : std_logic_vector(ADDR_WIDTH - 1 downto 0);
-   signal ir1out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
+   signal ir1sig     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal stall      : std_logic;
    
 begin
@@ -81,7 +95,7 @@ begin
    );
    
    pc1 : Reg
-      generic map(regWidth => ADDR_WIDTH);
+      generic map(regWidth => ADDR_WIDTH)
       port map(
                doRead => clk,
                input => pcAddr,
@@ -90,18 +104,26 @@ begin
                clk => clk
             );
             
-   ir1 : IR1 port map (
-      input    
-      output   
-      pcType   
+   ir1c : IR1 port map (
+      input    => memOut,
+      output   => ir1sig,
+      pcType   => nextPCType,
       stall    => stall,
       rst      => rst,
       clk      => clk
    );
    
-   jmp : Jmp port map (
+   ir2c : IR2 port map (
+      input    => ir1sig,
+      output   => IR2out,
+      stall    => stall,
+      rst      => rst,
+      clk      => clk
+   );
+   
+   jmpc : Jmp port map (
       pc1      => pc1out,
-      ir1      => ir1out,
+      ir1      => ir1sig,
       pcOut    => nextPC,
       regSel   => regSel,
       regIn    => regIn,
@@ -114,5 +136,6 @@ begin
       instr       => memOut,
       clk         => clk
    );
-
+   
+   ir1out <= ir1sig;
 end Behaviorial;

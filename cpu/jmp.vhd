@@ -3,6 +3,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.constants.all;
 
 entity Jmp is
    port(
@@ -27,19 +28,15 @@ begin
    process(clk)
    begin
       if rising_edge(clk) then
-         if isJmp = '1' and pc1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "00" then
+         if isJmp = '1' and ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "00" then
             -- XXX00: Absolute address
-            pc2 <= std_logic_vector(to_unsigned(ir1(ADDR_WIDTH - 1 downto 0)), pc2'length);
-         elsif isJmp = '1' and pc1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "01" then
+            pc2 <= std_logic_vector(unsigned(ir1(ADDR_WIDTH - 1 downto 0)));
+         elsif isJmp = '1' and ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "01" then
             -- XXX01: Address in register
-            pc2 <= std_logic_vector(
-               to_unsigned(pc1) + to_unsigned(regIn), 
-               pc2'length);
-         elsif isJmp = '1' and pc1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "10" then
+            pc2 <= std_logic_vector(unsigned(pc1) + unsigned(regIn));
+         elsif isJmp = '1' and ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "10" then
             -- XXX10: Offset from current address
-            pc2 <= std_logic_vector(
-               to_unsigned(pc1) + to_unsigned(ir1(ADDR_WIDTH - 1 downto 0)), 
-               pc2'length);
+            pc2 <= std_logic_vector(unsigned(pc1) + unsigned(ir1(ADDR_WIDTH - 1 downto 0)));
          else
             pc2 <= (others => '0');
          end if;

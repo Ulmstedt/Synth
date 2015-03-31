@@ -2,11 +2,14 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.constants.all;
+
 entity IR2 is
    port(
       input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       stall    : in std_logic;
+      rst      : in std_logic;
       clk      : in std_logic
    );
 end IR2;
@@ -27,13 +30,13 @@ architecture Behavioral of IR2 is
    
 begin
    ir2   : Reg
-      generic map(regWidth => PMEM_WIDTH);
+      generic map(regWidth => PMEM_WIDTH)
       port map(
-               doRead => clk,
-               input => muxVal,
-               output => output,
-               rst => rst,
-               clk => clk
+               doRead   => '1',
+               input    => muxVal,
+               output   => output,
+               rst      => rst,
+               clk      => clk
             );
    muxVal <=   (others => '0') when stall = '1' else
                input;

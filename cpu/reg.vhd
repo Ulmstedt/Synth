@@ -2,6 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.constants.all;
 
 entity Reg is
    generic (regWidth : natural := REG_WIDTH);
