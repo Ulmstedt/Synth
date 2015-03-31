@@ -44,9 +44,9 @@ alu.%: S=cpu/alu.vhd cpu/const.vhd
 alu.%: T=cpu/alutb.vhd
 alu.%: U=alu.ucf
 
-pmem.%: S=pmemArea.vhd ir1.vhd ir2.vhd jmp.vhd pcreg.vhd pmem.vhd reg.vhd records.vhd const.vhd
-pmem.%: T=pmem_tb.vhd
-pmem.%: U=pmem.ucf
+pmem.%: S=cpu/pmem_area.vhd cpu/ir1.vhd cpu/ir2.vhd cpu/jmp.vhd cpu/pcreg.vhd cpu/pmem.vhd cpu/reg.vhd cpu/pmem_content.vhd cpu/records.vhd cpu/const.vhd
+pmem.%: T=cpu/pmem_tb.vhd
+pmem.%: U=main.ucf
 
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
