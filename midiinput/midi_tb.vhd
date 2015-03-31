@@ -32,7 +32,7 @@ end component;
    signal mreg3         : std_logic_vector(MIDI_WIDTH - 1 downto 0);
    signal readRdy       : std_logic;
    signal tb_running    : boolean 	:= true;
-   signal midi_msg      : std_logic_vector(0 to 34) := "11111" & B"0_1001_0000_1" & B"0_1011_0111_1" & B"0_1000_0011_1";
+   signal midi_msg      : std_logic_vector(0 to 34) := "11111" & B"0_1001_0000_1" & B"0_1011_0111_1" & B"0_1010_0011_1";
 
 BEGIN
 
