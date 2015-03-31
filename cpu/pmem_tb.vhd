@@ -6,10 +6,10 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 use work.constants.all;
 
-ENTITY bus_tb IS
-END bus_tb;
+ENTITY pmem_tb IS
+END pmem_tb;
 
-ARCHITECTURE behavior OF bus_tb IS 
+ARCHITECTURE behavior OF pmem_tb IS 
 
   -- Component Declaration
 component PMemArea is
