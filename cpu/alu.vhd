@@ -37,7 +37,6 @@ architecture Behavioural of ALU is
 begin 
    process (clk)
       variable reg  : std_logic_vector(2*REG_WIDTH-1 downto 0);
-      variable tmp   : std_logic_vector(2*REG_WIDTH-1 downto 0);
    begin
       if rising_edge(clk) then
          case(ALUInstr) is
@@ -186,9 +185,9 @@ begin
                
                --set overflow to last bit shifted out
                if to_integer(unsigned(leftIn)) > REG_WIDTH or to_integer(unsigned(leftIn)) = 0 then
-                  sRO <= '0';
+                  sRC <= '0';
                else
-                  sRO <= rightIn(to_integer(unsigned(leftIn)-1));
+                  sRC <= rightIn(to_integer(unsigned(leftIn)-1));
                end if;
                
             when("00111") =>
@@ -211,9 +210,9 @@ begin
                
                --set overflow to last bit shifted out
                if to_integer(unsigned(leftIn)) > REG_WIDTH or to_integer(unsigned(leftIn)) = 0 then
-                  sRO <= '0';
+                  sRC <= '0';
                else
-                  sRO <= rightIn(REG_WIDTH-to_integer(unsigned(leftIn)));
+                  sRC <= rightIn(REG_WIDTH-to_integer(unsigned(leftIn)));
                end if;
                
             when("01000") =>

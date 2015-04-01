@@ -158,8 +158,8 @@ RRT:  IF
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
-C  :  IF
-O  :  =sista biten som shiftades ut
+C  :  =sista biten som shiftades ut
+O  :  IF
 RRM:  IF
 RRT:  IF
 
@@ -168,8 +168,8 @@ RRT:  IF
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
-C  :  IF
-O  :  =sista biten som shiftades ut
+C  :  =sista biten som shiftades ut
+O  :  IF
 RRM:  IF
 RRT:  IF
 
