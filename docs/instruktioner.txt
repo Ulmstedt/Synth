@@ -127,7 +127,7 @@ RRT:  IF
 
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
-N  :  IF
+N  :  1 om source < destination dvs indikerar att man använd operationen felaktigt, annars 0
 C  :  1 om additionen orsakar carry, annars 0
 O  :  IF
 RRM:  IF
@@ -139,17 +139,17 @@ Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
 C  :  IF
-O  :  1 om (x-y) < 0 om x > 0 och y < 0 eller (x-y) > 0 om x < 0 och y > 0annars 0
+O  :  1 om (s-d) < 0 om s > 0 och d < 0 eller (s-d) > 0 om s < 0 och d > 0 annars 0
 RRM:  IF
 RRT:  IF
 
 00101:  MUL signed(fixed point)
 
 Påverkade statusflaggor:
-Z  :  1 om resultatet är 0 annars 0
+Z  :  1 om den övre hälften av bitar alla är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
 C  :  IF
-O  :  1 om multiplikationen orsakat någon bit utöver REG_WIDTH att bli satt
+O  :  IF
 RRM:  IF
 RRT:  IF
 
@@ -235,7 +235,7 @@ RRT:  IF
 
 
 01111:  BITTEST
-(tar in unsigned)
+#0-31(tar in unsigned)
 Påverkade statusflaggor:
 Z  :  1 om biten är 0, 0 annars eller om talet som skickas in är >=REG_WIDTH
 N  :  IF
