@@ -12,7 +12,7 @@ entity IR1 is
       ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       pcType   : out std_logic_vector(1 downto 0);
-      stall    : out std_logic; 
+      stall    : out std_logic_vector(1 downto 0); 
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -41,6 +41,7 @@ architecture Behaviorial of IR1 is
    signal stalling         : std_logic;
    signal irOut            : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal ir1stallCausing  : std_logic;
+   signal ir1OP            : std_logic_vector(OP_WIDTH - 1 downto 0);
    
 begin
    ir1   : Reg
@@ -53,6 +54,9 @@ begin
                clk      => clk
             );
    
+   -- Convenience signal
+   ir1OP <= irOut(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
+   
    -- decide pcSel depending on input
    -- Is it a jump? OP code is 10XXX or 01XXX for branches
    isJmp       <= irOut(PMEM_WIDTH - 1) xor irOut(PMEM_WIDTH - 2);
@@ -63,24 +67,30 @@ begin
                   else '0';
    ir2reg      <= ir2in(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1);
    
-   ir1reg      <= input(REG_ALU_OFFSET downto REG_ALU_OFFSET - REG_BITS + 1)
-                     when  input(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "00101" OR
-                           input(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "00110"
-                     else input(REG_BITS - 1 downto 0);
-                     
-   ir1reg2     <= input(REG_BITS - 1 downto 0) 
-                     when input(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "00101"
-                     else ir1reg;
+   -- Bit of a clusterfuck, but picks out the register used depending on the OP code
+   ir1reg      <= irOut(REG_ALU_OFFSET downto REG_ALU_OFFSET - REG_BITS + 1) --ALUINSTR
+                     when ir1OP = "00101" OR ir1OP = "00110"
+                  else irOut(REG_LOAD_OFFSET downto REG_LOAD_OFFSET - REG_BITS + 1) --LOAD.wro
+                     when ir1OP = "11111"
+                  else irOut(REG_BITS - 1 downto 0);
+   
+   -- Retrieves the second register, if two are used by the command
+   ir1reg2     <= irOut(REG_BITS - 1 downto 0) 
+                     when ir1OP = "00101"
+                  else irOut(REG_STORE_OFFSET downto REG_STORE_OFFSET - REG_BITS + 1)
+                     when ir1OP = "11011"   
+                  else ir1reg;
    
    -- Check if IR1 is doing something with the reg IR2 loads to
    -- ALUINSTR.r has two 
    sameReg     <= '1' when ir1reg = ir2reg OR ir1reg2 = ir2reg else '0';
    
    -- Check if the ir1 is an instruction that might need to stall
-   with irOut(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) select ir1stallCausing <=
+   with ir1OP select ir1stallCausing <=
          '1' when "11001", -- STORE.r
          '1' when "11010", -- STORE.wo
          '1' when "11011", -- STORE.wofr
+         '1' when "11111", -- LOAD.wro
          '1' when "00100", -- MOVE
          '1' when "01001", -- BRANCH.r
          '1' when "10001", -- BCC.r
@@ -93,6 +103,11 @@ begin
    -- Need stall?
    stalling <= '1' when ir2isLoad = '1' and ir1stallCausing = '1' and sameReg = '1'
                else '0';
+   -- Set the stall counter to 0, 1 or two depending on if we need to stall or not,
+   -- and what type of instruction it is (ie. if branch, stall twice)
+   stall <= "10" when stalling = '1' and (ir1OP = "01001" OR ir1OP = "10001" OR ir1OP = "10101") else
+            "01" when stalling = '1' else
+            "00";
    
    muxOutput <=   irOut when stalling = '1' else
                   (others => '0') when isJmp = '1' else

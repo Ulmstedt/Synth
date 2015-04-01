@@ -1,4 +1,4 @@
-XXXXXX XX XXXX XXXX XXXX XXXX XXXX XXXX
+XXXXX XXX XXXX XXXX XXXX XXXX XXXX XXXX
 OP                   Data/adress --->                    
 STATUSFLAGGOR:
 Zero, Negative, Carry, Overflow, Read Ready Midi, Read Ready Touch
@@ -44,7 +44,7 @@ LOAD.wo (with offset)
 11110 RRRR RCCC CCCC CCCC AAA AAAA AAAA
 
 LOAD.wro (with offset in register)
-11111 RRRR RXXX XXXX OOOO AAA AAAA AAAA
+11111 RRRR RXXX XXXO OOOO AAA AAAA AAAA
 
 MOVE - stall
 00100 RRRR RXX XXXX XXXX XXXX XXXR RRRR
