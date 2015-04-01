@@ -1,0 +1,38 @@
+START:	
+	LOAD GR0,01,$0001	;GR0 = Bool list sorted
+	LOAD GR1,01,$00E0	;GR1 = Addr till current tal
+ENDOFLIST?:
+	;TMP = PM(Addr)
+	STORE GR1,00,$DF 	;godtyckligt ledig minnesplats $DF=Adr
+	LOAD GR2,10,$DF  	;GR2 = PM(ADDR)
+	
+	;TMP2 = PM(addr+1)
+	LOAD GR3,00,$DF
+	ADD GR3,01,$01
+	STORE GR3,00,$DF
+	LOAD GR3,10,$DF		;GR3 = PM(ADDR+1)
+	
+	;tmp1 > tmp2?
+	STORE GR3,00,$DF	;Ladda in GR3 till minnet så att vi kan CMP:ra
+	CMP GR2,00,$DF		;Jämför tmp och tmp2
+	BGE RÄKNAUPPADDR	;Hopp om tmp1 > tmp2
+	
+	;Byt plats på PM(ADDR) och PM(ADDR+1)
+	STORE GR1,00,$DF	;Spara addr i $DF
+	STORE GR3,10,$DF	;PM(ADDR)=TMP2
+	ADD GR1,01,$01		;incrementa addr med 1 tillfälligt
+	STORE GR1,00,$DF	;Spara undan till $DF
+	SUB GR1,01,$01		;återställ addr
+	STORE GR2,10,$DF	;PM(ADDR+1)=TMP
+
+	LOAD GR0,01,$0000	;Lista_sorterad = 0
+
+RÄKNAUPPADDR:
+	ADD GR1,01,$01		;incrementa addr med 1
+
+	CMP GR1,01,$FF		;Addr == $FF?
+	BNE ENDOFLIST?
+	
+	CMP GR0,01,$01		;Lista_sorterad == 1?
+	BNE START
+	HALT			;We have takeoff, listan sorterad! (hopefully)
