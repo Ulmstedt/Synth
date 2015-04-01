@@ -9,27 +9,38 @@ entity SoundOutput is
       clk               : in std_logic; -- Clock
       rst               : in std_logic; -- Reset
       sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-      i2s               : in std_logic; -- Output to I2S
+      mclk              : out std_logic; -- Master clock
+      sclk              : out std_logic; -- Serial clock
+      lrck              : out std_logic; -- Left/Right clock
+      sdout             : out std_logic; -- Serial data output
    );
 end SoundOutput;
 
 
 architecture Behavioral of SoundOutput is
 
-signal clkCounter       : std_logic_vector(SOUT_CLK_FREQ_WIDTH - 1 downto 0) := (others => '0');
-signal bitsOutput       : std_logic_vector(SAMPLE_SIZE_WIDTH - 1 downto 0) := (others => '0');
+   signal bitCounter       : std_logic_vector(SAMPLE_SIZE_WIDTH - 1 downto 0) := (others => '0'); -- Counts the number of bits that has been output
+   signal sample           : std_logic_vector(SAMPLE_SIZE - 1 downto 0) := (others => '0'); -- Current sample
+
+   signal sending          : std_logic; -- Boolean for if we are in the middle of a transfer
+   signal rightOutput      : std_logic; -- Are we sending left/right output?
+   
+   type states is (start_l,send_l,start_r,send_r); -- State enum left/right
+   signal state : states;
+
+begin
 
    process(clk) is
    begin
       if rising_edge(clk) then
          if rst = '1' then
-            -- Reset stuff here
+            sample <= (others => '0');
          else
-            clkCounter <= std_logic_vector(unsigned(clkCounter)+1);
-            
-            -- Check if its time to send sample bit (16 bits per SOUT_CLK_FREQ)
-            if clkCounter = std_logic_vector(to_unsigned(UART_CLK_PERIOD,UART_CLK_PERIOD_WIDTH)) then
-               
+            if rightOutput = '1'
+               lrck <= '0'; -- Send to left output
+               sdout <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+               bitCounter <= std_logic_vector(unsigned(bitCounter)+1); -- Increment bitCounter
+               state <= send_l;
             end if;
          end if;
       end if;
