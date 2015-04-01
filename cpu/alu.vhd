@@ -49,7 +49,7 @@ begin
                --set out
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -66,7 +66,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) + signed(leftIn));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(signed(reg)) = 0 then
+               if signed(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -99,7 +99,7 @@ begin
                else
                   sRZ <= '0';
                end if;
-               --revise this one
+               
                if reg(REG_WIDTH) = '1' then
                   sRC <= '1';
                else
@@ -111,7 +111,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) - signed(leftIn));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(signed(reg)) = 0 then
+               if signed(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -142,7 +142,7 @@ begin
                reg(2*REG_WIDTH-1 downto REG_WIDTH) := "00000000" & "00000000";
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(signed(reg)) = 0 then
+               if signed(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -165,7 +165,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) srl to_integer(unsigned(leftIn)));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -188,7 +188,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) sll to_integer(unsigned(leftIn)));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -211,7 +211,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := rightIn and leftIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -227,7 +227,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := rightIn or leftIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -244,7 +244,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := rightIn xor leftIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -261,7 +261,7 @@ begin
                reg(REG_WIDTH-1 downto 0) := not rightIn;
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               if to_integer(unsigned(reg)) = 0 then
+               if unsigned(reg) = 0 then
                   sRZ <= '1';
                else
                   sRZ <= '0';
@@ -291,17 +291,15 @@ begin
                
             when("01111") =>
                --BITTEST
-               if to_integer(unsigned(leftIn)) >= REG_WIDTH or to_integer(unsigned(leftIn)) < 0 then
-                  --guard against bad usage
-                  sRZ <= '0';
-               elsif rightIn(to_integer(unsigned(leftIn))) = '0' then
+               --make sure this works
+               if rightIn(to_integer(unsigned(leftIn))) = '0' then
                   sRZ <= '1';
                else
                   sRZ <= '0';
                end if;  
             when others =>
                --do nothing and others
-               --perhaps sr should stay the same as previous clk? in that case need to keep previous flags
+               -- if this case goes through same out values as last clk
                null;
          end case;
       end if;
