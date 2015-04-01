@@ -81,6 +81,7 @@ begin
          '1' when "11001", -- STORE.r
          '1' when "11010", -- STORE.wo
          '1' when "11011", -- STORE.wofr
+         '1' when "11111", -- LOAD.wro
          '1' when "00100", -- MOVE
          '1' when "01001", -- BRANCH.r
          '1' when "10001", -- BCC.r
