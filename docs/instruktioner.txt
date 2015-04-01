@@ -1,4 +1,4 @@
-XXXXXX XX XXXX XXXX XXXX XXXX XXXX XXXX
+XXXXX XXX XXXX XXXX XXXX XXXX XXXX XXXX
 OP                   Data/adress --->                    
 STATUSFLAGGOR:
 Zero, Negative, Carry, Overflow, Read Ready Midi, Read Ready Touch

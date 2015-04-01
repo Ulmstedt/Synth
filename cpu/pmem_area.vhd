@@ -61,7 +61,7 @@ architecture Behaviorial of PMemArea is
          ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
          pcType   : out std_logic_vector(1 downto 0);
-         stall    : out std_logic; 
+         stall    : out std_logic_vector(1 downto 0); 
          rst      : in std_logic;
          clk      : in std_logic
       );
@@ -87,6 +87,8 @@ architecture Behaviorial of PMemArea is
    signal ir1sig     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal ir2sig     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal stall      : std_logic;
+   signal stallInit  : std_logic_vector(1 downto 0);
+   signal stallCount : std_logic_vector(1 downto 0);
    
 begin
    pc : PCReg port map (
@@ -111,7 +113,7 @@ begin
       ir2in    => ir2sig,
       output   => ir1sig,
       pcType   => nextPCType,
-      stall    => stall,
+      stall    => stallInit,
       rst      => rst,
       clk      => clk
    );
@@ -142,4 +144,19 @@ begin
    
    ir1out <= ir1sig;
    ir2out <= ir2sig;
+   
+   -- Stall counter, branches need to stall twice to ensure correct data
+   process (clk) is
+   begin
+      if rising_edge(clk) then
+         if rst='1' then
+            stallCount <= "00";
+         elsif stallInit /= "00" then
+            stallCount <= stallInit;
+         elsif stallCount /= "00" then
+            stallCount <= std_logic_vector(unsigned(stallCount) - 1);
+         end if;
+      end if;
+   end process;
+   stall <= '1' when stallCount /= "00" else '0';
 end Behaviorial;
