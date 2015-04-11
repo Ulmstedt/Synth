@@ -84,11 +84,6 @@ end Behavourial;
 
 
 --Forwarding muxes and logic for them
---Det finns ett problem med LOAD.a instruktionen ty värdet som ska läggas i registret finns inte i pipelinen förrän steg 4 i pipelinen, med andra ord kan man t e x inte göra såhär:
--- LOAD.a Reg0, 0x00000004
--- ADDuns Reg0, Reg1
--- vad som fungerar dock är att lägga in en nop mellan dessa rader
--- vad som borde hända just nu om man skriver kod som exemplet är att man adderar 0x00000004 med värdet i reg1
 entity leftForwardMUXALU is
    port(
          in1               in std_logic_vector(REG_WIDTH-1 downto 0);

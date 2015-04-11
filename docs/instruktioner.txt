@@ -34,7 +34,12 @@ STORE.wo (from register with constant offset) - stall
 STORE.wofr (from register with constant offset from register) - stall
 11011 AAAA AAAA AAA XXXX XXOO OOOR RRRR
 		(O = Register with offset data)
-LOAD.a (Denna kan vara farlig eftersom värdet som skall in i registret inte hamnar i pipelinen förrän steg 4 och man kan därför inte ha databeroende hur som helst, det krävs ett stegs "mellanrum" i pipelinen)
+LOAD.a (Denna kan vara farlig eftersom värdet som skall in i registret inte hamnar i pipelinen förrän steg 4 och man kan därför inte ha databeroende hur som helst, det krävs ett stegs "mellanrum" i pipelinen) behöver stallas?
+--Det finns ett problem med LOAD.a instruktionen ty värdet som ska läggas i registret finns inte i pipelinen förrän steg 4 i pipelinen, med andra ord kan man t e x inte göra såhär:
+-- LOAD.a Reg0, 0x00000004
+-- ADDuns Reg0, Reg1
+-- vad som fungerar dock är att lägga in en nop mellan dessa rader
+-- vad som borde hända just nu om man skriver kod som exemplet är att man adderar 0x00000004 med värdet i reg1
 11100 RRRR RXXX XXXX XXXX AAA AAAA AAAA
 
 LOAD.c
