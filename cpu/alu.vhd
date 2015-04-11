@@ -145,9 +145,9 @@ begin
                --MUL (signed fixed point)
                reg(REG_WIDTH*2-1 downto 0) := std_logic_vector(signed(rightIn) * signed(leftIn));
 
-               REPORT "RIN VALUE: " & integer'image(to_integer(signed(rightIn)));
-               REPORT "LIN VALUE: " & integer'image(to_integer(signed(leftIn)));
-               REPORT "REG VALUE: " & integer'image(to_integer(signed(reg)));
+               --REPORT "RIN VALUE: " & integer'image(to_integer(signed(rightIn)));
+               --REPORT "LIN VALUE: " & integer'image(to_integer(signed(leftIn)));
+               --REPORT "REG VALUE: " & integer'image(to_integer(signed(reg)));
                
                --take the highest 16 bits to output
                ALUOut <= reg(REG_WIDTH*2-1 downto REG_WIDTH);
@@ -313,6 +313,16 @@ begin
                else
                   sRZ <= '0';
                end if;
+            when("11111") =>
+            --reserved to let left_in go through
+            ALUOut <= left_in;
+            
+            when("10000") =>
+            --ADD unsigned without affecting flags
+               --variable is set instantly(not like signals)
+               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) + to_integer(unsigned(leftIn)), REG_WIDTH+1));
+               --Then set out
+               ALUOut <= reg(REG_WIDTH-1 downto 0);
                
             when others =>
                --do nothing and others

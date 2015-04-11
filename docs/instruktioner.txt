@@ -22,7 +22,7 @@ NOP
 TRAP
 00001 XXX XXXX XXXX XXXX XXXX XXXX XXXX
 
-STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adress och data)
+STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adress och data) 
 11000 AAA AAAA AAAA DDDD DDDD DDDD DDDD
 
 STORE.r (from register) - stall
@@ -34,7 +34,7 @@ STORE.wo (from register with constant offset) - stall
 STORE.wofr (from register with constant offset from register) - stall
 11011 AAAA AAAA AAA XXXX XXOO OOOR RRRR
 		(O = Register with offset data)
-LOAD.a
+LOAD.a (Denna kan vara farlig eftersom värdet som skall in i registret inte hamnar i pipelinen förrän steg 4 och man kan därför inte ha databeroende hur som helst, det krävs ett stegs "mellanrum" i pipelinen)
 11100 RRRR RXXX XXXX XXXX AAA AAAA AAAA
 
 LOAD.c
@@ -50,6 +50,7 @@ MOVE - stall
 00100 RRRR RXX XXXX XXXX XXXX XXXR RRRR
 
 ---------------------------------------------
+--Branch med offset i register behöver dataforwarding
 
 BRANCH(till adress)
 01000 XXXX XXXX XXXX XXXX AAA AAAA AAAA
@@ -244,6 +245,8 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
+10000: addera utan att ändra statusflaggor(unsigned)
+11111: reserverad för att låta leftIn gå igenom (statusflaggor ändras ej)
 -----------------------------------------
 
 
