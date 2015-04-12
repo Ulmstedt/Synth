@@ -19,9 +19,9 @@ entity ALUArea is
       Z4D4Out   in std_logic_vector(REG_WIDTH  - 1 downto 0);
       rst       in std_logic;
       clk       in std_logic;
-      IR2       in std_logic_vector(REG_WIDTH-1 downto 0);
-      IR3       in std_logic_vector(REG_WIDTH-1 downto 0);
-      IR4       in std_logic_vector(REG_WIDTH-1 downto 0);
+      IR2       in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR3       in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4       in std_logic_vector(REG_WIDTH*2-1 downto 0);
    );
 end ALUArea;
 
@@ -32,10 +32,10 @@ architecture Behaviorial of ALUArea is
          in1               in std_logic_vector(REG_WIDTH-1 downto 0);
          in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
          in3               in std_logic_vector(REG_WIDTH  - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH-1 downto 0);
-         IR3               in std_logic_vector(REG_WIDTH-1 downto 0);
-         IR4               in std_logic_vector(REG_WIDTH-1 downto 0);
-         out1        out std_logic_vector(REG_WIDTH - 1 downto 0)
+         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         out1              out std_logic_vector(REG_WIDTH - 1 downto 0)
       );
    end component;
    
@@ -44,10 +44,10 @@ architecture Behaviorial of ALUArea is
          in1               in std_logic_vector(REG_WIDTH-1 downto 0);
          in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
          in3               in std_logic_vector(REG_WIDTH  - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH-1 downto 0);
-         IR3               in std_logic_vector(REG_WIDTH-1 downto 0);
-         IR4               in std_logic_vector(REG_WIDTH-1 downto 0);
-         out1        out std_logic_vector(REG_WIDTH - 1 downto 0)
+         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         out1              out std_logic_vector(REG_WIDTH - 1 downto 0)
       );
    end component;  
    
@@ -56,7 +56,7 @@ architecture Behaviorial of ALUArea is
          in1               in std_logic_vector(REG_WIDTH-1 downto 0);
          in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
          out1              out std_logic_vector(REG_WIDTH - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH-1 downto 0)
+         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0)
       );
    end component;
 
@@ -65,7 +65,7 @@ architecture Behaviorial of ALUArea is
          in1               in std_logic_vector(REG_WIDTH-1 downto 0);
          in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
          out1              out std_logic_vector(REG_WIDTH - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH-1 downto 0)
+         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0)
       );
    end component;
    
@@ -75,7 +75,7 @@ architecture Behaviorial of ALUArea is
          in1               in std_logic_vector(REG_WIDTH-1 downto 0);
          in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
          out1              out std_logic_vector(REG_WIDTH - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH-1 downto 0)
+         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0)
       );
    end component;
    
@@ -108,7 +108,7 @@ architecture Behaviorial of ALUArea is
    signal sRCI std_logic;
    
    signal ALUOutSignal std_logic_vector(REG_WIDTH-1 downto 0);
-   signal ALUInstrInternal std_logic_vector(ALU_INSTR_WIDTH downto 0);
+   signal ALUInstrInternal std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
    
 begin
    MUX1 : leftForwardMUXALU port map (
@@ -175,10 +175,10 @@ begin
    --Om det rör sig om en ALUINSTRUKTION så ska den givna instruktionen läsas, alla andra fall kan ses som specialfall
    --för att fixa med att ge en konstant offset i både store och load fallen samt då man storar en konstant så krävs en extra mux/extra register
    --lade till en mux för stora med konstant och ännu en till mux för att kunna utföra instruktioner "with offset" dvs store och load.
-   with IR2(REG_WIDTH-1 downto REG_WIDTH-OP_WIDTH) select
+   with IR2(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH+1) select
                           -- ALUINST
-      ALUInstrInternal <=  IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH) when "00101",
-                           IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH) when "00110",
+      ALUInstrInternal <=  IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH + 1) when "00101",
+                           IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH + 1) when "00110",
                            --STORE.c
                            "11111" when "11000",
                            --STORE.r , 11111 is reserved to let what comes in through leftIn go straight to ALUout after clk
@@ -207,7 +207,7 @@ begin
    srO <= sROI;
    srZ <= sRCI;
    
-   --Muxade innan denna så att vi kan stora konstanter direkt i minnet
+   --Muxade innan denna så att vi kan lagra konstanter direkt i minnet
    Z3in <= MUX4Out;
    
    --set actual out signal from ALUAREA
