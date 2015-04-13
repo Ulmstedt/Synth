@@ -52,6 +52,12 @@ begin
                in2 when others;                
 end Behavourial;
 
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+use work.constants.all;
+
 --special mux to handle storing of a constant
 entity storeMUXBeforeZ3 is
    port(
@@ -74,6 +80,12 @@ begin
                in2 when others;      
 end Behavourial;
 
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+use work.constants.all;
+
 --Special mux to handle withoffset instructions, adress part is thought to be put through to the left inport of the ALU, this offset to the right
 --also used for ALUINST.c where contents of register comes into left aluinport and the constant to the right inport
 entity withOffSetMUX is
@@ -95,14 +107,20 @@ begin
                --LOAD WO
                ----mask out the constant and let it through
                "00000"&IR2(WITH_OFFSET_OFFSET downto WITH_OFFSET_OFFSET - WITH_OFFSET_WIDTH + 1) when "11110",
+               --special case
                --ALUINST.c
                IR2(CONST_STORE_OFFSET downto 0) when "00110",
                --else whatever comes in from leftforward mux goes through
                in2 when others;    
 end Behavourial;
 
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
---Forwarding muxes and logic for them
+use work.constants.all;
+
+--Forwarding muxes
 entity leftForwardMUXALU is
    port(
          in1      :         in std_logic_vector(REG_WIDTH-1 downto 0);
@@ -117,16 +135,23 @@ architecture Behavourial of leftForwardMUXALU is
 
 begin
    out1  <= in3 when selectSig = "00" else
-         <= in2 when selectSig = "01" else
-         <= in1;
+            in2 when selectSig = "01" else
+            in1;
          
 end Behavourial;
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+use work.constants.all;
 
 entity rightForwardMUXALU is
    port(
          in1       :        in std_logic_vector(REG_WIDTH-1 downto 0);
          in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
          in3       :        in std_logic_vector(REG_WIDTH  - 1 downto 0);
+         selectSig:         in std_logic_vector(1 downto 0);
          out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0)
    );
 end rightForwardMUXALU;
@@ -135,7 +160,7 @@ architecture Behavourial of rightForwardMUXALU is
 
 begin
    out1  <= in3 when selectSig = "00" else
-         <= in2 when selectSig = "01" else
-         <= in1;
+            in2 when selectSig = "01" else
+            in1;
          
 end Behavourial;

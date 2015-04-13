@@ -21,7 +21,7 @@ entity ALUArea is
       clk     :  in std_logic;
       IR2     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
       IR3     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR4     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4     :  in std_logic_vector(REG_WIDTH*2-1 downto 0)
    );
 end ALUArea;
 
@@ -91,38 +91,38 @@ architecture Behaviorial of ALUArea is
    
    component forwardLogicLeft is
    port(
-      IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);     
-      selectSignal      out std_logic_vector(1 downto 0)
+      IR2             :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR3             :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4             :  in std_logic_vector(REG_WIDTH*2-1 downto 0);     
+      selectSignal    :  out std_logic_vector(1 downto 0)
    );
    end component;
    
    component forwardLogicRight is
    port(
-      IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);     
-      selectSignal      out std_logic_vector(1 downto 0)
+      IR2          :     in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR3          :     in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4          :     in std_logic_vector(REG_WIDTH*2-1 downto 0);     
+      selectSignal :     out std_logic_vector(1 downto 0)
    );
    end component;
     
    --interna signaler
-   signal MUX5Out std_logic_vector(REG_WIDTH-1 downto 0);
-   signal MUX4Out std_logic_vector(REG_WIDTH-1 downto 0);
-   signal MUX3Out std_logic_vector(REG_WIDTH-1 downto 0);
-   signal MUX2Out std_logic_vector(REG_WIDTH-1 downto 0);
-   signal MUX1Out std_logic_vector(REG_WIDTH-1 downto 0);
-   signal MUX1Select std_logic_vector(1 downto 0);
-   signal MUX2Select std_logic_vector(1 downto 0);
+   signal MUX5Out             :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal MUX4Out             :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal MUX3Out             :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal MUX2Out             :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal MUX1Out             :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal MUX1Select          :     std_logic_vector(1 downto 0);
+   signal MUX2Select          :     std_logic_vector(1 downto 0);
    
-   signal sRZI std_logic;
-   signal sRNI std_logic;
-   signal sROI std_logic;
-   signal sRCI std_logic;
+   signal sRZI                :     std_logic;
+   signal sRNI                :     std_logic;
+   signal sROI                :     std_logic;
+   signal sRCI                :     std_logic;
    
-   signal ALUOutSignal std_logic_vector(REG_WIDTH-1 downto 0);
-   signal ALUInstrInternal std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
+   signal ALUOutSignal        :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal ALUInstrInternal    :     std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
    
 begin
    MUX1 : leftForwardMUXALU port map (
@@ -148,7 +148,7 @@ begin
       out1              => MUX2Out   
    );
    
-   FLR : leftForwardMUXALU port map(
+   FLR : forwardLogicRight port map(
       IR2               => IR2,
       IR3               => IR3,
       IR4               => IR4,
@@ -195,7 +195,7 @@ begin
    --Om det rör sig om en ALUINSTRUKTION så ska den givna instruktionen läsas, alla andra fall kan ses som specialfall
    --för att fixa med att ge en konstant offset i både store och load fallen samt då man storar en konstant så krävs en extra mux/extra register
    --lade till en mux för stora med konstant och ännu en till mux för att kunna utföra instruktioner "with offset" dvs store och load.
-   with IR2(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH+1) select
+   with IR2(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH) select
                           -- ALUINST
       ALUInstrInternal <=  IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH + 1) when "00101",
                            IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH + 1) when "00110",
@@ -217,7 +217,7 @@ begin
                            --LOAD.wro
                            "10000" when "11111",
                            --MOVE
-                           "11111" when "00100"
+                           "11111" when "00100",
                            --do nothing
                            "00000" when others;   
    

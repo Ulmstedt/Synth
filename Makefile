@@ -40,7 +40,7 @@ midi_input.%: T=midiinput/midi_tb.vhd
 midi_input.%: U=main.ucf
 
 
-alu.%: S=cpu/alu.vhd cpu/const.vhd
+alu.%: S=cpu/alu_area.vhd cpu/alu.vhd cpu/alu_muxes.vhd cpu/rightforwardinglogic.vhd cpu/leftforwardinglogic.vhd cpu/const.vhd
 alu.%: T=cpu/alu_tb.vhd
 alu.%: U=main.ucf
 
