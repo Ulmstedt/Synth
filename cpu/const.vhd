@@ -11,7 +11,7 @@ package Constants is
    constant REG_ALU_OFFSET       : natural := 20;
    constant REG_LOAD_OFFSET      : natural := 15;
    constant REG_STORE_OFFSET     : natural := 9;
-   constant CONST_LOAD_OFFSET    : natural := 20;
+   constant ADDR_OFFSET          : natural := 26;
    constant CONST_BRANCH_OFFSET  : natural := 9;
    constant OP_WIDTH             : natural := 5;
    
@@ -29,4 +29,10 @@ package Constants is
    constant LOAD_WRO_OFFSET      : natural := 15;
    
    constant CONST_STORE_OFFSET   : natural := 15;
+   
+   constant SR_WIDTH             : natural := 8;
+   constant Z_OFFSET             : natural := 0;
+   constant N_OFFSET             : natural := 1;
+   constant C_OFFSET             : natural := 2;
+   constant O_OFFSET             : natural := 3;
 end Constants;
