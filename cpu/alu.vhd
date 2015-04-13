@@ -315,7 +315,7 @@ begin
                end if;
             when("11111") =>
             --reserved to let left_in go through
-            ALUOut <= left_in;
+            ALUOut <= leftIn;
             
             when("10000") =>
             --ADD unsigned without affecting flags
