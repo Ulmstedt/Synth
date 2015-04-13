@@ -6,22 +6,22 @@ use work.constants.all;
 
 entity ALUArea is
    port(
-      ALUOut    out std_logic_vector(REG_WIDTH - 1 downto 0);
-      Z3in      out std_logic_vector(REG_WIDTH - 1 downto 0);
-      sRZ       out std_logic;
-      sRN       out std_logic;
-      sRO       out std_logic;
-      sRC       out std_logic;
-      D2Out     in std_logic_vector(REG_WIDTH - 1 downto 0);
-      B2Out     in std_logic_vector(REG_WIDTH  - 1 downto 0);
-      A2Out     in std_logic_vector(REG_WIDTH  - 1 downto 0);
-      D3Out     in std_logic_vector(REG_WIDTH  - 1 downto 0);
-      Z4D4Out   in std_logic_vector(REG_WIDTH  - 1 downto 0);
-      rst       in std_logic;
-      clk       in std_logic;
-      IR2       in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR3       in std_logic_vector(REG_WIDTH*2-1 downto 0);
-      IR4       in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      ALUOut  :  out std_logic_vector(REG_WIDTH - 1 downto 0);
+      Z3in    :  out std_logic_vector(REG_WIDTH - 1 downto 0);
+      sRZ     :  out std_logic;
+      sRN     :  out std_logic;
+      sRO     :  out std_logic;
+      sRC     :  out std_logic;
+      D2Out   :  in std_logic_vector(REG_WIDTH - 1 downto 0);
+      B2Out   :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
+      A2Out   :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
+      D3Out   :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
+      Z4D4Out :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
+      rst     :  in std_logic;
+      clk     :  in std_logic;
+      IR2     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR3     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
    );
 end ALUArea;
 
@@ -29,70 +29,82 @@ architecture Behaviorial of ALUArea is
 
    component leftForwardMUXALU is
       port(
-         in1               in std_logic_vector(REG_WIDTH-1 downto 0);
-         in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
-         in3               in std_logic_vector(REG_WIDTH  - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         out1              out std_logic_vector(REG_WIDTH - 1 downto 0)
+         in1       :        in std_logic_vector(REG_WIDTH-1 downto 0);
+         in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
+         in3       :        in std_logic_vector(REG_WIDTH  - 1 downto 0);
+         selectSig :        in std_logic_vector(1 downto 0);
+         out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0)
       );
    end component;
    
    component rightForwardMUXALU is
       port(
-         in1               in std_logic_vector(REG_WIDTH-1 downto 0);
-         in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
-         in3               in std_logic_vector(REG_WIDTH  - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         out1              out std_logic_vector(REG_WIDTH - 1 downto 0)
+         in1       :        in std_logic_vector(REG_WIDTH-1 downto 0);
+         in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
+         in3       :        in std_logic_vector(REG_WIDTH  - 1 downto 0);
+         selectSig :        in std_logic_vector(1 downto 0);
+         out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0)
       );
    end component;  
    
    component MUXbeforeALU is
       port(
-         in1               in std_logic_vector(REG_WIDTH-1 downto 0);
-         in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
-         out1              out std_logic_vector(REG_WIDTH - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0)
+         in1       :        in std_logic_vector(REG_WIDTH-1 downto 0);
+         in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
+         out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0);
+         IR2       :        in std_logic_vector(REG_WIDTH*2-1 downto 0)
       );
    end component;
 
    component storeMUXBeforeZ3 is
       port(
-         in1               in std_logic_vector(REG_WIDTH-1 downto 0);
-         in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
-         out1              out std_logic_vector(REG_WIDTH - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0)
+         in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
+         out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0);
+         IR2       :        in std_logic_vector(REG_WIDTH*2-1 downto 0)
       );
    end component;
    
    --this mux is placed as the innermost MUX to the right inport of the ALU (not in the schematic as of yet)
    component withOffSetMUX is
       port(
-         in1               in std_logic_vector(REG_WIDTH-1 downto 0);
-         in2               in std_logic_vector(REG_WIDTH - 1 downto 0);
-         out1              out std_logic_vector(REG_WIDTH - 1 downto 0);
-         IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0)
+         in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
+         out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0);
+         IR2       :        in std_logic_vector(REG_WIDTH*2-1 downto 0)
       );
    end component;
    
    component ALU is
       port(
-      leftIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
-      rightIn : in std_logic_vector(REG_WIDTH-1 downto 0);
-      ALUOut  : out std_logic_vector(REG_WIDTH-1 downto 0);
-      ALUInstr: in std_logic_vector(4 downto 0);
-      
-      clk      : in std_logic;
-      
-      sRZ     : out std_logic;
-      sRN     : out std_logic;
-      sRO     : out std_logic;
-      sRC     : out std_logic
+         leftIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
+         rightIn : in std_logic_vector(REG_WIDTH-1 downto 0);
+         ALUOut  : out std_logic_vector(REG_WIDTH-1 downto 0);
+         ALUInstr: in std_logic_vector(4 downto 0);
+         
+         clk     : in std_logic;
+         
+         sRZ     : out std_logic;
+         sRN     : out std_logic;
+         sRO     : out std_logic;
+         sRC     : out std_logic
       );
+   end component;
+   
+   component forwardLogicLeft is
+   port(
+      IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);     
+      selectSignal      out std_logic_vector(1 downto 0)
+   );
+   end component;
+   
+   component forwardLogicRight is
+   port(
+      IR2               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR3               in std_logic_vector(REG_WIDTH*2-1 downto 0);
+      IR4               in std_logic_vector(REG_WIDTH*2-1 downto 0);     
+      selectSignal      out std_logic_vector(1 downto 0)
+   );
    end component;
     
    --interna signaler
@@ -101,6 +113,8 @@ architecture Behaviorial of ALUArea is
    signal MUX3Out std_logic_vector(REG_WIDTH-1 downto 0);
    signal MUX2Out std_logic_vector(REG_WIDTH-1 downto 0);
    signal MUX1Out std_logic_vector(REG_WIDTH-1 downto 0);
+   signal MUX1Select std_logic_vector(1 downto 0);
+   signal MUX2Select std_logic_vector(1 downto 0);
    
    signal sRZI std_logic;
    signal sRNI std_logic;
@@ -115,20 +129,30 @@ begin
       in1               => B2Out,
       in2               => Z4D4Out,
       in3               => D3Out,
-      out1              => MUX1Out,   
+      selectSig         => MUX1Select,
+      out1              => MUX1Out   
+   );
+   
+   FLL : forwardLogicLeft port map(
       IR2               => IR2,
       IR3               => IR3,
-      IR4               => IR4
+      IR4               => IR4,
+      selectSignal      => MUX1Select
    );
 
    MUX2 : rightForwardMUXALU port map (
       in1               => A2Out,
       in2               => Z4D4Out,
       in3               => D3Out,
-      out1              => MUX2Out,   
+      selectSig         => MUX2Select,
+      out1              => MUX2Out   
+   );
+   
+   FLR : leftForwardMUXALU port map(
       IR2               => IR2,
       IR3               => IR3,
-      IR4               => IR4
+      IR4               => IR4,
+      selectSignal      => MUX2Select
    );
    
    MUX3 : MUXbeforeALU port map (
@@ -139,16 +163,12 @@ begin
    );
    
    MUX4 : storeMUXBeforeZ3 port map (
-      --in1 doesn't matter in this case(unused)
-      in1               => D2Out,
       in2               => MUX1Out,
       out1              => MUX4Out,   
       IR2               => IR2
    );
 
    MUX5 : withOffSetMUX port map (
-      --in1 doesn't matter in this case(unused)
-      in1               => D2Out,
       in2               => MUX2Out,
       out1              => MUX5Out,   
       IR2               => IR2
