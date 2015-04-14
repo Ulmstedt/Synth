@@ -10,6 +10,7 @@ entity MainArea is
       ir2      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       pmemSel  : in std_logic_vector(REG_BITS - 1 downto 0);
       pmemOut  : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -35,6 +36,7 @@ architecture Behavioral of MainArea is
          regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
+         SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
          regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
          regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
          regWrite    : in std_logic;
@@ -136,6 +138,7 @@ begin
       regAOut     => reg2ASig,
       regBOut     => reg2BSig,
       SRin        => SR,
+      SRout       => srOut,
       regWriteSel => regWriteSel,
       regWriteVal => regWriteVal,
       regWrite    => regWrite,

@@ -10,6 +10,7 @@ entity PMemArea is
       ir2out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
       regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -74,6 +75,7 @@ architecture Behaviorial of PMemArea is
          pcOut : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
          regSel: out std_logic_vector(REG_BITS - 1 downto 0);
          regIn : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         sr    : in std_logic_vector(SR_WIDTH - 1 downto 0);
          rst   : in std_logic;
          clk   : in std_logic
       );
@@ -132,6 +134,7 @@ begin
       pcOut    => nextPC,
       regSel   => regSel,
       regIn    => regIn,
+      sr       => sr,
       rst      => rst,
       clk      => clk
    );

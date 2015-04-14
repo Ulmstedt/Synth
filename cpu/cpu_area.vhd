@@ -18,6 +18,7 @@ architecture Behavioral of CPUArea is
          ir2      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          pmemSel  : in std_logic_vector(REG_BITS - 1 downto 0);
          pmemOut  : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
          rst      : in std_logic;
          clk      : in std_logic
       );
@@ -29,6 +30,7 @@ architecture Behavioral of CPUArea is
          ir2out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
          regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
          regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
          rst      : in std_logic;
          clk      : in std_logic
       );
@@ -38,6 +40,7 @@ architecture Behavioral of CPUArea is
    signal ir2     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal regSel  : std_logic_vector(REG_BITS - 1 downto 0);
    signal regVal  : std_logic_vector(ADDR_WIDTH - 1 downto 0);
+   signal sr      : std_logic_vector(SR_WIDTH - 1 downto 0);
    
 begin
    main : MainArea port map(
@@ -45,6 +48,7 @@ begin
       ir2         => ir2,
       pmemSel     => regSel,
       pmemOut     => regVal,
+      srOut          => sr,
       rst         => rst,
       clk         => clk
    );
@@ -54,6 +58,7 @@ begin
       ir2out      => ir2,
       regSel      => regSel,
       regIn       => regVal,
+      sr          => sr,
       rst         => rst,
       clk         => clk
    );

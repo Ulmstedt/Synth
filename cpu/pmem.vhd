@@ -21,7 +21,7 @@ begin
    process(clk) is
    begin
       if rising_edge(clk) then
-         instr <= mem(to_integer(unsigned(addr)));
+         instr <= mem(to_integer(unsigned(addr)) mod PMEM_HEIGHT);
       end if;
    end process;
 end Behavioral;

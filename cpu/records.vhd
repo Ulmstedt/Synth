@@ -22,6 +22,6 @@ package Records is
    end record;
 	
    type pmem_t is array (0 to PMEM_HEIGHT - 1) of std_logic_vector(PMEM_WIDTH - 1 downto 0);
-   type mem_t is array (0 to PMEM_HEIGHT - 1) of std_logic_vector(REG_WIDTH - 1 downto 0);
+   type mem_t is array (0 to MEM_HEIGHT - 1) of std_logic_vector(REG_WIDTH - 1 downto 0);
 end Records;
 

@@ -25,7 +25,7 @@ begin
       if rising_edge(clk) then
          output <= mem(to_integer(unsigned(addr)));
          if doWrite = '1' then
-            mem(to_integer(unsigned(addr))) <= newValue;
+            mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
          end if;
       end if;
    end process;
