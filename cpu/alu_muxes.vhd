@@ -61,8 +61,6 @@ use work.constants.all;
 --special mux to handle storing of a constant
 entity storeMUXBeforeZ3 is
    port(
-      --in1 unused in current form
-      in1       :       in std_logic_vector(REG_WIDTH-1 downto 0);
       in2       :        in std_logic_vector(REG_WIDTH - 1 downto 0);
       out1      :        out std_logic_vector(REG_WIDTH - 1 downto 0);
       IR2       :        in std_logic_vector(REG_WIDTH*2-1 downto 0)

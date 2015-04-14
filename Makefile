@@ -49,7 +49,7 @@ pmem.%: T=cpu/pmem_tb.vhd
 pmem.%: U=main.ucf
 
 #To test the whole cpu, atm, needs to add the appropriate files below, as they're not yet present
-cpu.%: S=cpu/pmem_area.vhd cpu/ir1.vhd cpu/ir2.vhd cpu/jmp.vhd cpu/pcreg.vhd cpu/pmem.vhd cpu/reg.vhd cpu/pmem_content.vhd cpu/records.vhd cpu/const.vhd
+cpu.%: S=cpu/cpu_area.vhd cpu/main_area.vhd cpu/pmem_area.vhd cpu/ir1.vhd cpu/ir2.vhd cpu/jmp.vhd cpu/pcreg.vhd cpu/pmem.vhd cpu/reg_area.vhd cpu/reg.vhd cpu/mem_area.vhd cpu/mem.vhd cpu/z4d4mux.vhd cpu/d_reg.vhd cpu/alu_area.vhd cpu/alu.vhd cpu/alu_muxes.vhd cpu/rightforwardinglogic.vhd cpu/leftforwardinglogic.vhd cpu/mem_content.vhd cpu/pmem_content.vhd cpu/records.vhd cpu/const.vhd
 cpu.%: T=cpu/cpu_tb.vhd
 cpu.%: U=main.ucf
 

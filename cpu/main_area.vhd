@@ -31,10 +31,10 @@ architecture Behavioral of MainArea is
       port(
          pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
          pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         regASel     : in std_logic_vector(REG_BITS - 1 downto 0);
-         regBSel     : in std_logic_vector(REG_BITS - 1 downto 0);
+         ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
          regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
          regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
          regWrite    : in std_logic;
@@ -60,7 +60,20 @@ architecture Behavioral of MainArea is
          clk     :  in std_logic;
          IR2     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
          IR3     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
-         IR4     :  in std_logic_vector(REG_WIDTH*2-1 downto 0);
+         IR4     :  in std_logic_vector(REG_WIDTH*2-1 downto 0)
+      );
+   end component;
+   
+   component MemArea is
+      port(
+         ir4      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         z3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         d3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         z4d4     : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
+         doWrite  : out std_logic;
+         rst      : in std_logic;
+         clk      : in std_logic
       );
    end component;
    
@@ -76,9 +89,14 @@ architecture Behavioral of MainArea is
    signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0);
    signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal z3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
    
    signal ir3out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal ir4out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
+   
+   signal regWriteSel   : std_logic_vector(REG_BITS - 1 downto 0);
+   signal regWriteVal   : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal regWrite      : std_logic;
    
 begin
    alu : ALUArea port map(
@@ -92,26 +110,35 @@ begin
          B2Out   => regBOut,
          A2Out   => regAOut,
          D3Out   => d3Out,
-         Z4D4Out => ...,
+         Z4D4Out => regWriteVal,
          rst     => rst,
          clk     => clk,
          IR2     => ir2,
          IR3     => ir3out,
          IR4     => ir4out
       );
-   end component;
+      
+   mem : MemArea port map(
+      ir4      => ir4out,
+      z3       => z3Out,
+      d3       => d3Out,
+      z4d4     => regWriteVal,
+      regSel   => regWriteSel,
+      doWrite  => regWrite,
+      rst      => rst,
+      clk      => clk
+   );
 
    regs : RegArea port map(
       pmemSel     => pmemSel,
       pmemOut     => pmemOut,
-      regASel     => regASel,
-      regBSel     => regBSel,
+      ir1         => ir1,
       regAOut     => reg2ASig,
       regBOut     => reg2BSig,
       SRin        => SR,
-      regWriteSel => ...,
-      regWriteVal => ...,
-      regWrite    => ...,
+      regWriteSel => regWriteSel,
+      regWriteVal => regWriteVal,
+      regWrite    => regWrite,
       rst         => rst,
       clk         => clk
    );
@@ -163,7 +190,7 @@ begin
    z3Reg : Reg port map(
       doRead   => clk,
       input    => z3In,
-      output   => ...,
+      output   => z3out,
       rst      => rst,
       clk      => clk
    );

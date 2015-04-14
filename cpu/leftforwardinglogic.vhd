@@ -120,5 +120,5 @@ begin
    --LOAD.a, LOAD.c, LOAD.wo, LOAD.wro, MOVE, ALUINST.r eller ALUINST.c
    selectSignal            <= "00" when changeInIR3 = '1' else                
                               "01" when changeInIR4 = '1' else                       
-                              "1Z";
+                              "1-";
 end Behavourial;
