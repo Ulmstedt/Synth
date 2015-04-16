@@ -18,10 +18,11 @@ end pMemory;
 architecture Behavioral of pMemory is
    signal  mem : pmem_t := pmemc;
 begin
-   process(clk) is
-   begin
-      if rising_edge(clk) then
-         instr <= mem(to_integer(unsigned(addr)) mod PMEM_HEIGHT);
-      end if;
-   end process;
+   --process(clk) is
+   --begin
+   --   if rising_edge(clk) then
+   --      instr <= mem(to_integer(unsigned(addr)) mod PMEM_HEIGHT);
+   --   end if;
+   --end process;
+   instr <= mem(to_integer(unsigned(addr)) mod PMEM_HEIGHT);
 end Behavioral;
