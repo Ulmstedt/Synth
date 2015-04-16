@@ -13,6 +13,7 @@ entity RegArea is
       regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
       regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
       SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
+      SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
       regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
       regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
       regWrite    : in std_logic;
@@ -119,6 +120,7 @@ begin
       rst      => rst,
       clk      => clk
    );
+   SRout <= regVal(7)(SR_WIDTH - 1 downto 0);
    
    -- fill with registers as appropriate
    
