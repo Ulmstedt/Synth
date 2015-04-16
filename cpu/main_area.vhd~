@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -196,7 +195,6 @@ begin
       clk      => clk
    );
    
-=======
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -396,6 +394,4 @@ begin
       rst      => rst,
       clk      => clk
    );
-   
->>>>>>> 462b4b0b95479a526db1bd06d23000434d104ac6
 end Behavioral;

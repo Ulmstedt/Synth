@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -31,7 +31,7 @@ begin
       end if;
    end process;
 end Behavioral;
-=======
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -64,4 +64,3 @@ begin
       end if;
    end process;
 end Behavioral;
->>>>>>> 462b4b0b95479a526db1bd06d23000434d104ac6
