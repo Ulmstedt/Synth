@@ -172,7 +172,7 @@ begin
    ir4   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir3out,
          output   => ir4out,
          rst      => rst,
