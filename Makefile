@@ -39,6 +39,9 @@ midi_input.%: S=midiinput/midi_area.vhd midiinput/midi_check_msg.vhd midiinput/m
 midi_input.%: T=midiinput/midi_tb.vhd
 midi_input.%: U=main.ucf
 
+s_out.%: S=soundoutput/sout_area.vhd soundoutput/sout.vhd soundoutput/sout_clkgen.vhd soundoutput/sout_constants.vhd
+s_out.%: T=soundoutput/sout_tb.vhd
+s_out.%: U=main.ucf
 
 alu.%: S=cpu/alu.vhd cpu/const.vhd
 alu.%: T=cpu/alu_tb.vhd
