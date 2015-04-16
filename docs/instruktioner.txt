@@ -22,7 +22,7 @@ NOP
 TRAP
 00001 XXX XXXX XXXX XXXX XXXX XXXX XXXX
 
-STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adress och data)
+STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adress och data) 
 11000 AAA AAAA AAAA DDDD DDDD DDDD DDDD
 
 STORE.r (from register) - stall
@@ -50,6 +50,7 @@ MOVE - stall
 00100 RRRR RXX XXXX XXXX XXXX XXXR RRRR
 
 ---------------------------------------------
+--Branch med offset i register behöver dataforwarding
 
 BRANCH(till adress)
 01000 XXXX XXXX XXXX XXXX AAA AAAA AAAA
@@ -158,8 +159,8 @@ RRT:  IF
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
-C  :  IF
-O  :  =sista biten som shiftades ut
+C  :  =sista biten som shiftades ut
+O  :  IF
 RRM:  IF
 RRT:  IF
 
@@ -168,8 +169,8 @@ RRT:  IF
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
-C  :  IF
-O  :  =sista biten som shiftades ut
+C  :  =sista biten som shiftades ut
+O  :  IF
 RRM:  IF
 RRT:  IF
 
@@ -244,6 +245,8 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
+10000: addera utan att ändra statusflaggor(unsigned)
+11111: reserverad för att låta leftIn gå igenom (statusflaggor ändras ej)
 -----------------------------------------
 
 

@@ -10,6 +10,10 @@ entity PMemArea is
       ir2out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
       regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+<<<<<<< HEAD
+=======
+      sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -26,7 +30,11 @@ architecture Behaviorial of PMemArea is
       );
    end component;
    
+<<<<<<< HEAD
    component Memory is
+=======
+   component pMemory is
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       port(
          addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
          instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
@@ -74,6 +82,10 @@ architecture Behaviorial of PMemArea is
          pcOut : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
          regSel: out std_logic_vector(REG_BITS - 1 downto 0);
          regIn : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+<<<<<<< HEAD
+=======
+         sr    : in std_logic_vector(SR_WIDTH - 1 downto 0);
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
          rst   : in std_logic;
          clk   : in std_logic
       );
@@ -132,11 +144,19 @@ begin
       pcOut    => nextPC,
       regSel   => regSel,
       regIn    => regIn,
+<<<<<<< HEAD
+=======
+      sr       => sr,
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       rst      => rst,
       clk      => clk
    );
 
+<<<<<<< HEAD
    mem : Memory port map (
+=======
+   mem : pMemory port map (
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       addr        => pcAddr,
       instr       => memOut,
       clk         => clk

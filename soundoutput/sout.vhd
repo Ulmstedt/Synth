@@ -30,6 +30,7 @@ begin
 
    tempsignal <= std_logic_vector(to_unsigned(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)),SAMPLE_SIZE_WIDTH));
 
+
    process(clk) is
    begin
       if rising_edge(clk) then
