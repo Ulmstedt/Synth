@@ -5,6 +5,16 @@ use IEEE.numeric_std.all;
 
 use work.Constants.all;
 
+<<<<<<< HEAD
+architecture RegArea is
+   port(
+      pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
+      pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      regASel     : in std_logic_vector(REG_BITS - 1 downto 0);
+      regBSel     : in std_logic_vector(REG_BITS - 1 downto 0);
+      regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
+=======
 entity RegArea is
    port(
       pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
@@ -14,6 +24,7 @@ entity RegArea is
       regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
       SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
       SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
       regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
       regWrite    : in std_logic;
@@ -23,11 +34,20 @@ entity RegArea is
 end RegArea;
    
    
+<<<<<<< HEAD
+entity Behavioral of RegArea is
+   type regId_t is array (REG_BITS - 1 downto 0) of std_logic;
+   type regVal_t is array(REG_BITS - 1 downto 0) of std_logic_vector(REG_WIDTH - 1 downto 0);
+
+   component Reg
+      generic(regWidth : natural);
+=======
 architecture Behavioral of RegArea is
    type regVal_t is array(REG_NUM - 1 downto 0) of std_logic_vector(REG_WIDTH - 1 downto 0);
 
    component Reg
       generic(regWidth : natural := REG_WIDTH);
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       port(
          doRead      : in std_logic;
          input       : in std_logic_vector(regWidth - 1 downto 0);           
@@ -37,6 +57,43 @@ architecture Behavioral of RegArea is
       );
    end component;
    
+<<<<<<< HEAD
+   signal writeReg   : regId_t;
+   signal regVal     : regVal_t;
+begin
+   -- Generic Register 0
+   genReg0  : Reg port map(
+      doRead   <= writeReg(0),
+      input    <= regWriteVal,
+      output   <= regVal(0),
+      rst      <= rst,
+      clk      <= clk
+   );
+   -- Generic Register 1
+   genReg1  : Reg port map(
+      doRead   <= writeReg(1),
+      input    <= regWriteVal,
+      output   <= regVal(1),
+      rst      <= rst,
+      clk      <= clk
+   );
+   -- Generic Register 2
+   genReg2  : Reg port map(
+      doRead   <= writeReg(2),
+      input    <= regWriteVal,
+      output   <= regVal(2),
+      rst      <= rst,
+      clk      <= clk
+   );
+   -- fill with registers as appropriate
+   
+   -- Set the bit in the map that is currently being written to
+   writeReg <= (others => '0') OR regWrite sll to_integer(unsigned(regWriteSel));
+   
+   pmemOut <= regVal(pmemSel);
+   regAOut <= regVal(regASel);
+   regBOut <= regVal(regBSel);
+=======
    signal writeReg   : std_logic_vector(REG_NUM - 1 downto 0);
    signal regVal     : regVal_t;
    
@@ -158,5 +215,6 @@ begin
                ir1(REG_LOAD_OFFSET downto REG_LOAD_OFFSET - REG_BITS + 1)
                   when  ir1OP = "11111" else    -- LOAD.wro
                (others => '0');
+>>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
    
 end Behavioral;
