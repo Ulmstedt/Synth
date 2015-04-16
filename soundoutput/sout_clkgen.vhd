@@ -18,6 +18,7 @@ architecture Behavioral of SoutClkgen is
    
    signal sclkS            : std_logic; -- Serial clock signal
    signal mclkS            : std_logic; -- Master clock signal
+   signal clk_counter      : std_logic_vector(11 downto 0) := (others => '0'); -- Clk counter
    
 begin
 
@@ -27,9 +28,31 @@ begin
          if rst = '1' then
             sclkS <= '0';
             mclkS <= '0';
+            clk_counter <= (others => '0');
          else
             -- Generate clocks
+
+            clk_counter <= std_logic_vector(unsigned(clk_counter)+1);
+            if clk_counter = std_logic_vector(to_unsigned(70,12)) then -- 2267?
+
+               -- "Shift" clock
+               sclkS <= '1';
+               clk_counter <= (others => '0');
+
+               -- Master clock 
+               if mclkS = '0' then
+                  mclkS <= '1';
+               else
+                  mclkS <= '0';
+               end if;
+
+            end if;
          end if;
+
+         if sclkS = '1' then
+            sclkS <= '0';
+         end if;
+
       end if;
    end process;
 

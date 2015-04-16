@@ -39,15 +39,19 @@ begin
             lrckS <= '0';
             bitCounter <= (others => '0');
             sdout <= '0';
-         else
-            sdout <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter))); -- Tidigare: SAMPLE_SIZE - 1
-            -- Check for when the entire sample has been sent
-            if bitCounter = std_logic_vector(to_unsigned(SAMPLE_SIZE-1,SAMPLE_SIZE_WIDTH)) then -- Tidigare: SAMPLE_SIZE - 1
-               bitCounter <= (others => '0');
+         elsif sclk = '1' then
+            if bitCounter = "000000" then
                if lrckS = '0' then
                   lrckS <= '1';
                else
                   lrckS <= '0';
+               end if;
+            end if;
+            sdout <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+            -- Check for when the entire sample has been sent
+            if bitCounter = std_logic_vector(to_unsigned(SAMPLE_SIZE-1,SAMPLE_SIZE_WIDTH)) then
+               bitCounter <= (others => '0');
+               if lrckS = '1' then
                   sample <= sampleBuffer;
                end if;
             else
