@@ -31,6 +31,8 @@ package Constants is
    constant LOAD_WRO_OFFSET      : natural := 15;
    
    constant CONST_STORE_OFFSET   : natural := 15;
+
+   constant LOAD_ADRESS_OFFSET   : natural := 10;
    
    constant SR_BITS              : natural := 4;
    constant SR_WIDTH             : natural := 8;

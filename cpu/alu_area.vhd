@@ -6,7 +6,8 @@ use work.constants.all;
 
 entity ALUArea is
    port(
-      ALUOut  :  out std_logic_vector(REG_WIDTH - 1 downto 0);
+      --ALUOut  :  out std_logic_vector(REG_WIDTH - 1 downto 0);
+      D3Out   :  out std_logic_vector(REG_WIDTH  - 1 downto 0);
       Z3in    :  out std_logic_vector(REG_WIDTH - 1 downto 0);
       sRZ     :  out std_logic;
       sRN     :  out std_logic;
@@ -15,7 +16,6 @@ entity ALUArea is
       D2Out   :  in std_logic_vector(REG_WIDTH - 1 downto 0);
       B2Out   :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
       A2Out   :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
-      D3Out   :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
       Z4D4Out :  in std_logic_vector(REG_WIDTH  - 1 downto 0);
       rst     :  in std_logic;
       clk     :  in std_logic;
@@ -121,14 +121,14 @@ architecture Behaviorial of ALUArea is
    signal sROI                :     std_logic;
    signal sRCI                :     std_logic;
    
-   signal ALUOutSignal        :     std_logic_vector(REG_WIDTH-1 downto 0);
+   signal ALUOutSignalD3Out   :     std_logic_vector(REG_WIDTH-1 downto 0);
    signal ALUInstrInternal    :     std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
    
 begin
    MUX1 : leftForwardMUXALU port map (
       in1               => B2Out,
       in2               => Z4D4Out,
-      in3               => D3Out,
+      in3               => ALUOutSignalD3Out,
       selectSig         => MUX1Select,
       out1              => MUX1Out   
    );
@@ -143,7 +143,7 @@ begin
    MUX2 : rightForwardMUXALU port map (
       in1               => A2Out,
       in2               => Z4D4Out,
-      in3               => D3Out,
+      in3               => ALUOutSignalD3Out,
       selectSig         => MUX2Select,
       out1              => MUX2Out   
    );
@@ -179,7 +179,7 @@ begin
       leftIn            => MUX3Out,
       rightIn           => MUX5Out,
 
-      ALUOut            => ALUOutSignal,
+      ALUOut            => ALUOutSignalD3Out,
       ALUInstr          => ALUInstrInternal,
       
       clk               => clk,
@@ -231,6 +231,6 @@ begin
    Z3in <= MUX4Out;
    
    --set actual out signal from ALUAREA
-   ALUOut <= ALUOutSignal;
+   D3Out <= ALUOutSignalD3Out;
    
 end Behaviorial;

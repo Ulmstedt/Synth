@@ -6,7 +6,7 @@ use work.constants.all;
 
 entity DReg is
    port(
-      ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      ir1in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       output   : out std_logic_vector(REG_WIDTH - 1 downto 0);
       rst      : in std_logic;
       clk      : in std_logic
@@ -26,7 +26,7 @@ architecture Behavioral of DReg is
    end component;
    
    signal loadValue  : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal ir2op      : std_logic_vector(OP_WIDTH - 1 downto 0);
+   signal ir1op      : std_logic_vector(OP_WIDTH - 1 downto 0);
 begin
    d2   : Reg
       port map(
@@ -37,11 +37,12 @@ begin
                clk      => clk
             );
    -- Convenience signal
-   ir2op <= IR2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
+   ir1op <= IR1in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
    
    -- Get the value from the instruction to put in to the register
-   loadValue <=   ir2in(REG_WIDTH - 1 downto 0) when ir2op = "11101" OR ir2op = "00110" else -- LOAD.c, ALUINSTR.c
-                  (REG_WIDTH - 1 downto ADDR_WIDTH => '0') & ir2in(ADDR_OFFSET downto ADDR_OFFSET - ADDR_WIDTH + 1)
-                     when ir2op = "11110" OR ir2op = "11110" OR ir2op = "11000" else -- LOAD.wo, STORE.c, STORE.wo
+   loadValue <=   ir1in(REG_WIDTH - 1 downto 0) when ir1op = "11101" OR ir1op = "00110" else -- LOAD.c, ALUINSTR.c
+                  (REG_WIDTH - 1 downto ADDR_WIDTH => '0') & ir1in(ADDR_OFFSET downto ADDR_OFFSET - ADDR_WIDTH + 1)
+                     when ir1op = "11110" OR ir1op = "11110" OR ir1op = "11000" else -- LOAD.wo, STORE.c, STORE.wo
+                     "00000" & ir1in(LOAD_ADRESS_OFFSET downto 0) when ir1op = "11100" else -- LOAD.a
                   (others => '0');
 end Behavioral;
