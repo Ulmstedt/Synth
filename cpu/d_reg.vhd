@@ -45,4 +45,5 @@ begin
                      when ir1op = "11110" OR ir1op = "11110" OR ir1op = "11000" else -- LOAD.wo, STORE.c, STORE.wo
                      "00000" & ir1in(LOAD_ADRESS_OFFSET downto 0) when ir1op = "11100" else -- LOAD.a
                   (others => '0');
+
 end Behavioral;

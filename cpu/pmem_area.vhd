@@ -39,6 +39,7 @@ architecture Behaviorial of PMemArea is
       port(
          input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         pcType   : out std_logic_vector(1 downto 0);
          stall    : in std_logic;
          rst      : in std_logic;
          clk      : in std_logic
@@ -61,7 +62,6 @@ architecture Behaviorial of PMemArea is
          input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         pcType   : out std_logic_vector(1 downto 0);
          stall    : out std_logic_vector(1 downto 0); 
          rst      : in std_logic;
          clk      : in std_logic
@@ -114,7 +114,6 @@ begin
       input    => memOut,
       ir2in    => ir2sig,
       output   => ir1sig,
-      pcType   => nextPCType,
       stall    => stallInit,
       rst      => rst,
       clk      => clk
@@ -123,6 +122,7 @@ begin
    ir2c : IR2 port map (
       input    => ir1sig,
       output   => ir2sig,
+      pcType   => nextPCType,
       stall    => stall,
       rst      => rst,
       clk      => clk

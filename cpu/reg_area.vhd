@@ -5,6 +5,7 @@ use IEEE.numeric_std.all;
 
 use work.Constants.all;
 
+
 entity RegArea is
    port(
       pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
@@ -160,3 +161,4 @@ begin
                (others => '0');
    
 end Behavioral;
+

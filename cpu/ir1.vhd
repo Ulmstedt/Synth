@@ -11,7 +11,6 @@ entity IR1 is
       input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      pcType   : out std_logic_vector(1 downto 0);
       stall    : out std_logic_vector(1 downto 0); 
       rst      : in std_logic;
       clk      : in std_logic
@@ -59,8 +58,7 @@ begin
    
    -- decide pcSel depending on input
    -- Is it a jump? OP code is 10XXX or 01XXX for branches
-   isJmp       <= irOut(PMEM_WIDTH - 1) xor irOut(PMEM_WIDTH - 2);
-   -- Note that a NOP is not inserted yet, thus a command can be ran after a JMP
+   isJmp       <= ir2in(PMEM_WIDTH - 1) xor ir2in(PMEM_WIDTH - 2); -- prev. irOut
    
    -- Stall needed calculations
    ir2isLoad   <= '1' when ir2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "11100"
@@ -105,18 +103,14 @@ begin
                else '0';
    -- Set the stall counter to 0, 1 or two depending on if we need to stall or not,
    -- and what type of instruction it is (ie. if branch, stall twice)
-   stall <= "10" when stalling = '1' and (ir1OP = "01001" OR ir1OP = "10001" OR ir1OP = "10101") else
+   stall <= "01" when stalling = '1' and (ir1OP = "01001" OR ir1OP = "10001" OR ir1OP = "10101") else 
             "01" when stalling = '1' else
             "00";
    
    muxOutput <=   irOut when stalling = '1' else
                   (others => '0') when isJmp = '1' else
                   input;
-                  
-   pcType <= "11" when rst = '1' else
-            "10" when stalling = '1' else
-            "01" when isJmp = '1' else
-            "00";
+   
    
    output <= irOut;
    
