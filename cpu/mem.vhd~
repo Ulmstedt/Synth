@@ -1,4 +1,4 @@
-
+<<<<<<< HEAD
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -26,11 +26,12 @@ begin
       if rising_edge(clk) then
          output <= mem(to_integer(unsigned(addr)));
          if doWrite = '1' then
-            mem(to_integer(unsigned(addr))) <= newValue;
+            mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
          end if;
       end if;
    end process;
 end Behavioral;
+=======
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -64,3 +65,5 @@ begin
       end if;
    end process;
 end Behavioral;
+
+>>>>>>> 7b652e4e31ea0b686e33e6873af9bdd0ccf1250f
