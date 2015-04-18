@@ -195,7 +195,7 @@ begin
    --Om det rör sig om en ALUINSTRUKTION så ska den givna instruktionen läsas, alla andra fall kan ses som specialfall
    --för att fixa med att ge en konstant offset i både store och load fallen samt då man storar en konstant så krävs en extra mux/extra register
    --lade till en mux för stora med konstant och ännu en till mux för att kunna utföra instruktioner "with offset" dvs store och load.
-   with IR2(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH) select
+   with IR2(PMEM_WIDTH-1 downto PMEM_WIDTH-OP_WIDTH) select
                           -- ALUINST
       ALUInstrInternal <=  IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH + 1) when "00101",
                            IR2(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET - ALU_INSTR_WIDTH + 1) when "00110",

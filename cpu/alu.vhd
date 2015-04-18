@@ -93,9 +93,10 @@ begin
                reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) - to_integer(unsigned(leftIn)), REG_WIDTH+1));
                ALUOut <= reg(REG_WIDTH-1 downto 0);
                
-               --REPORT "REG VALUE: " & integer'image(to_integer(unsigned(reg)));
-               if unsigned(reg) = 0 then
+               REPORT "REG VALUE: " & integer'image(to_integer(unsigned(reg(REG_WIDTH - 1 downto 0))));
+               if to_integer(unsigned(reg(REG_WIDTH - 1 downto 0))) = 0 then
                   sRZ <= '1';
+                  REPORT "IT SHOULD BE FUCKING SET NOW";
                else
                   sRZ <= '0';
                end if;
@@ -288,18 +289,20 @@ begin
                end if;
                
             when("01100") =>
-               --CMP
-               if rightIn = leftIn then
+               --CMP (UNSIGNED?)
+               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) - to_integer(unsigned(leftIn)), REG_WIDTH+1));
+               
+               if unsigned(reg) = 0 then
                   --if they are equal 
                   sRZ <= '1';
                else
                   sRZ <= '0';
                end if;
                
-               if rightIn < leftIn then
+               if unsigned(rightIn) < unsigned(leftIn) then
                   --if rx < ry or rx < const we put a 1 on the most significant bit of reg
                   sRN <= '1';
-               elsif rightIn >= leftIn then
+               else
                   sRN <= '0';
                end if;
                
@@ -307,15 +310,15 @@ begin
                --BITTEST
                --make sure this works
                if unsigned(leftIn) >= REG_WIDTH then
-                  srZ <= '0';
+                  sRZ <= '0';
                elsif rightIn(to_integer(unsigned(leftIn))) = '0' then
                   sRZ <= '1';
                else
                   sRZ <= '0';
                end if;
             when("11111") =>
-            --reserved to let left_in go through
-            ALUOut <= leftIn;
+               --reserved to let left_in go through
+               ALUOut <= leftIn;
             
             when("10000") =>
             --ADD unsigned without affecting flags
