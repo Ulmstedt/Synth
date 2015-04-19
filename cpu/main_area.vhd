@@ -97,9 +97,11 @@ architecture Behavioral of MainArea is
    signal regBSel    : std_logic_vector(REG_BITS - 1 downto 0);
    signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    
+
    signal ALUOut   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0);
+   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := "00000000";
    signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
+
    signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal z3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
    

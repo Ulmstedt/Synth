@@ -115,7 +115,7 @@ begin
    SR  : Reg 
    generic map(regWidth => SR_WIDTH)
    port map(
-      doRead   => writeReg(7),
+      doRead   => '1',
       input    => SRin,
       output   => regVal(7)(SR_WIDTH - 1 downto 0),
       rst      => rst,

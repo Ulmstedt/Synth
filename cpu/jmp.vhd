@@ -21,7 +21,6 @@ end Jmp;
 architecture Behavioral of Jmp is
    signal isJmp   : std_logic;
    signal condJmp : std_logic_vector(SR_BITS - 1 downto 0);
-   signal jmpAdd  : std_logic_vector(ADDR_WIDTH - 1 downto 0);
    signal pc2     : std_logic_vector(ADDR_WIDTH - 1 downto 0);
 begin
    isJmp <= ir1(PMEM_WIDTH - 1) xor ir1(PMEM_WIDTH - 2);

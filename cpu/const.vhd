@@ -10,7 +10,7 @@ package Constants is
    constant REG_WIDTH            : natural := 16;
     
    constant REG_DEST_OFFSET      : natural := 26;
-   constant REG_ALU_OFFSET       : natural := 20;
+   constant REG_ALU_OFFSET       : natural := 21;
    constant REG_LOAD_OFFSET      : natural := 15;
    constant REG_STORE_OFFSET     : natural := 9;
    constant ADDR_OFFSET          : natural := 26;
