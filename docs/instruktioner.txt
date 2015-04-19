@@ -155,11 +155,10 @@ RRM:  IF
 RRT:  IF
 
 00110:  bitshift right
-
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
-C  :  =sista biten som shiftades ut
+C  :  =sista biten som shiftades ut(när det gäller de fallet då man skiftar ut 0 bitar 0-ställs carryn)
 O  :  IF
 RRM:  IF
 RRT:  IF
@@ -169,7 +168,7 @@ RRT:  IF
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
-C  :  =sista biten som shiftades ut
+C  :  =sista biten som shiftades ut(när det gäller de fallet då man skiftar ut 0 bitar 0-ställs carryn)
 O  :  IF
 RRM:  IF
 RRT:  IF
@@ -223,20 +222,30 @@ RRT:  IF
 01110:  MORETHAN
 */
 
-01100:  CMP
+01100:  CMP(unsigned)
+
+Påverkade statusflaggor:
+Z  :  1 om x-y=0 annars 0
+N  :  1 om x < y annars 0
+C  :  1 om carry genereras av x-y
+O  :  IF
+RRM:  IF
+RRT:  IF
+
+01101:  CMP(signed)
 
 Påverkade statusflaggor:
 Z  :  1 om x-y=0 annars 0
 N  :  1 om x < y annars 0
 C  :  IF
-O  :  IF
+O  :  set overflow if x-y results in overflow
 RRM:  IF
 RRT:  IF
 
 
 
 01111:  BITTEST
-#0-31(tar in unsigned)
+#0-15(tar in unsigned)
 Påverkade statusflaggor:
 Z  :  1 om biten är 0, 0 annars eller om talet som skickas in är >=REG_WIDTH
 N  :  IF
@@ -246,7 +255,22 @@ RRM:  IF
 RRT:  IF
 
 10000: addera utan att ändra statusflaggor(unsigned)
+Påverkade statusflaggor:
+Z  :  IF
+N  :  IF
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 11111: reserverad för att låta leftIn gå igenom (statusflaggor ändras ej)
+Påverkade statusflaggor:
+Z  :  IF
+N  :  IF
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
 -----------------------------------------
 
 
