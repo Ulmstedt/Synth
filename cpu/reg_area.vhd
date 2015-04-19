@@ -111,17 +111,17 @@ begin
       rst      => rst,
       clk      => clk
    );
-   -- Status Register
+   -- Status Register (Reg 8 atm)
    SR  : Reg 
    generic map(regWidth => SR_WIDTH)
    port map(
       doRead   => '1',
       input    => SRin,
-      output   => regVal(7)(SR_WIDTH - 1 downto 0),
+      output   => regVal(8)(SR_WIDTH - 1 downto 0),
       rst      => rst,
       clk      => clk
    );
-   SRout <= regVal(7)(SR_WIDTH - 1 downto 0);
+   SRout <= regVal(8)(SR_WIDTH - 1 downto 0);
    
    -- fill with registers as appropriate
    

@@ -43,6 +43,11 @@ architecture Behavioural of ALU is
    signal sRNInternal         :  std_logic := '0';
    signal sRCInternal         :  std_logic := '0';
    signal sROInternal         :  std_logic := '0';
+
+   signal srZlast             : std_logic := '0';
+   signal srNlast             : std_logic := '0';
+   signal srClast             : std_logic := '0';
+   signal srOlast             : std_logic := '0';
    
 begin 
    --only when compare uns
@@ -59,7 +64,7 @@ begin
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) + signed(rightIn)) when "00010",                                                            --ADD signed
                (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) - to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "00011",  --SUB unsigned
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) - signed(rightIn)) when "00100",                                                            --SUB signed
-               std_logic_vector((signed(leftIn) * signed(rightIn)) srl REG_WIDTH) when "00101",                                                                                       --MUL(signed fixed point)(result in 16 msb so make right shifts so result ends up in 16 lsb like all other)
+               std_logic_vector((signed(leftIn) * signed(rightIn)) srl REG_WIDTH) when "00101",                                                                                        --MUL(signed fixed point)(result in 16 msb so make right shifts so result ends up in 16 lsb like all other)
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) srl to_integer(unsigned(rightIn))) when "00110",                                          --bitshift right
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) sll to_integer(unsigned(rightIn))) when "00111",                                          --bitshift left
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (leftIn and rightIn) when "01000",                                                                                          --AND
@@ -89,14 +94,14 @@ begin
             '1' when ALUInstr = "01100" and unsigned(leftIn) = unsigned(rightIn) else                                                                 --CMP UNSIGNED
             '1' when ALUInstr = "01101" and signed(leftIn) = signed(rightIn) else                                                                     --CMP SIGNED
             '1' when ALUInstr = "01111" and to_integer(unsigned(rightIn)) <=(REG_WIDTH-1) and leftIn(to_integer(unsigned(rightIn))) = '0' else        --BITTEST
-            sRZInternal when ALUInstr = "10000" else                                                                                                  --ADD without affecting SR
-            sRZInternal when ALUInstr = "11111" else                                                                                                  --Let leftIn through
-            sRZInternal when ALUInstr = "00000" else                                                                                                  --Do nothing
+            srZlast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srZlast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srZlast when ALUInstr = "00000" else                                                                                                      --Do nothing
             '0';                                                                                                                                      --other cases
    
 
       --set NEGATIVE flag
-   sRNInternal   <= sRNInternal when ALUInstr = "00001" else                                                                                          --ADD unsigned
+   sRNInternal   <= srNlast when ALUInstr = "00001" else                                                                                              --ADD unsigned
             '1' when ALUInstr = "00010" and temp(REG_WIDTH-1) = '1' else                                                                              --ADD signed
             '1' when ALUInstr = "00011" and unsigned(leftIn) < unsigned(rightIn) else                                                                 --SUB unsigned
             '1' when ALUInstr = "00100" and temp(REG_WIDTH-1) = '1' else                                                                              --SUB signed
@@ -109,56 +114,58 @@ begin
             '1' when ALUInstr = "01011" and temp(REG_WIDTH-1) = '1' else                                                                              --NOT
             '1' when ALUInstr = "01100" and unsigned(leftIn) < unsigned(rightIn) else                                                                 --CMP UNSIGNED
             '1' when ALUInstr = "01101" and signed(leftIn) < signed(rightIn) else                                                                     --CMP SIGNED
-            sRNInternal when ALUInstr = "01111" else                                                                                                  --BITTEST
-            sRNInternal when ALUInstr = "10000" else                                                                                                  --ADD without affecting SR
-            sRNInternal when ALUInstr = "11111" else                                                                                                  --Let leftIn through
-            sRNInternal when ALUInstr = "00000" else                                                                                                  --Do nothing
+            srNlast when ALUInstr = "01111" else                                                                                                      --BITTEST
+            srNlast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srNlast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srNlast when ALUInstr = "00000" else                                                                                                      --Do nothing
             '0';                                                                                                                                      --other cases
 
          
      --set CARRY flag
    sRCInternal   <= '1' when ALUInstr = "00001" and temp(REG_WIDTH) = '1' else                                                                        --ADD unsigned
-            sRCInternal when ALUInstr = "00010" else                                                                                                  --ADD signed
+            srClast when ALUInstr = "00010" else                                                                                                      --ADD signed
             '1' when ALUInstr = "00011" and temp(REG_WIDTH) = '1' else                                                                                --SUB unsigned
-            sRCInternal when ALUInstr = "00100" else                                                                                                  --SUB signed
-            sRCInternal when ALUInstr = "00101" else                                                                                                  --MUL(signed fixed point)
-            leftIn(to_integer(unsigned(rightIn)) - 1) when ALUInstr = "00110" and to_integer(unsigned(rightIn)) < REG_WIDTH and to_integer(unsigned(rightIn)) /= 0 else          --BITSHIFT RIGHT
-            leftIn(REG_WIDTH - to_integer(unsigned(rightIn))) when ALUInstr = "00111" and to_integer(unsigned(rightIn)) < REG_WIDTH and to_integer(unsigned(rightIn)) /= 0 else  --BITSHIFT LEFT
-            sRCInternal when ALUInstr = "01000" else                                                                                                  --AND
-            sRCInternal when ALUInstr = "01001" else                                                                                                  --OR
-            sRCInternal when ALUInstr = "01010" else                                                                                                  --XOR
-            sRCInternal when ALUInstr = "01011" else                                                                                                  --NOT
+            srClast when ALUInstr = "00100" else                                                                                                      --SUB signed
+            srClast when ALUInstr = "00101" else                                                                                                      --MUL(signed fixed point)
+            leftIn(to_integer(unsigned(rightIn)) - 1) when ALUInstr = "00110" and to_integer(unsigned(rightIn)) < REG_WIDTH and 
+                                                           to_integer(unsigned(rightIn)) /= 0 else                                                    --BITSHIFT RIGHT
+            leftIn(REG_WIDTH - to_integer(unsigned(rightIn))) when ALUInstr = "00111" and to_integer(unsigned(rightIn)) < REG_WIDTH and 
+                                                                   to_integer(unsigned(rightIn)) /= 0 else                                            --BITSHIFT LEFT
+            srClast when ALUInstr = "01000" else                                                                                                      --AND
+            srClast when ALUInstr = "01001" else                                                                                                      --OR
+            srClast when ALUInstr = "01010" else                                                                                                      --XOR
+            srClast when ALUInstr = "01011" else                                                                                                      --NOT
             '1' when ALUInstr = "01100" and checkCarryTemp(REG_WIDTH) = '1' else                                                                      --CMP UNSIGNED(check if carry was generated)
-            sRCInternal when ALUInstr = "01101" else                                                                                                  --CMP SIGNED
-            sRCInternal when ALUInstr = "01111" else                                                                                                  --BITTEST
-            sRCInternal when ALUInstr = "10000" else                                                                                                  --ADD without affecting SR
-            sRCInternal when ALUInstr = "11111" else                                                                                                  --Let leftIn through
-            sRCInternal when ALUInstr = "00000" else                                                                                                  --Do nothing
+            srClast when ALUInstr = "01101" else                                                                                                      --CMP SIGNED
+            srClast when ALUInstr = "01111" else                                                                                                      --BITTEST
+            srClast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srClast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srClast when ALUInstr = "00000" else                                                                                                      --Do nothing
             '0';                                                                                                                                      --other cases
          
          --set OVERFLOW flag
-   sROInternal   <= sROInternal when ALUInstr = "00001" else                                                                                          --ADD unsigned
+   sROInternal   <= srOlast when ALUInstr = "00001" else                                                                                              --ADD unsigned
             '1' when ALUInstr = "00010" and ((leftIn(REG_WIDTH-1) = '1' and rightIn(REG_WIDTH-1) = '1' and temp(REG_WIDTH-1) = '0') or
                   (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '0' and temp(REG_WIDTH-1) = '1')) else                                         --ADD signed if the sum of two operands both with sign bit on results in a number with sign bit off we set overflow
                                                                                                                                                       --do same if two operands with sign bit off results in a number with sign bit on we have overflow
-            sROInternal when ALUInstr = "00011" else                                                                                                  --SUB unsigned
+            srOlast when ALUInstr = "00011" else                                                                                                      --SUB unsigned
             '1' when ALUInstr = "00100" and ((leftIn(REG_WIDTH-1) = '1' and rightIn(REG_WIDTH-1) = '0' and temp(REG_WIDTH-1) = '0') or
                   (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '1' and temp(REG_WIDTH-1) = '1')) else                                        --SUB signed assume x negative and y positive, if x-y results in a positive value we have overflow. Assume x positive and y negative,
                                                                                                                                                       -- if x-y results in a negative value we have overflow
-            sROInternal when ALUInstr = "00101" else                                                                                                  --MUL(signed fixed point)
-            sROInternal when ALUInstr = "00110" else                                                                                                  --BITSHIFT RIGHT
-            sROInternal when ALUInstr = "00111" else                                                                                                  --BITSHIFT LEFT
-            sROInternal when ALUInstr = "01000" else                                                                                                  --AND
-            sROInternal when ALUInstr = "01001" else                                                                                                  --OR
-            sROInternal when ALUInstr = "01010" else                                                                                                  --XOR
-            sROInternal when ALUInstr = "01011" else                                                                                                  --NOT
-            sROInternal when ALUInstr = "01100" else                                                                                                  --CMP UNSIGNED
+            srOlast when ALUInstr = "00101" else                                                                                                      --MUL(signed fixed point)
+            srOlast when ALUInstr = "00110" else                                                                                                      --BITSHIFT RIGHT
+            srOlast when ALUInstr = "00111" else                                                                                                      --BITSHIFT LEFT
+            srOlast when ALUInstr = "01000" else                                                                                                      --AND
+            srOlast when ALUInstr = "01001" else                                                                                                      --OR
+            srOlast when ALUInstr = "01010" else                                                                                                      --XOR
+            srOlast when ALUInstr = "01011" else                                                                                                      --NOT
+            srOlast when ALUInstr = "01100" else                                                                                                      --CMP UNSIGNED
             '1' when ALUInstr = "01101" and ((leftIn(REG_WIDTH-1) = '1' and rightIn(REG_WIDTH-1) = '0' and checkOverflowTemp(REG_WIDTH-1) = '0') or
-                  (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '1' and checkOverflowTemp(REG_WIDTH-1) = '1')) else     --CMP SIGNED
-            sROInternal when ALUInstr = "01111" else                                                                                                  --BITTEST
-            sROInternal when ALUInstr = "10000" else                                                                                                  --ADD without affecting SR
-            sROInternal when ALUInstr = "11111" else                                                                                                  --Let leftIn through
-            sROInternal when ALUInstr = "00000" else                                                                                                  --Do nothing
+                  (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '1' and checkOverflowTemp(REG_WIDTH-1) = '1')) else                           --CMP SIGNED
+            srOlast when ALUInstr = "01111" else                                                                                                      --BITTEST
+            srOlast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srOlast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srOlast when ALUInstr = "00000" else                                                                                                      --Do nothing
             '0';                                                                                                                                      --other cases    
 
    --set flags
@@ -169,5 +176,16 @@ begin
    
    --set proper out         
    ALUOut <= temp(REG_WIDTH-1 downto 0);
+
+   -- Set the values for the last cycle, so the SR-outs keep their values if unchanged.
+   process (clk) is
+   begin
+      if rising_edge(clk) then
+         srZlast <= sRZInternal;
+         srNlast <= sRNInternal;
+         srClast <= sRCInternal;
+         srOlast <= sROInternal;
+      end if;
+   end process;
    
 end Behavioural;
