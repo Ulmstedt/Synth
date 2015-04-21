@@ -5,12 +5,12 @@ use IEEE.numeric_std.all;
 
 use work.Constants.all;
 
-
+--A2 and B2 are now in here as regAOut and regBOut
 entity RegArea is
    port(
       pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
       pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
       regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
       SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
@@ -44,7 +44,7 @@ architecture Behavioral of RegArea is
    signal regASel    : std_logic_vector(REG_BITS - 1 downto 0);
    signal regBSel    : std_logic_vector(REG_BITS - 1 downto 0);
    
-   signal ir1OP      : std_logic_vector(OP_WIDTH - 1 downto 0);
+   signal ir2OP      : std_logic_vector(OP_WIDTH - 1 downto 0);
    signal t          : std_logic_vector(REG_NUM - 1 downto 0);
 begin
    -- Generic Register 0
@@ -126,7 +126,7 @@ begin
    -- fill with registers as appropriate
    
    -- Convenience signal
-   ir1OP <= ir1(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
+   ir2OP <= ir2(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
    
    -- Set the bit in the map that is currently being written to
    t(0) <= regWrite;
@@ -137,27 +137,27 @@ begin
    regBOut <= regVal(to_integer(unsigned(regBSel)));
    
    -- Destination
-   regBSel <=  ir1(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1)
-                  when  ir1OP = "11100"         -- LOAD.a
-                     OR ir1OP = "11101"         -- LOAD.c
-                     OR ir1OP = "11110"         -- LOAD.wo
-                     OR ir1OP = "11111"         -- LOAD.wro
-                     OR ir1OP = "00100" else    -- MOVE
-               ir1(REG_ALU_OFFSET downto REG_ALU_OFFSET - REG_BITS + 1)
-                  when  ir1OP = "00101"         -- ALUINST.r
-                     OR ir1OP = "00110" else    -- ALUINST.c
-               ir1(REG_STORE_OFFSET downto REG_STORE_OFFSET - REG_BITS + 1)
-                  when  ir1OP = "11011" else    -- STORE.wofr
+   regBSel <=  ir2(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1)
+                  when  ir2OP = "11100"         -- LOAD.a
+                     OR ir2OP = "11101"         -- LOAD.c
+                     OR ir2OP = "11110"         -- LOAD.wo
+                     OR ir2OP = "11111"         -- LOAD.wro
+                     OR ir2OP = "00100" else    -- MOVE
+               ir2(REG_ALU_OFFSET downto REG_ALU_OFFSET - REG_BITS + 1)
+                  when  ir2OP = "00101"         -- ALUINST.r
+                     OR ir2OP = "00110" else    -- ALUINST.c
+               ir2(REG_STORE_OFFSET downto REG_STORE_OFFSET - REG_BITS + 1)
+                  when  ir2OP = "11011" else    -- STORE.wofr
                (others => '0');
    -- Source
-   regASel <=  ir1(REG_BITS - 1 downto 0)
-                  when  ir1OP = "11001"         -- STORE.r
-                     OR ir1OP = "11010"         -- STORE.wo
-                     OR ir1OP = "11011"         -- STORE.wofr
-                     OR ir1OP = "00100"         -- MOVE
-                     OR ir1OP = "00101" else    -- ALUINST.r
-               ir1(REG_LOAD_OFFSET downto REG_LOAD_OFFSET - REG_BITS + 1)
-                  when  ir1OP = "11111" else    -- LOAD.wro
+   regASel <=  ir2(REG_BITS - 1 downto 0)
+                  when  ir2OP = "11001"         -- STORE.r
+                     OR ir2OP = "11010"         -- STORE.wo
+                     OR ir2OP = "11011"         -- STORE.wofr
+                     OR ir2OP = "00100"         -- MOVE
+                     OR ir2OP = "00101" else    -- ALUINST.r
+               ir2(REG_LOAD_OFFSET downto REG_LOAD_OFFSET - REG_BITS + 1)
+                  when  ir2OP = "11111" else    -- LOAD.wro
                (others => '0');
    
 end Behavioral;

@@ -50,7 +50,7 @@ architecture Behavioural of ALU is
    
 begin 
    --only when compare uns
-   checkCarryTemp <= (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) - to_integer(unsigned(rightIn)), REG_WIDTH+1)) when ALUInstr = "01100" else
+   checkCarryTemp <= (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) - unsigned(rightIn)) when ALUInstr = "01100" else
                      (others => '0');
    
    --only when compare sig
@@ -59,9 +59,10 @@ begin
    
    with ALUInstr select
       --do arithmetic operation
+      --sub uns ger error
       temp  <= (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) + to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "00001",  --ADD unsigned
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) + signed(rightIn)) when "00010",                                                            --ADD signed
-               (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) - to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "00011",  --SUB unsigned
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) - unsigned(rightIn)) when "00011",                                                        --SUB unsigned
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) - signed(rightIn)) when "00100",                                                            --SUB signed
                std_logic_vector((signed(leftIn) * signed(rightIn)) srl REG_WIDTH) when "00101",                                                                                        --MUL(signed fixed point)(result in 16 msb so make right shifts so result ends up in 16 lsb like all other)
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) srl to_integer(unsigned(rightIn))) when "00110",                                          --bitshift right
@@ -104,7 +105,7 @@ begin
             '1' when ALUInstr = "00010" and temp(REG_WIDTH-1) = '1' else                                                                              --ADD signed
             '1' when ALUInstr = "00011" and unsigned(leftIn) < unsigned(rightIn) else                                                                 --SUB unsigned
             '1' when ALUInstr = "00100" and temp(REG_WIDTH-1) = '1' else                                                                              --SUB signed
-            '1' when ALUInstr = "00101" and temp(REG_WIDTH-1) = '1' else                                                                              --MUL(signed fixed point)
+            '1' when ALUInstr = "00101" and temp(REG_WIDTH*2-1) = '1' else                                                                            --MUL(signed fixed point)
             '1' when ALUInstr = "00110" and temp(REG_WIDTH-1) = '1' else                                                                              --BITSHIFT RIGHT
             '1' when ALUInstr = "00111" and temp(REG_WIDTH-1) = '1' else                                                                              --BITSHIFT LEFT
             '1' when ALUInstr = "01000" and temp(REG_WIDTH-1) = '1' else                                                                              --AND
