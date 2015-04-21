@@ -4,7 +4,6 @@ use IEEE.numeric_std.all;
 
 use work.Constants.all;
 
----ALUOut == D3Out
 entity ALU is
    port(
       leftIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
