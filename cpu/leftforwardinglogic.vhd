@@ -24,19 +24,25 @@ architecture Behavourial of forwardLogicLeft is
    signal store_Read_Reg      : std_logic_vector(REG_BITS-1 downto 0);
    signal ALU_Read_Reg        : std_logic_vector(REG_BITS-1 downto 0);
    
-   signal possibleForward     : std_logic;
-   signal changeInIR3         : std_logic;
-   signal changeInIR4         : std_logic;
-   signal isIR2ALUinstr       : std_logic;
+   signal possibleForward           : std_logic;
+   signal changeInIR3               : std_logic;
+   signal changeInIR4               : std_logic;
+   signal isIR2ALUinstr             : std_logic;
   
-   signal IR2OP               : std_logic_vector(OP_WIDTH-1 downto 0);
-   signal IR3OP               : std_logic_vector(OP_WIDTH-1 downto 0);
-   signal IR4OP               : std_logic_vector(OP_WIDTH-1 downto 0);
+   signal IR2OP                     : std_logic_vector(OP_WIDTH-1 downto 0);
+   signal IR3OP                     : std_logic_vector(OP_WIDTH-1 downto 0);
+   signal IR4OP                     : std_logic_vector(OP_WIDTH-1 downto 0);
    
-   signal IR3DestReg          : std_logic_vector(REG_BITS-1 downto 0);
-   signal IR3DestRegALU       : std_logic_vector(REG_BITS-1 downto 0);
-   signal IR4DestReg          : std_logic_vector(REG_BITS-1 downto 0);
-   signal IR4DestRegALU       : std_logic_vector(REG_BITS-1 downto 0);
+   signal IR3DestReg                : std_logic_vector(REG_BITS-1 downto 0);
+   signal IR3DestRegALU             : std_logic_vector(REG_BITS-1 downto 0);
+   signal IR4DestReg                : std_logic_vector(REG_BITS-1 downto 0);
+   signal IR4DestRegALU             : std_logic_vector(REG_BITS-1 downto 0);
+   
+   signal IR3ALUInstr               : std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
+   signal isIR3ALUInstrAndNoChange  : std_logic;
+   
+   signal IR4ALUInstr               : std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
+   signal isIR4ALUInstrAndNoChange  : std_logic;
    
 begin
    store_Read_Reg <= IR2(READ_REG_OFFSET downto READ_REG_OFFSET-REG_BITS+1);
@@ -50,7 +56,10 @@ begin
    
    IR4OP <= IR4(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH);
    IR4DestReg <= IR4(REG_DEST_OFFSET downto REG_DEST_OFFSET-REG_BITS+1);
-   IR4DestRegALU <= IR3(ALU_DEST_REG_OFFSET downto ALU_DEST_REG_OFFSET-REG_BITS+1);
+   IR4DestRegALU <= IR4(ALU_DEST_REG_OFFSET downto ALU_DEST_REG_OFFSET-REG_BITS+1);
+   
+  IR3ALUInstr <= IR3(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET-ALU_INSTR_WIDTH+1);
+  IR4ALUInstr <= IR4(ALU_INSTR_OFFSET downto ALU_INSTR_OFFSET-ALU_INSTR_WIDTH+1);
    
    --kolla om IR2Op är en ALU instr ty det ger "specialfall"
    with IR2OP select isIR2ALUinstr  <= 
@@ -68,27 +77,38 @@ begin
                '1' when "00101",
                '1' when "00110",
                '0' when others;
-                        
+               
+   --kolla om det rör sig om Do nothing, CMP unsigned, CMP signed eller BITTEST vid ALU INSTRUKTIONER
+   isIR3ALUInstrAndNoChange   <= '1' when IR3OP = "00101" and (IR3ALUInstr = "00000" or IR3ALUInstr = "01100" or IR3ALUInstr = "01101" or IR3ALUInstr = "01111") else
+                                 '1' when IR3OP = "00110" and (IR3ALUInstr = "00000" or IR3ALUInstr = "01100" or IR3ALUInstr = "01101" or IR3ALUInstr = "01111") else
+                                 '0';
+                                 
+   isIR4ALUInstrAndNoChange   <= '1' when IR4OP = "00101" and (IR4ALUInstr = "00000" or IR4ALUInstr = "01100" or IR4ALUInstr = "01101" or IR4ALUInstr = "01111") else
+                                 '1' when IR4OP = "00110" and (IR4ALUInstr = "00000" or IR4ALUInstr = "01100" or IR4ALUInstr = "01101" or IR4ALUInstr = "01111") else
+                                 '0';
+   
    --Kolla IR3 om det är möjligt om det är en instruktion som kan förändra register, givetvis måste även possibleForward vara 1 kollar också om det finns registerberoende
    --Intsruktioner som skall kollas:
    --LOAD.a, LOAD.c, LOAD.wo, LOAD.wro, MOVE, ALUINST.r eller ALUINST.c
    --and not(IR2OP = "00101" or IR2OP = "00110") och and(IR2OP = "00101" or IR2OP = "00110") är fallen då det rör sig om ALU instr, eftersom det är de enda fallen där dest. reg
    --skiljer sig på vilka bitar som hör till den så måste detta specialfall göras
+   --eftersom en del ALU instr. inte ändrar i registren och ALUn skickar ut tidigare utvärdet i dessa fall så ska dessa inte muxas ut alltså: ALU instruktioner som inte ändrar i register:
+   --Do nothing, CMP(unsigned och signed), BITTEST
    changeInIR3             <= '1' when IR3OP = "11100" and possibleForward = '1' and IR3DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
                               '1' when IR3OP = "11101" and possibleForward = '1' and IR3DestReg = store_Read_Reg and isIR2ALUinstr = '0' else 
                               '1' when IR3OP = "11110" and possibleForward = '1' and IR3DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
                               '1' when IR3OP = "11111" and possibleForward = '1' and IR3DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
                               '1' when IR3OP = "00100" and possibleForward = '1' and IR3DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
-                              '1' when IR3OP = "00101" and possibleForward = '1' and IR3DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' else
-                              '1' when IR3OP = "00110" and possibleForward = '1' and IR3DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' else
+                              '1' when IR3OP = "00101" and possibleForward = '1' and IR3DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' and isIR3ALUInstrAndNoChange = '0' else
+                              '1' when IR3OP = "00110" and possibleForward = '1' and IR3DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' and isIR3ALUInstrAndNoChange = '0' else
                            
                               '1' when IR3OP = "11100" and possibleForward = '1' and IR3DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR3OP = "11101" and possibleForward = '1' and IR3DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else 
                               '1' when IR3OP = "11110" and possibleForward = '1' and IR3DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR3OP = "11111" and possibleForward = '1' and IR3DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR3OP = "00100" and possibleForward = '1' and IR3DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
-                              '1' when IR3OP = "00101" and possibleForward = '1' and IR3DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' else
-                              '1' when IR3OP = "00110" and possibleForward = '1' and IR3DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' else
+                              '1' when IR3OP = "00101" and possibleForward = '1' and IR3DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' and isIR3ALUInstrAndNoChange = '0' else
+                              '1' when IR3OP = "00110" and possibleForward = '1' and IR3DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' and isIR3ALUInstrAndNoChange = '0' else
                            
                               '0';
                            
@@ -98,16 +118,16 @@ begin
                               '1' when IR4OP = "11110" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
                               '1' when IR4OP = "11111" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
                               '1' when IR4OP = "00100" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = store_Read_Reg and isIR2ALUinstr = '0' else
-                              '1' when IR4OP = "00101" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' else
-                              '1' when IR4OP = "00110" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' else
+                              '1' when IR4OP = "00101" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' and isIR4ALUInstrAndNoChange = '0' else
+                              '1' when IR4OP = "00110" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = store_Read_Reg and isIR2ALUinstr = '0' and isIR4ALUInstrAndNoChange = '0' else
                            
                               '1' when IR4OP = "11100" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR4OP = "11101" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR4OP = "11110" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR4OP = "11111" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
                               '1' when IR4OP = "00100" and possibleForward = '1' and changeInIR3 = '0' and IR4DestReg = ALU_Read_Reg and isIR2ALUinstr = '1' else
-                              '1' when IR4OP = "00101" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' else
-                              '1' when IR4OP = "00110" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' else
+                              '1' when IR4OP = "00101" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' and isIR4ALUInstrAndNoChange = '0' else
+                              '1' when IR4OP = "00110" and possibleForward = '1' and changeInIR3 = '0' and IR4DestRegALU = ALU_Read_Reg and isIR2ALUinstr = '1' and isIR4ALUInstrAndNoChange = '0' else
                               '0';
                            
    --Nu återstår att kolla om vi har registerberoende i IR3 och har vi det så skall selectSignal sättas till 00

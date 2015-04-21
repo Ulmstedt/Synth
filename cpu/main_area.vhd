@@ -68,12 +68,22 @@ architecture Behavioral of MainArea is
    
    component MemArea is
       port(
+         ir3      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          ir4      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          z3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
          d3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
          z4d4     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
          doWrite  : out std_logic;
+         rst      : in std_logic;
+         clk      : in std_logic
+      );
+   end component;
+
+   component DReg is
+      port(
+         ir1in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         output   : out std_logic_vector(REG_WIDTH - 1 downto 0);
          rst      : in std_logic;
          clk      : in std_logic
       );
@@ -87,9 +97,11 @@ architecture Behavioral of MainArea is
    signal regBSel    : std_logic_vector(REG_BITS - 1 downto 0);
    signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    
-   signal ALUOut     : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0);
+
+   signal ALUOut   : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := "00000000";
    signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
+
    signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal z3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
    
@@ -101,6 +113,14 @@ architecture Behavioral of MainArea is
    signal regWrite      : std_logic;
    
 begin
+
+   d2  : DReg port map(   
+         ir1in    => ir1,
+         output   => regDOut,
+         rst      => rst,
+         clk      => clk
+         );
+
    alu : ALUArea port map(
          ALUOut  => ALUOut,
          Z3in    => z3In,
@@ -121,6 +141,7 @@ begin
       );
       
    mem : MemArea port map(
+      ir3      => ir3out,
       ir4      => ir4out,
       z3       => z3Out,
       d3       => d3Out,
@@ -199,3 +220,4 @@ begin
    );
    
 end Behavioral;
+

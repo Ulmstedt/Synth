@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -28,634 +26,165 @@ end ALU;
 --ALUINST.c
 --00110 OOOOO RRRR X DDDD DDDD DDDD DDDD
 
---First register will be put into rightIn, second reg or constant will be put in leftIn
+--First register will be put into leftIn, second reg or constant will be put in rightIn
 
 --carry flag is only of importance for unsigned arithmetic
 --overflow flag is only of importance for signed arithmetic
 --so will not care about those other cases
 
 architecture Behavioural of ALU is
+   --with initialized values
+   signal temp                :  std_logic_vector(2*REG_WIDTH-1 downto 0) := (others => '0');
+   signal checkCarryTemp      :  std_logic_vector(2*REG_WIDTH-1 downto 0) := (others => '0');
+   signal checkOverflowTemp   :  std_logic_vector(2*REG_WIDTH-1 downto 0) := (others => '0');
+   
+   signal sRZInternal         :  std_logic := '0';
+   signal sRNInternal         :  std_logic := '0';
+   signal sRCInternal         :  std_logic := '0';
+   signal sROInternal         :  std_logic := '0';
+
+   signal srZlast             : std_logic := '0';
+   signal srNlast             : std_logic := '0';
+   signal srClast             : std_logic := '0';
+   signal srOlast             : std_logic := '0';
+   
 begin 
-   process (clk)
-      variable reg  : std_logic_vector(2*REG_WIDTH-1 downto 0);
-      variable tmp   : std_logic_vector(2*REG_WIDTH-1 downto 0);
+   --only when compare uns
+   checkCarryTemp <= (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) - to_integer(unsigned(rightIn)), REG_WIDTH+1)) when ALUInstr = "01100" else
+                     (others => '0');
+   
+   --only when compare sig
+   checkOverflowTemp <= (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) - signed(rightIn)) when ALUInstr = "01101" else
+                     (others => '0');
+   
+   with ALUInstr select
+      --do arithmetic operation
+      temp  <= (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) + to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "00001",  --ADD unsigned
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) + signed(rightIn)) when "00010",                                                            --ADD signed
+               (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) - to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "00011",  --SUB unsigned
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) - signed(rightIn)) when "00100",                                                            --SUB signed
+               std_logic_vector((signed(leftIn) * signed(rightIn)) srl REG_WIDTH) when "00101",                                                                                        --MUL(signed fixed point)(result in 16 msb so make right shifts so result ends up in 16 lsb like all other)
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) srl to_integer(unsigned(rightIn))) when "00110",                                          --bitshift right
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) sll to_integer(unsigned(rightIn))) when "00111",                                          --bitshift left
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (leftIn and rightIn) when "01000",                                                                                          --AND
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (leftIn or rightIn) when "01001",                                                                                           --OR
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (leftIn xor rightIn) when "01010",                                                                                          --XOR
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (not leftIn) when "01011",                                                                                                  --NOT
+               (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) + to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "10000",  --ADD unsigned without affecting flags
+               (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & leftIn when "11111",                                                                                                        --let leftIn go through ALU
+               temp when "00000",                                                                                                                                                      --DO nothing
+               temp when "01100",                                                                                                                                                      --CMP unsigned
+               temp when "01101",                                                                                                                                                      --CMP signed
+               temp when "01111",                                                                                                                                                      --BITTEST
+               temp when others;                                                                                                                                                       --catch all
+   
+   --set ZERO flag
+   sRZInternal   <= '1' when ALUInstr = "00001" and unsigned(temp) = 0 else                                                                           --ADD unsigned
+            '1' when ALUInstr = "00010" and signed(temp) = 0 else                                                                                     --ADD signed
+            '1' when ALUInstr = "00011" and unsigned(temp) = 0 else                                                                                   --SUB unsigned
+            '1' when ALUInstr = "00100" and signed(temp) = 0 else                                                                                     --SUB signed
+            '1' when ALUInstr = "00101" and signed(temp) = 0 else                                                                                     --MUL(signed fixed point)
+            '1' when ALUInstr = "00110" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --BITSHIFT RIGHT
+            '1' when ALUInstr = "00111" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --BITSHIFT LEFT
+            '1' when ALUInstr = "01000" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --AND
+            '1' when ALUInstr = "01001" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --OR
+            '1' when ALUInstr = "01010" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --XOR
+            '1' when ALUInstr = "01011" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --NOT
+            '1' when ALUInstr = "01100" and unsigned(leftIn) = unsigned(rightIn) else                                                                 --CMP UNSIGNED
+            '1' when ALUInstr = "01101" and signed(leftIn) = signed(rightIn) else                                                                     --CMP SIGNED
+            '1' when ALUInstr = "01111" and to_integer(unsigned(rightIn)) <=(REG_WIDTH-1) and leftIn(to_integer(unsigned(rightIn))) = '0' else        --BITTEST
+            srZlast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srZlast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srZlast when ALUInstr = "00000" else                                                                                                      --Do nothing
+            '0';                                                                                                                                      --other cases
+   
+
+      --set NEGATIVE flag
+   sRNInternal   <= srNlast when ALUInstr = "00001" else                                                                                              --ADD unsigned
+            '1' when ALUInstr = "00010" and temp(REG_WIDTH-1) = '1' else                                                                              --ADD signed
+            '1' when ALUInstr = "00011" and unsigned(leftIn) < unsigned(rightIn) else                                                                 --SUB unsigned
+            '1' when ALUInstr = "00100" and temp(REG_WIDTH-1) = '1' else                                                                              --SUB signed
+            '1' when ALUInstr = "00101" and temp(REG_WIDTH-1) = '1' else                                                                              --MUL(signed fixed point)
+            '1' when ALUInstr = "00110" and temp(REG_WIDTH-1) = '1' else                                                                              --BITSHIFT RIGHT
+            '1' when ALUInstr = "00111" and temp(REG_WIDTH-1) = '1' else                                                                              --BITSHIFT LEFT
+            '1' when ALUInstr = "01000" and temp(REG_WIDTH-1) = '1' else                                                                              --AND
+            '1' when ALUInstr = "01001" and temp(REG_WIDTH-1) = '1' else                                                                              --OR
+            '1' when ALUInstr = "01010" and temp(REG_WIDTH-1) = '1' else                                                                              --XOR
+            '1' when ALUInstr = "01011" and temp(REG_WIDTH-1) = '1' else                                                                              --NOT
+            '1' when ALUInstr = "01100" and unsigned(leftIn) < unsigned(rightIn) else                                                                 --CMP UNSIGNED
+            '1' when ALUInstr = "01101" and signed(leftIn) < signed(rightIn) else                                                                     --CMP SIGNED
+            srNlast when ALUInstr = "01111" else                                                                                                      --BITTEST
+            srNlast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srNlast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srNlast when ALUInstr = "00000" else                                                                                                      --Do nothing
+            '0';                                                                                                                                      --other cases
+
+         
+     --set CARRY flag
+   sRCInternal   <= '1' when ALUInstr = "00001" and temp(REG_WIDTH) = '1' else                                                                        --ADD unsigned
+            srClast when ALUInstr = "00010" else                                                                                                      --ADD signed
+            '1' when ALUInstr = "00011" and temp(REG_WIDTH) = '1' else                                                                                --SUB unsigned
+            srClast when ALUInstr = "00100" else                                                                                                      --SUB signed
+            srClast when ALUInstr = "00101" else                                                                                                      --MUL(signed fixed point)
+            leftIn(to_integer(unsigned(rightIn)) - 1) when ALUInstr = "00110" and to_integer(unsigned(rightIn)) < REG_WIDTH and 
+                                                           to_integer(unsigned(rightIn)) /= 0 else                                                    --BITSHIFT RIGHT
+            leftIn(REG_WIDTH - to_integer(unsigned(rightIn))) when ALUInstr = "00111" and to_integer(unsigned(rightIn)) < REG_WIDTH and 
+                                                                   to_integer(unsigned(rightIn)) /= 0 else                                            --BITSHIFT LEFT
+            srClast when ALUInstr = "01000" else                                                                                                      --AND
+            srClast when ALUInstr = "01001" else                                                                                                      --OR
+            srClast when ALUInstr = "01010" else                                                                                                      --XOR
+            srClast when ALUInstr = "01011" else                                                                                                      --NOT
+            '1' when ALUInstr = "01100" and checkCarryTemp(REG_WIDTH) = '1' else                                                                      --CMP UNSIGNED(check if carry was generated)
+            srClast when ALUInstr = "01101" else                                                                                                      --CMP SIGNED
+            srClast when ALUInstr = "01111" else                                                                                                      --BITTEST
+            srClast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srClast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srClast when ALUInstr = "00000" else                                                                                                      --Do nothing
+            '0';                                                                                                                                      --other cases
+         
+         --set OVERFLOW flag
+   sROInternal   <= srOlast when ALUInstr = "00001" else                                                                                              --ADD unsigned
+            '1' when ALUInstr = "00010" and ((leftIn(REG_WIDTH-1) = '1' and rightIn(REG_WIDTH-1) = '1' and temp(REG_WIDTH-1) = '0') or
+                  (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '0' and temp(REG_WIDTH-1) = '1')) else                                         --ADD signed if the sum of two operands both with sign bit on results in a number with sign bit off we set overflow
+                                                                                                                                                      --do same if two operands with sign bit off results in a number with sign bit on we have overflow
+            srOlast when ALUInstr = "00011" else                                                                                                      --SUB unsigned
+            '1' when ALUInstr = "00100" and ((leftIn(REG_WIDTH-1) = '1' and rightIn(REG_WIDTH-1) = '0' and temp(REG_WIDTH-1) = '0') or
+                  (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '1' and temp(REG_WIDTH-1) = '1')) else                                        --SUB signed assume x negative and y positive, if x-y results in a positive value we have overflow. Assume x positive and y negative,
+                                                                                                                                                      -- if x-y results in a negative value we have overflow
+            srOlast when ALUInstr = "00101" else                                                                                                      --MUL(signed fixed point)
+            srOlast when ALUInstr = "00110" else                                                                                                      --BITSHIFT RIGHT
+            srOlast when ALUInstr = "00111" else                                                                                                      --BITSHIFT LEFT
+            srOlast when ALUInstr = "01000" else                                                                                                      --AND
+            srOlast when ALUInstr = "01001" else                                                                                                      --OR
+            srOlast when ALUInstr = "01010" else                                                                                                      --XOR
+            srOlast when ALUInstr = "01011" else                                                                                                      --NOT
+            srOlast when ALUInstr = "01100" else                                                                                                      --CMP UNSIGNED
+            '1' when ALUInstr = "01101" and ((leftIn(REG_WIDTH-1) = '1' and rightIn(REG_WIDTH-1) = '0' and checkOverflowTemp(REG_WIDTH-1) = '0') or
+                  (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '1' and checkOverflowTemp(REG_WIDTH-1) = '1')) else                           --CMP SIGNED
+            srOlast when ALUInstr = "01111" else                                                                                                      --BITTEST
+            srOlast when ALUInstr = "10000" else                                                                                                      --ADD without affecting SR
+            srOlast when ALUInstr = "11111" else                                                                                                      --Let leftIn through
+            srOlast when ALUInstr = "00000" else                                                                                                      --Do nothing
+            '0';                                                                                                                                      --other cases    
+
+   --set flags
+   sRZ <= sRZInternal;
+   sRN <= sRNInternal;
+   sRC <= sRCInternal;
+   sRO <= sROInternal;
+   
+   --set proper out         
+   ALUOut <= temp(REG_WIDTH-1 downto 0);
+
+   -- Set the values for the last cycle, so the SR-outs keep their values if unchanged.
+   process (clk) is
    begin
       if rising_edge(clk) then
-         case(ALUInstr) is
-            when ("00001") =>
-               --ADD unsigned
-               --variable is set instantly(not like signals)
-               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) + to_integer(unsigned(leftIn)), REG_WIDTH+1));
-               --Then set out
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               --then we check if we should set flags, all cases will follow this "formula"
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --There is carry if bit # REG_WIDTH is 1
-               if reg(REG_WIDTH) = '1' then
-                  sRC <= '1';
-               else
-                  sRC <= '0';
-               end if;
-                  
-            when ("00010") =>
-               --ADD signed
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) + signed(leftIn));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if signed(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --if the sum of two operands both with sign bit on results in a number with sign bit off we set overflow
-               --do same if two operands with sign bit off results in a number with sign bit on we have overflow
-               if (rightIn(REG_WIDTH-1) = '1' and leftIn(REG_WIDTH-1) = '1' and reg(REG_WIDTH-1) = '0') or
-                  (rightIn(REG_WIDTH-1) = '0' and leftIn(REG_WIDTH-1) = '0' and reg(REG_WIDTH-1) = '1') then
-                  sRO <= '1';
-               else
-                  sRO <= '0';
-               end if;
-               
-            when ("00011") =>
-               --SUB unsigned
-               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) - to_integer(unsigned(leftIn)), REG_WIDTH+1));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               --REPORT "REG VALUE: " & integer'image(to_integer(unsigned(reg)));
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check if negative to indicate error of use of this function
-               if unsigned(leftIn) > unsigned(rightIn) then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               if reg(REG_WIDTH) = '1' then
-                  sRC <= '1';
-               else
-                  sRC <= '0';
-               end if;
-               
-            when ("00100") =>
-               --SUB signed
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) - signed(leftIn));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if signed(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH*2-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --rightIn-leftIn
-               --if the sum of the two operands rightIn with sign bit on, leftIn with sign bit off results in something with sign bit off we set overflow
-               --if the sum of the two operands rightIn with sign bit off, leftIn with sign bit on results in something with sign bit on we set overflow
-               if (rightIn(REG_WIDTH-1) = '1' and leftIn(REG_WIDTH-1) = '0' and reg(REG_WIDTH-1) = '0') or
-                  (rightIn(REG_WIDTH-1) = '0' and leftIn(REG_WIDTH-1) = '1' and reg(REG_WIDTH-1) = '1') then
-                  sRO <= '1';
-               else
-                  sRO <= '0';
-               end if;
-               
-            when ("00101") =>
-               --MUL (signed fixed point)
-               reg(REG_WIDTH*2-1 downto 0) := std_logic_vector(signed(rightIn) * signed(leftIn));
-
-               REPORT "RIN VALUE: " & integer'image(to_integer(signed(rightIn)));
-               REPORT "LIN VALUE: " & integer'image(to_integer(signed(leftIn)));
-               REPORT "REG VALUE: " & integer'image(to_integer(signed(reg)));
-               
-               --take the highest 16 bits to output
-               ALUOut <= reg(REG_WIDTH*2-1 downto REG_WIDTH);
-               
-               if signed(reg(REG_WIDTH*2-1 downto REG_WIDTH)) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH*2-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-          
-            when("00110") =>
-               --bitshift right
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) srl to_integer(unsigned(leftIn)));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg(REG_WIDTH-1 downto 0)) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit(here we just look at most significant bit that we put ALUOut)
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --set overflow to last bit shifted out
-               if to_integer(unsigned(leftIn)) > REG_WIDTH or to_integer(unsigned(leftIn)) = 0 then
-                  sRO <= '0';
-               else
-                  sRO <= rightIn(to_integer(unsigned(leftIn)-1));
-               end if;
-               
-            when("00111") =>
-               --bitshift left
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) sll to_integer(unsigned(leftIn)));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --set overflow to last bit shifted out
-               if to_integer(unsigned(leftIn)) > REG_WIDTH or to_integer(unsigned(leftIn)) = 0 then
-                  sRO <= '0';
-               else
-                  sRO <= rightIn(REG_WIDTH-to_integer(unsigned(leftIn)));
-               end if;
-               
-            when("01000") =>
-               --AND
-               reg(REG_WIDTH-1 downto 0) := rightIn and leftIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg(REG_WIDTH-1 downto 0)) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               --check signbit
-               
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01001") =>
-               --OR
-               reg(REG_WIDTH-1 downto 0) := rightIn or leftIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01010") =>
-               --XOR
-               reg(REG_WIDTH-1 downto 0) := rightIn xor leftIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01011") =>
-               --NOT
-               reg(REG_WIDTH-1 downto 0) := not rightIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01100") =>
-               --CMP
-               if rightIn = leftIn then
-                  --if they are equal 
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               if rightIn < leftIn then
-                  --if rx < ry or rx < const we put a 1 on the most significant bit of reg
-                  sRN <= '1';
-               elsif rightIn >= leftIn then
-                  sRN <= '0';
-               end if;
-               
-            when("01111") =>
-               --BITTEST
-               --make sure this works
-               if unsigned(leftIn) >= REG_WIDTH then
-                  srZ <= '0';
-               elsif rightIn(to_integer(unsigned(leftIn))) = '0' then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-            when others =>
-               --do nothing and others
-               --if this case goes through same ALUOut and flags remain same as from last clk
-               null;
-         end case;
+         srZlast <= sRZInternal;
+         srNlast <= sRNInternal;
+         srClast <= sRCInternal;
+         srOlast <= sROInternal;
       end if;
    end process;
-=======
-
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
-
-use work.Constants.all;
-
-entity ALU is
-   port(
-      leftIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
-      rightIn : in std_logic_vector(REG_WIDTH-1 downto 0);
-      ALUOut  : out std_logic_vector(REG_WIDTH-1 downto 0);
-      ALUInstr  : in std_logic_vector(4 downto 0);
-      
-      clk      : in std_logic;
-      
-      sRZ     : out std_logic;
-      sRN     : out std_logic;
-      sRO     : out std_logic;
-      sRC     : out std_logic
-   );
-end ALU;
-
---ALUINST.r
---00101 OOOOO RRRR X XXXX XXXX XXXX RRRR
-
---ALUINST.c
---00110 OOOOO RRRR X DDDD DDDD DDDD DDDD
-
---First register will be put into rightIn, second reg or constant will be put in leftIn
-
---carry flag is only of importance for unsigned arithmetic
---overflow flag is only of importance for signed arithmetic
---so will not care about those other cases
-
-architecture Behavioural of ALU is
-begin 
-   process (clk)
-      variable reg  : std_logic_vector(2*REG_WIDTH-1 downto 0);
-   begin
-      if rising_edge(clk) then
-         case(ALUInstr) is
-            when ("00001") =>
-               --ADD unsigned
-               --variable is set instantly(not like signals)
-               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) + to_integer(unsigned(leftIn)), REG_WIDTH+1));
-               --Then set out
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               --then we check if we should set flags, all cases will follow this "formula"
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --There is carry if bit # REG_WIDTH is 1
-               if reg(REG_WIDTH) = '1' then
-                  sRC <= '1';
-               else
-                  sRC <= '0';
-               end if;
-                  
-            when ("00010") =>
-               --ADD signed
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) + signed(leftIn));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if signed(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --if the sum of two operands both with sign bit on results in a number with sign bit off we set overflow
-               --do same if two operands with sign bit off results in a number with sign bit on we have overflow
-               if (rightIn(REG_WIDTH-1) = '1' and leftIn(REG_WIDTH-1) = '1' and reg(REG_WIDTH-1) = '0') or
-                  (rightIn(REG_WIDTH-1) = '0' and leftIn(REG_WIDTH-1) = '0' and reg(REG_WIDTH-1) = '1') then
-                  sRO <= '1';
-               else
-                  sRO <= '0';
-               end if;
-               
-            when ("00011") =>
-               --SUB unsigned
-               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) - to_integer(unsigned(leftIn)), REG_WIDTH+1));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               --REPORT "REG VALUE: " & integer'image(to_integer(unsigned(reg)));
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check if negative to indicate error of use of this function
-               if unsigned(leftIn) > unsigned(rightIn) then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               if reg(REG_WIDTH) = '1' then
-                  sRC <= '1';
-               else
-                  sRC <= '0';
-               end if;
-               
-            when ("00100") =>
-               --SUB signed
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(signed(rightIn) - signed(leftIn));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if signed(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH*2-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --rightIn-leftIn
-               --if the sum of the two operands rightIn with sign bit on, leftIn with sign bit off results in something with sign bit off we set overflow
-               --if the sum of the two operands rightIn with sign bit off, leftIn with sign bit on results in something with sign bit on we set overflow
-               if (rightIn(REG_WIDTH-1) = '1' and leftIn(REG_WIDTH-1) = '0' and reg(REG_WIDTH-1) = '0') or
-                  (rightIn(REG_WIDTH-1) = '0' and leftIn(REG_WIDTH-1) = '1' and reg(REG_WIDTH-1) = '1') then
-                  sRO <= '1';
-               else
-                  sRO <= '0';
-               end if;
-               
-            when ("00101") =>
-               --MUL (signed fixed point)
-               reg(REG_WIDTH*2-1 downto 0) := std_logic_vector(signed(rightIn) * signed(leftIn));
-
-               --REPORT "RIN VALUE: " & integer'image(to_integer(signed(rightIn)));
-               --REPORT "LIN VALUE: " & integer'image(to_integer(signed(leftIn)));
-               --REPORT "REG VALUE: " & integer'image(to_integer(signed(reg)));
-               
-               --take the highest 16 bits to output
-               ALUOut <= reg(REG_WIDTH*2-1 downto REG_WIDTH);
-               
-               if signed(reg(REG_WIDTH*2-1 downto REG_WIDTH)) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH*2-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-          
-            when("00110") =>
-               --bitshift right
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) srl to_integer(unsigned(leftIn)));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg(REG_WIDTH-1 downto 0)) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit(here we just look at most significant bit that we put ALUOut)
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --set overflow to last bit shifted out
-               if to_integer(unsigned(leftIn)) > REG_WIDTH or to_integer(unsigned(leftIn)) = 0 then
-                  sRC <= '0';
-               else
-                  sRC <= rightIn(to_integer(unsigned(leftIn)-1));
-               end if;
-               
-            when("00111") =>
-               --bitshift left
-               reg(REG_WIDTH-1 downto 0) := std_logic_vector(unsigned(rightIn) sll to_integer(unsigned(leftIn)));
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-               --set overflow to last bit shifted out
-               if to_integer(unsigned(leftIn)) > REG_WIDTH or to_integer(unsigned(leftIn)) = 0 then
-                  sRC <= '0';
-               else
-                  sRC <= rightIn(REG_WIDTH-to_integer(unsigned(leftIn)));
-               end if;
-               
-            when("01000") =>
-               --AND
-               reg(REG_WIDTH-1 downto 0) := rightIn and leftIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg(REG_WIDTH-1 downto 0)) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               --check signbit
-               
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01001") =>
-               --OR
-               reg(REG_WIDTH-1 downto 0) := rightIn or leftIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01010") =>
-               --XOR
-               reg(REG_WIDTH-1 downto 0) := rightIn xor leftIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01011") =>
-               --NOT
-               reg(REG_WIDTH-1 downto 0) := not rightIn;
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-               if unsigned(reg) = 0 then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               --check signbit
-               if reg(REG_WIDTH-1) = '1' then
-                  sRN <= '1';
-               else
-                  sRN <= '0';
-               end if;
-               
-            when("01100") =>
-               --CMP
-               if rightIn = leftIn then
-                  --if they are equal 
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-               
-               if rightIn < leftIn then
-                  --if rx < ry or rx < const we put a 1 on the most significant bit of reg
-                  sRN <= '1';
-               elsif rightIn >= leftIn then
-                  sRN <= '0';
-               end if;
-               
-            when("01111") =>
-               --BITTEST
-               --make sure this works
-               if unsigned(leftIn) >= REG_WIDTH then
-                  srZ <= '0';
-               elsif rightIn(to_integer(unsigned(leftIn))) = '0' then
-                  sRZ <= '1';
-               else
-                  sRZ <= '0';
-               end if;
-            when("11111") =>
-            --reserved to let left_in go through
-            ALUOut <= leftIn;
-            
-            when("10000") =>
-            --ADD unsigned without affecting flags
-               --variable is set instantly(not like signals)
-               reg(REG_WIDTH downto 0) := std_logic_vector(to_unsigned(to_integer(unsigned(rightIn)) + to_integer(unsigned(leftIn)), REG_WIDTH+1));
-               --Then set out
-               ALUOut <= reg(REG_WIDTH-1 downto 0);
-               
-            when others =>
-               --do nothing and others
-               --if this case goes through same ALUOut and flags remain same as from last clk
-               null;
-         end case;
-      end if;
-   end process;
->>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
+   
 end Behavioural;

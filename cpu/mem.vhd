@@ -7,10 +7,11 @@ use work.constants.all;
 use work.records.all;
 use work.memContent.all;
 
+--Z4 now inside of memory
 entity Memory is
    port(
       addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      output   : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      outputZ4 : out std_logic_vector(REG_WIDTH - 1 downto 0);
       doWrite  : in std_logic;
       newValue : in std_logic_vector(REG_WIDTH - 1 downto 0);
       clk      : in std_logic
@@ -24,7 +25,7 @@ begin
    process(clk) is
    begin
       if rising_edge(clk) then
-         output <= mem(to_integer(unsigned(addr)));
+         outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
          if doWrite = '1' then
             mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
          end if;

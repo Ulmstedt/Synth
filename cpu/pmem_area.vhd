@@ -10,10 +10,7 @@ entity PMemArea is
       ir2out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
       regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-<<<<<<< HEAD
-=======
       sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
->>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -30,11 +27,7 @@ architecture Behaviorial of PMemArea is
       );
    end component;
    
-<<<<<<< HEAD
-   component Memory is
-=======
    component pMemory is
->>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       port(
          addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
          instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
@@ -46,6 +39,8 @@ architecture Behaviorial of PMemArea is
       port(
          input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         pcType   : out std_logic_vector(1 downto 0);
+         sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
          stall    : in std_logic;
          rst      : in std_logic;
          clk      : in std_logic
@@ -68,7 +63,6 @@ architecture Behaviorial of PMemArea is
          input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         pcType   : out std_logic_vector(1 downto 0);
          stall    : out std_logic_vector(1 downto 0); 
          rst      : in std_logic;
          clk      : in std_logic
@@ -82,10 +76,6 @@ architecture Behaviorial of PMemArea is
          pcOut : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
          regSel: out std_logic_vector(REG_BITS - 1 downto 0);
          regIn : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-<<<<<<< HEAD
-=======
-         sr    : in std_logic_vector(SR_WIDTH - 1 downto 0);
->>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
          rst   : in std_logic;
          clk   : in std_logic
       );
@@ -124,7 +114,6 @@ begin
       input    => memOut,
       ir2in    => ir2sig,
       output   => ir1sig,
-      pcType   => nextPCType,
       stall    => stallInit,
       rst      => rst,
       clk      => clk
@@ -133,6 +122,8 @@ begin
    ir2c : IR2 port map (
       input    => ir1sig,
       output   => ir2sig,
+      pcType   => nextPCType,
+      sr       => sr,
       stall    => stall,
       rst      => rst,
       clk      => clk
@@ -144,19 +135,11 @@ begin
       pcOut    => nextPC,
       regSel   => regSel,
       regIn    => regIn,
-<<<<<<< HEAD
-=======
-      sr       => sr,
->>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       rst      => rst,
       clk      => clk
    );
 
-<<<<<<< HEAD
-   mem : Memory port map (
-=======
    mem : pMemory port map (
->>>>>>> 1f04ef8d6d73ceecfcff45cd608513bab054b369
       addr        => pcAddr,
       instr       => memOut,
       clk         => clk

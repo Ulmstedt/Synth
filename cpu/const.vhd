@@ -3,14 +3,14 @@ package Constants is
    constant ADDR_WIDTH           : natural := 11;
    constant PMEM_HEIGHT          : natural := 64;
    
-   constant MEM_HEIGHT          : natural := 64;
+   constant MEM_HEIGHT           : natural := 64;
     
    constant REG_NUM              : natural := 32;
    constant REG_BITS             : natural := 5;
    constant REG_WIDTH            : natural := 16;
     
    constant REG_DEST_OFFSET      : natural := 26;
-   constant REG_ALU_OFFSET       : natural := 20;
+   constant REG_ALU_OFFSET       : natural := 21;
    constant REG_LOAD_OFFSET      : natural := 15;
    constant REG_STORE_OFFSET     : natural := 9;
    constant ADDR_OFFSET          : natural := 26;
@@ -31,6 +31,8 @@ package Constants is
    constant LOAD_WRO_OFFSET      : natural := 21;
    
    constant CONST_STORE_OFFSET   : natural := 15;
+
+   constant LOAD_ADRESS_OFFSET   : natural := 10;
    
    constant SR_BITS              : natural := 4;
    constant SR_WIDTH             : natural := 8;
