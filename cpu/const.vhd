@@ -27,8 +27,8 @@ package Constants is
    
    constant OP_LOAD              : natural := 3;
    constant READ_REG_OFFSET      : natural := 4;
-   constant STORE_WOFR_OFFSET    : natural := 9;
-   constant LOAD_WRO_OFFSET      : natural := 15;
+   constant STORE_WOFR_OFFSET    : natural := 15;
+   constant LOAD_WRO_OFFSET      : natural := 21;
    
    constant CONST_STORE_OFFSET   : natural := 15;
 

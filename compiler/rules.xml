@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<instructions>
+
+   <instr name="NOP">
+      <OP>00000</OP>
+   </instr>
+
+   <instr name="TRAP">
+      <OP>00001</OP>
+   </instr>
+
+   <instr name="STORE.C">
+      <OP>11000</OP>
+      <DEST>
+         <LENGTH>11</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>16</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="STORE.R">
+      <OP>11001</OP>
+      <DEST>
+         <LENGTH>11</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>5</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="LOAD.A">
+      <OP>11100</OP>
+      <DEST>
+         <LENGTH>5</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>11</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="LOAD.C">
+      <OP>11101</OP>
+      <DEST>
+         <LENGTH>5</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>16</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="MOVE">
+      <OP>00100</OP>
+      <DEST>
+         <LENGTH>5</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>5</LENGTH>
+      </SRC>
+   </instr>
+
+   <!-- BRANCH -->
+
+   <instr name="BCC">
+      <OP>10000</OP>
+      <DEST>
+         <LENGTH>4</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>11</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="BCC.OFR">
+      <OP>10001</OP>
+      <DEST>
+         <LENGTH>4</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>5</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="BCC.O">
+      <OP>10010</OP>
+      <DEST>
+         <LENGTH>4</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>10</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="BNCC">
+      <OP>10100</OP>
+      <DEST>
+         <LENGTH>4</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>11</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="BNCC.OFR">
+      <OP>10101</OP>
+      <DEST>
+         <LENGTH>4</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>5</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="BNCC.O">
+      <OP>10110</OP>
+      <DEST>
+         <LENGTH>4</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>10</LENGTH>
+      </SRC>
+   </instr>
+
+</instructions>
