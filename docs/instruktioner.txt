@@ -32,7 +32,7 @@ STORE.wo (from register with constant offset) - stall
 11010 AAAA AAAA AAA CCCC CCCC CCCR RRRR
 
 STORE.wofr (from register with constant offset from register) - stall
-11011 AAAA AAAA AAA XXXX XXOO OOOR RRRR
+11011 AAAA AAAA AAA OOOO O XXXX XX R RRRR
 		(O = Register with offset data)
 LOAD.a
 11100 RRRR RXXX XXXX XXXX AAA AAAA AAAA
@@ -44,7 +44,7 @@ LOAD.wo (with offset)
 11110 RRRR RCCC CCCC CCCC AAA AAAA AAAA
 
 LOAD.wro (with offset in register)
-11111 RRRR RXXX XXXO OOOO AAA AAAA AAAA
+11111 RRRR R OOOO O XXXX XX AAA AAAA AAAA
 
 MOVE - stall
 00100 RRRR RXX XXXX XXXX XXXX XXXR RRRR
@@ -65,20 +65,20 @@ BCC
 10000 SSSS XXXX XXXX XXXX AAA AAAA AAAA
 (S = status flag)
 
-BCC(offset i reg) - stall
+BCC.OFR(offset from reg) - stall
 10001 SSSS XXX XXXX XXXX XXXX XXXR RRRR
 
-BCC(offset från där man står)
+BCC.O(offset från där man står)
 10010 SSSS XXX XXXX XXXX XXOO OOOO OOOO
 
 BNCC
 10100 SSSS XXXX XXXX XXXX AAA AAAA AAAA
 (S = status flag)
 
-BNCC(offset i reg) - stall
+BNCC.OFR(offset from reg) - stall
 10101 SSSS XXX XXXX XXXX XXXX XXXR RRRR
 
-BNCC(offset från där man står)
+BNCC.O(offset från där man står)
 10110 SSSS XXX XXXX XXXX XXOO OOOO OOOO
 
 
