@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<instructions>
+
+   <instr name="NOP">
+      <OP>00000</OP>
+   </instr>
+
+   <instr name="TRAP">
+      <OP>00001</OP>
+   </instr>
+
+   <instr name="MOVE">
+      <OP>00100</OP>
+      <DEST>
+         <OFFSET>6</OFFSET>
+         <LENGTH>5</LENGTH>
+      </DEST>
+      <SRC>
+         <OFFSET>28</OFFSET>
+         <LENGTH>5</LENGTH>
+      </SRC>
+   </instr>
+
+   
+   
+</instructions>
