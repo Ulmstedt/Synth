@@ -136,28 +136,29 @@ begin
    regAOut <= regVal(to_integer(unsigned(regASel)));
    regBOut <= regVal(to_integer(unsigned(regBSel)));
    
-   -- Destination
+   -- Destination (or value to save to memory)
    regBSel <=  ir2(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1)
                   when  ir2OP = "11100"         -- LOAD.a
                      OR ir2OP = "11101"         -- LOAD.c
                      OR ir2OP = "11110"         -- LOAD.wo
                      OR ir2OP = "11111"         -- LOAD.wro
                      OR ir2OP = "00100" else    -- MOVE
+               ir2(REG_BITS - 1 downto 0)
+                  when  ir2OP = "11001"         -- STORE.r
+                     OR ir2OP = "11010"         -- STORE.wo
+                     OR ir2OP = "11011" else    -- STORE.wofr
                ir2(REG_ALU_OFFSET downto REG_ALU_OFFSET - REG_BITS + 1)
                   when  ir2OP = "00101"         -- ALUINST.r
                      OR ir2OP = "00110" else    -- ALUINST.c
-               ir2(REG_STORE_OFFSET downto REG_STORE_OFFSET - REG_BITS + 1)
-                  when  ir2OP = "11011" else    -- STORE.wofr
                (others => '0');
    -- Source
    regASel <=  ir2(REG_BITS - 1 downto 0)
-                  when  ir2OP = "11001"         -- STORE.r
-                     OR ir2OP = "11010"         -- STORE.wo
-                     OR ir2OP = "11011"         -- STORE.wofr
-                     OR ir2OP = "00100"         -- MOVE
+                  when  ir2OP = "00100"         -- MOVE
                      OR ir2OP = "00101" else    -- ALUINST.r
                ir2(REG_LOAD_OFFSET downto REG_LOAD_OFFSET - REG_BITS + 1)
                   when  ir2OP = "11111" else    -- LOAD.wro
+               ir2(REG_STORE_OFFSET downto REG_STORE_OFFSET - REG_BITS + 1)
+                  when  ir2OP = "11011" else    -- STORE.wofr
                (others => '0');
    
 end Behavioral;

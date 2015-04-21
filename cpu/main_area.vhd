@@ -91,8 +91,6 @@ architecture Behavioral of MainArea is
    
    signal Reg2ASig   : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal Reg2BSig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regAOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regBOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    
 
