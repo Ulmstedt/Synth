@@ -125,7 +125,6 @@ RRM:  IF
 RRT:  IF
 
 00011:  SUB unsigned
-
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om source < destination dvs indikerar att man använd operationen felaktigt, annars 0

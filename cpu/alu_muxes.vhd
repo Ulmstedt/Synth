@@ -101,10 +101,10 @@ begin
    with IR2(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH) select
                --STORE WO
                ----mask out the constant and let it through
-      out1 <=  "00000"&IR2(WITH_OFFSET_OFFSET downto WITH_OFFSET_OFFSET - WITH_OFFSET_WIDTH + 1) when "11010",
+      out1 <=  "00000"&IR2(WITH_OS_STORE_OFFSET downto WITH_OS_STORE_OFFSET - WITH_OFFSET_WIDTH + 1) when "11010",
                --LOAD WO
                ----mask out the constant and let it through
-               "00000"&IR2(WITH_OFFSET_OFFSET downto WITH_OFFSET_OFFSET - WITH_OFFSET_WIDTH + 1) when "11110",
+               "00000"&IR2(WITH_OS_LOAD_OFFSET downto WITH_OS_LOAD_OFFSET - WITH_OFFSET_WIDTH + 1) when "11110",
                --special case
                --ALUINST.c
                IR2(CONST_STORE_OFFSET downto 0) when "00110",
