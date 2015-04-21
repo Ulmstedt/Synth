@@ -103,7 +103,7 @@ begin
                else '0';
    -- Set the stall counter to 0, 1 or two depending on if we need to stall or not,
    -- and what type of instruction it is (ie. if branch, stall twice)
-   stall <= "01" when stalling = '1' and (ir1OP = "01001" OR ir1OP = "10001" OR ir1OP = "10101") else 
+   stall <= "10" when stalling = '1' and (ir1OP = "01001" OR ir1OP = "10001" OR ir1OP = "10101") else 
             "01" when stalling = '1' else
             "00";
    

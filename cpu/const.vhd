@@ -3,7 +3,7 @@ package Constants is
    constant ADDR_WIDTH           : natural := 11;
    constant PMEM_HEIGHT          : natural := 64;
    
-   constant MEM_HEIGHT          : natural := 64;
+   constant MEM_HEIGHT           : natural := 64;
     
    constant REG_NUM              : natural := 32;
    constant REG_BITS             : natural := 5;

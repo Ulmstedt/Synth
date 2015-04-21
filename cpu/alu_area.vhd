@@ -116,11 +116,6 @@ architecture Behaviorial of ALUArea is
    signal MUX1Select          :     std_logic_vector(1 downto 0);
    signal MUX2Select          :     std_logic_vector(1 downto 0);
    
-   signal sRZI                :     std_logic;
-   signal sRNI                :     std_logic;
-   signal sROI                :     std_logic;
-   signal sRCI                :     std_logic;
-   
    signal ALUOutSignal        :     std_logic_vector(REG_WIDTH-1 downto 0);
    signal ALUInstrInternal    :     std_logic_vector(ALU_INSTR_WIDTH-1 downto 0);
    
@@ -184,10 +179,10 @@ begin
       
       clk               => clk,
       
-      sRZ               => sRZI,
-      sRN               => sRNI,
-      sRO               => sROI,
-      sRC               => sRCI
+      sRZ               => sRZ,
+      sRN               => sRN,
+      sRO               => sRO,
+      sRC               => sRC
    
    
    );
@@ -220,12 +215,6 @@ begin
                            "11111" when "00100",
                            --do nothing
                            "00000" when others;   
-   
-   --set actual SR
-   srZ <= sRZI;
-   srN <= sRNI;
-   srO <= sROI;
-   srZ <= sRCI;
    
    --Muxade innan denna så att vi kan lagra konstanter direkt i minnet
    Z3in <= MUX4Out;
