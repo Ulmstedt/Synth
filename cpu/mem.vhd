@@ -25,7 +25,7 @@ begin
    process(clk) is
    begin
       if rising_edge(clk) then
-         outputZ4 <= mem(to_integer(unsigned(addr)));
+         outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
          if doWrite = '1' then
             mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
          end if;
