@@ -98,7 +98,7 @@ end withOffSetMUX;
 architecture Behavourial of withOffSetMUX is
 
 begin
-   with IR2(REG_WIDTH*2-1 downto REG_WIDTH*2-OP_WIDTH) select
+   with IR2(PMEM_WIDTH-1 downto PMEM_WIDTH-OP_WIDTH) select
                --STORE WO
                ----mask out the constant and let it through
       out1 <=  "00000"&IR2(WITH_OFFSET_OFFSET downto WITH_OFFSET_OFFSET - WITH_OFFSET_WIDTH + 1) when "11010",
