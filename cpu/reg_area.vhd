@@ -155,9 +155,9 @@ begin
    regASel <=  ir2(REG_BITS - 1 downto 0)
                   when  ir2OP = "00100"         -- MOVE
                      OR ir2OP = "00101" else    -- ALUINST.r
-               ir2(REG_LOAD_OFFSET downto REG_LOAD_OFFSET - REG_BITS + 1)
+               ir2(LOAD_WRO_OFFSET downto LOAD_WRO_OFFSET - REG_BITS + 1)
                   when  ir2OP = "11111" else    -- LOAD.wro
-               ir2(REG_STORE_OFFSET downto REG_STORE_OFFSET - REG_BITS + 1)
+               ir2(STORE_WOFR_OFFSET downto STORE_WOFR_OFFSET - REG_BITS + 1) -- wrong offset?
                   when  ir2OP = "11011" else    -- STORE.wofr
                (others => '0');
    
