@@ -141,12 +141,12 @@ begin
                   when  ir2OP = "11100"         -- LOAD.a
                      OR ir2OP = "11101"         -- LOAD.c
                      OR ir2OP = "11110"         -- LOAD.wo
-                     OR ir2OP = "11111"         -- LOAD.wro
-                     OR ir2OP = "00100" else    -- MOVE
+                     OR ir2OP = "11111" else    -- LOAD.wro
                ir2(REG_BITS - 1 downto 0)
                   when  ir2OP = "11001"         -- STORE.r
                      OR ir2OP = "11010"         -- STORE.wo
-                     OR ir2OP = "11011" else    -- STORE.wofr
+                     OR ir2OP = "11011"         -- STORE.wofr
+                     OR ir2OP = "00100" else    -- move
                ir2(REG_ALU_OFFSET downto REG_ALU_OFFSET - REG_BITS + 1)
                   when  ir2OP = "00101"         -- ALUINST.r
                      OR ir2OP = "00110" else    -- ALUINST.c
