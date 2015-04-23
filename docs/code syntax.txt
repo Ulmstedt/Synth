@@ -1,0 +1,15 @@
+INSTR ARG1, ARG2...
+Det är ICKE case-sensitive
+
+Man kan skriva "ARG1,,,,,,,,   ,,,,,,,,,,,ARG2" (cause why not)
+
+Kommentarer skrivs med "; kommentar goes here" (utan "") och måste (currently) skrivas EFTER en rad kod
+Ex:
+MOVE $A4, 1001 ; Exempelkommentar
+
+För att använda konstanter skriver man:
+CONSTANT name, value
+
+$F    -- Hex
+%1111 -- Bin
+15    -- Dec

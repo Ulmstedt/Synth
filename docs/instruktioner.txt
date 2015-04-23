@@ -28,10 +28,10 @@ STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adre
 STORE.r (from register) - stall
 11001 AAA AAAA AAAA XXXX XXXX XXXR RRRR
 
-STORE.wo (from register with constant offset) - stall
+STORE.o (from register with constant offset) - stall
 11010 AAAA AAAA AAA CCCC CCCC CCCR RRRR
 
-STORE.wofr (from register with constant offset from register) - stall
+STORE.or (from register with constant offset from register) - stall
 11011 AAAA AAAA AAA OOOO O XXXX XX R RRRR
 		(O = Register with offset data)
 LOAD.a
@@ -40,10 +40,10 @@ LOAD.a
 LOAD.c
 11101 RRRR RXX XXXX DDDD DDDD DDDD DDDD
 
-LOAD.wo (with offset)
+LOAD.o (with offset)
 11110 RRRR RCCC CCCC CCCC AAA AAAA AAAA
 
-LOAD.wro (with offset in register)
+LOAD.or (with offset in register)
 11111 RRRR R OOOO O XXXX XX AAA AAAA AAAA
 
 MOVE - stall
@@ -52,20 +52,20 @@ MOVE - stall
 ---------------------------------------------
 --Branch med offset i register behöver dataforwarding
 
-BRANCH(till adress)
+BRA (till adress)
 01000 XXXX XXXX XXXX XXXX AAA AAAA AAAA
 
-BRANCH(offset i register) - stall
+BRA.OR(offset i register) - stall
 01001 XXX XXXX XXXX XXXX XXXX XXXR RRRR
 
-BRANCH(offset från där man står)
+BRA.O(offset från där man står)
 01010 XXX XXXX XXXX XXXX XXOO OOOO OOOO 
 
 BCC
 10000 SSSS XXXX XXXX XXXX AAA AAAA AAAA
 (S = status flag)
 
-BCC.OFR(offset from reg) - stall
+BCC.OR(offset from reg) - stall
 10001 SSSS XXX XXXX XXXX XXXX XXXR RRRR
 
 BCC.O(offset från där man står)
@@ -75,7 +75,7 @@ BNCC
 10100 SSSS XXXX XXXX XXXX AAA AAAA AAAA
 (S = status flag)
 
-BNCC.OFR(offset from reg) - stall
+BNCC.OR(offset from reg) - stall
 10101 SSSS XXX XXXX XXXX XXXX XXXR RRRR
 
 BNCC.O(offset från där man står)
@@ -85,10 +85,10 @@ BNCC.O(offset från där man står)
 ---------- ALU -------------------------
 
 
-ALUINST.r - stall
+ALU.r - stall
 00101 OOOOO RRRR RX XXXX XXXX XXXR RRRR
 
-ALUINST.c - stall
+ALU.c - stall
 00110 OOOOO RRRR RX DDDD DDDD DDDD DDDD
 
 
@@ -104,7 +104,7 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
-00001:  ADD unsigned
+00001:  ADDU unsigned
 
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
@@ -113,6 +113,7 @@ C  :  1 om additionen orsakar carry, annars 0
 O  :  IF
 RRM:  IF
 RRT:  IF
+
 
 00010:  ADD signed
 
@@ -124,7 +125,9 @@ O  :  1 om två positiva tal resulterar i ett tal med signbit 1(eller vice versa 
 RRM:  IF
 RRT:  IF
 
-00011:  SUB unsigned
+
+00011:  SUBU unsigned
+
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om source < destination dvs indikerar att man använd operationen felaktigt, annars 0
@@ -153,7 +156,7 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
-00110:  bitshift right
+00110:  BSR bitshift right
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
 N  :  1 om resultatets sign bit är satt, annars 0
@@ -162,7 +165,7 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
-00111:  bitshift left
+00111:  BSL bitshift left
 
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
@@ -213,15 +216,7 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
-
-/*
-(ALL THESE ARE COMPARE, replacing these with CMP only)
-01100:  EQUAL
-01101:  LESSTHAN
-01110:  MORETHAN
-*/
-
-01100:  CMP(unsigned)
+01100:  CMPU(unsigned)
 
 Påverkade statusflaggor:
 Z  :  1 om x-y=0 annars 0
@@ -253,7 +248,7 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
-10000: addera utan att ändra statusflaggor(unsigned)
+10000: ADDX addera utan att ändra statusflaggor(unsigned)
 Påverkade statusflaggor:
 Z  :  IF
 N  :  IF

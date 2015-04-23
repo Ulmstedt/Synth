@@ -16,7 +16,7 @@ component SoutArea is
    port(
       clk               : in std_logic;
       rst               : in std_logic;
-      --sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
+      sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
       sclk              : out std_logic; -- Serial clock
       mclk              : out std_logic; -- Master clock
       lrck              : out std_logic; -- Left/Right clock
@@ -39,7 +39,7 @@ BEGIN
    sout : SoutArea port map(
       clk => clk, 
       rst => rst,
-      --sampleBuffer => sampleBuffer,
+      sampleBuffer => sampleBuffer,
       sclk => sclk,
       mclk => mclk,
       lrck => lrck,

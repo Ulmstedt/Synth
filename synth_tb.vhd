@@ -6,30 +6,27 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 use work.constants.all;
 
-ENTITY cpu_tb IS
-END cpu_tb;
+ENTITY synth_tb IS
+END synth_tb;
 
-ARCHITECTURE behavior OF cpu_tb IS 
+ARCHITECTURE behavior OF synth_tb IS 
 
   -- Component Declaration
-component CPUArea is
+component Synth is
    port(
-      audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      rst      : in std_logic;
-      clk      : in std_logic
+      rst         : in std_logic;
+      clk         : in std_logic
    );
 end component;
 	
   signal clk 		   : std_logic	:= '0';
   signal rst 		   : std_logic	:= '0';
-  signal audioOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
   signal tb_running	: boolean 	:= true;
 
 BEGIN
 
   -- Component Instantiation
-   cpu : CPUArea port map(
-      audioOut => audioOut,
+   synt : Synth port map(
       rst      => rst,
       clk      => clk
    );
