@@ -32,7 +32,7 @@ architecture Behavioral of MainArea is
       port(
          pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
          pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
@@ -91,10 +91,6 @@ architecture Behavioral of MainArea is
    
    signal Reg2ASig   : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal Reg2BSig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regAOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regBOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regASel    : std_logic_vector(REG_BITS - 1 downto 0);
-   signal regBSel    : std_logic_vector(REG_BITS - 1 downto 0);
    signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    
 
@@ -129,8 +125,8 @@ begin
          sRO     => SR(O_OFFSET),
          sRC     => SR(C_OFFSET),
          D2Out   => regDOut,
-         B2Out   => regBOut,
-         A2Out   => regAOut,
+         B2Out   => reg2BSig,
+         A2Out   => reg2ASig,
          D3Out   => d3Out,
          Z4D4Out => regWriteVal,
          rst     => rst,
@@ -155,7 +151,7 @@ begin
    regs : RegArea port map(
       pmemSel     => pmemSel,
       pmemOut     => pmemOut,
-      ir1         => ir1,
+      ir2         => ir2,
       regAOut     => reg2ASig,
       regBOut     => reg2BSig,
       SRin        => SR,
@@ -165,22 +161,6 @@ begin
       regWrite    => regWrite,
       rst         => rst,
       clk         => clk
-   );
-   
-   regA : Reg port map(
-      doRead   => clk,
-      input    => Reg2ASig,
-      output   => regAOut,
-      rst      => rst,
-      clk      => clk
-   );
-   
-   regB : Reg port map(
-      doRead   => clk,
-      input    => Reg2BSig,
-      output   => regBOut,
-      rst      => rst,
-      clk      => clk
    );
    
    ir3   : Reg

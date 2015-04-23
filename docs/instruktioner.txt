@@ -114,6 +114,7 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
+
 00010:  ADD signed
 
 Påverkade statusflaggor:
@@ -123,6 +124,7 @@ C  :  IF
 O  :  1 om två positiva tal resulterar i ett tal med signbit 1(eller vice versa med 2 negativa tal), annars 0
 RRM:  IF
 RRT:  IF
+
 
 00011:  SUBU unsigned
 

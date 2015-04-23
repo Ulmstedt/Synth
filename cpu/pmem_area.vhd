@@ -155,11 +155,11 @@ begin
          if rst='1' then
             stallCount <= "00";
          elsif stallInit /= "00" then
-            stallCount <= stallInit;
+            stallCount <= std_logic_vector(unsigned(stallInit) - 1);
          elsif stallCount /= "00" then
             stallCount <= std_logic_vector(unsigned(stallCount) - 1);
          end if;
       end if;
    end process;
-   stall <= '1' when stallCount /= "00" else '0';
+   stall <= '1' when stallCount /= "00" OR stallInit /= "00" else '0';
 end Behaviorial;

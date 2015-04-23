@@ -22,7 +22,8 @@ package Constants is
    constant ALU_DEST_REG_OFFSET  : natural := 21;
    constant ALU_SRC_REG_OFFSET   : natural := 4;
    
-   constant WITH_OFFSET_OFFSET   : natural := 21;
+   constant WITH_OS_LOAD_OFFSET  : natural := 21;
+   constant WITH_OS_STORE_OFFSET : natural := 15;
    constant WITH_OFFSET_WIDTH    : natural := 11;
    
    constant OP_LOAD              : natural := 3;
