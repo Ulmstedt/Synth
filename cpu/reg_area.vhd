@@ -15,6 +15,7 @@ entity RegArea is
       regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
       SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
       SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
+      audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
       regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
       regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
       regWrite    : in std_logic;
@@ -39,6 +40,16 @@ architecture Behavioral of RegArea is
          clk         : in std_logic
       );
    end component;
+
+   component Timer is
+      generic(timer_width : natural := REG_WIDTH);
+      port(
+         loadValue   : in std_logic_vector(timer_width - 1 downto 0);
+         finished    : out std_logic;
+         rst         : in std_logic;
+         clk         : in std_logic
+      );
+   end component;
    
    signal writeReg   : std_logic_vector(REG_NUM - 1 downto 0);
    signal regVal     : regVal_t;
@@ -48,9 +59,14 @@ architecture Behavioral of RegArea is
    
    signal ir2OP      : std_logic_vector(OP_WIDTH - 1 downto 0);
    --signal t          : std_logic_vector(REG_NUM - 1 downto 0);
-   signal SRsig      : std_logic_vector(SR_WIDTH - 1 downto 0);
-   signal SRlast     : std_logic_vector(SR_WIDTH - 1 downto 0);
+   signal SRsig      : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
+   signal SRlast     : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
    signal resetSR    : std_logic_vector(SR_WIDTH - 1 downto 0);
+
+   signal lt1        : std_logic_vector(2*REG_WIDTH - 1 downto 0);
+   signal lt1lsbs    : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal lt1msbs    : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal lt1done    : std_logic;
 begin
    -- Generic Registers
    gregs : for I in 0 to GREGS_NUM - 1 generate
@@ -74,14 +90,52 @@ begin
       clk      => clk
    );
    SRout <= regVal(SR_REG_OFFSET)(SR_WIDTH - 1 downto 0);
-   
+
+   -- Long timer 1 (Register 16 & 17)
+   lt1lsbs <= regWriteVal when writeReg(16) = '1' else (others => '0');
+   lt1lsb : Reg
+   generic map(regWidth => REG_WIDTH)
+   port map(
+      doRead   => clk,
+      input    => lt1lsbs,
+      output   => lt1(REG_WIDTH - 1 downto 0),
+      rst      => rst,
+      clk      => clk
+   );
+   lt1msbs <= regWriteVal when writeReg(17) = '1' else (others => '0');
+   lt1msb : Reg
+   generic map(regWidth => REG_WIDTH)
+   port map(
+      doRead   => clk,
+      input    => lt1msbs,
+      output   => lt1(2*REG_WIDTH - 1 downto REG_WIDTH),
+      rst      => rst,
+      clk      => clk
+   );
+   lt1t : Timer
+   generic map(timer_width => 2*REG_WIDTH)
+   port map(
+         loadValue   => lt1,
+         finished    => lt1done,
+         rst         => rst,
+         clk         => clk
+   );
+
+   -- Audio-out reg
+   audioReg : Reg port map(
+         doRead   => writeReg(31),
+         input    => regWriteVal,
+         output   => audioOut,
+         rst      => rst,
+         clk      => clk
+      );
    -- fill with registers as appropriate
    
    -- Convenience signal
    ir2OP <= ir2(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
    
    -- Set the bit in the map that is currently being written to
-   wsel : for I in 0 to REG_BITS - 1 generate
+   wsel : for I in 0 to REG_NUM - 1 generate
       writeReg(I) <= '1' when to_integer(unsigned(regWriteSel)) = I else '0';
    end generate wsel;
    --t(0) <= regWrite;
@@ -114,13 +168,15 @@ begin
                SRlast(I) <= '0';
                -- Reset on read
             else
-               SRlast(I) <= regVal(SR_REG_OFFSET)(I);
+               SRlast(I) <= SRsig(I);
                -- Non-resetting flags need to keep their value once set
             end if;
          end loop;
       end if;
    end process;
-   SRsig <= (SRin(SR_WIDTH - 1 downto 4) or SRlast(SR_WIDTH - 1 downto 4)) & SRin(3 downto 0);
+   SRsig <= (( SRin(SR_WIDTH - 1 downto 5) &
+               lt1done)
+            or SRlast(SR_WIDTH - 1 downto 4)) & SRin(3 downto 0);
    
    -- Destination (or value to save to memory)
    regBSel <=  ir2(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1)
