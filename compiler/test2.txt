@@ -1,0 +1,44 @@
+ADDU.R $A, $10
+ADDU.C $A, $10
+
+ADD.R $A, $10
+ADD.C $A, $10
+
+SUBU.R $A, $10
+SUBU.C $A, $10
+
+SUB.R $A, $10
+SUB.C $A, $10
+
+MUL.R $A, $10
+MUL.C $A, $10
+
+BSR.R $A, $10
+BSR.C $A, $10
+
+BSL.R $A, $10
+BSL.C $A, $10
+
+AND.R $A, $10
+AND.C $A, $10
+
+OR.R $A, $10
+OR.C $A, $10
+
+XOR.R $A, $10
+XOR.C $A, $10
+
+NOT.R $A, $10
+NOT.C $A, $10
+
+CMPU.R $A, $10
+CMPU.C $A, $10
+
+CMP.R $A, $10
+CMP.C $A, $10
+
+BITTEST.R $A, $10
+BITTEST.C $A, $10
+
+ADDX.R $A, $10
+ADDX.C $A, $10
