@@ -8,7 +8,6 @@ entity Timer is
    generic(timer_width : natural := REG_WIDTH);
    port(
       loadValue   : in std_logic_vector(timer_width - 1 downto 0);
-      loadTimer   : in std_logic;
       finished    : out std_logic;
       rst         : in std_logic;
       clk         : in std_logic
@@ -17,7 +16,7 @@ end Timer;
 
 architecture Behavioral of Timer is
    signal counter          : std_logic_vector(loadValue'range);
-   signal finishedCounting : std_logic;
+   signal finishedCounting : std_logic := '0';
 begin
    process (clk) is
    begin
@@ -28,13 +27,13 @@ begin
          if finishedCounting = '1' then
             finishedCounting <= '0';
          end if;
-         if to_integer(unsigned(loadValue)) /= 0 then
+         if to_integer(unsigned(loadValue(loadValue'high downto loadValue'high - REG_WIDTH + 1))) /= 0 then
             counter <= loadValue;
-         elsif to_integer(unsigned(counter)) > 1 then
+         elsif to_integer(unsigned(counter)) >= 1 then
             if to_integer(unsigned(counter)) = 1 then
                finishedCounting <= '1';
             end if;
-            counter <= std_logic_vector(to_integer(unsigned(counter)) - 1);
+            counter <= std_logic_vector(unsigned(counter) - 1);
          end if;
       end if;
    end process;

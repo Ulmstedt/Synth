@@ -62,6 +62,27 @@
 
    <!-- BRANCH -->
 
+   <instr name="BRA">
+      <OP>01000</OP>
+      <DEST>
+         <LENGTH>11</LENGTH>
+      </DEST>
+   </instr>
+
+   <instr name="BRA.OR">
+      <OP>01001</OP>
+      <DEST>
+         <LENGTH>5</LENGTH>
+      </DEST>
+   </instr>
+
+   <instr name="BRA.O">
+      <OP>01010</OP>
+      <DEST>
+         <LENGTH>10</LENGTH>
+      </DEST>
+   </instr>
+
    <instr name="BCC">
       <OP>10000</OP>
       <DEST>
@@ -72,7 +93,7 @@
       </SRC>
    </instr>
 
-   <instr name="BCC.OFR">
+   <instr name="BCC.OR">
       <OP>10001</OP>
       <DEST>
          <LENGTH>4</LENGTH>
@@ -102,7 +123,7 @@
       </SRC>
    </instr>
 
-   <instr name="BNCC.OFR">
+   <instr name="BNCC.OR">
       <OP>10101</OP>
       <DEST>
          <LENGTH>4</LENGTH>
@@ -134,7 +155,7 @@
 
    <!-- 3 args -->
 
-   <instr name="STORE.WO">
+   <instr name="STORE.O">
       <OP>11010</OP>
       <DEST>
          <LENGTH>11</LENGTH>
@@ -147,7 +168,7 @@
       </OFFSET>
    </instr>
 
-   <instr name="STORE.WOFR">
+   <instr name="STORE.OR">
       <OP>11011</OP>
       <DEST>
          <LENGTH>11</LENGTH>
@@ -160,7 +181,7 @@
       </OFFSET>
    </instr>
 
-   <instr name="LOAD.WO">
+   <instr name="LOAD.O">
       <OP>11110</OP>
       <DEST>
          <LENGTH>5</LENGTH>
@@ -173,7 +194,7 @@
       </OFFSET>
    </instr>
 
-   <instr name="LOAD.WOFR">
+   <instr name="LOAD.OR">
       <OP>11111</OP>
       <DEST>
          <LENGTH>5</LENGTH>

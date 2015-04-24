@@ -28,10 +28,10 @@ STORE.c (constant) (specialfall där vi inte hade tillräckligt med bitar för adre
 STORE.r (from register) - stall
 11001 AAA AAAA AAAA XXXX XXXX XXXR RRRR
 
-STORE.wo (from register with constant offset) - stall
+STORE.o (from register with constant offset) - stall
 11010 AAAA AAAA AAA CCCC CCCC CCCR RRRR
 
-STORE.wofr (from register with constant offset from register) - stall
+STORE.or (from register with constant offset from register) - stall
 11011 AAAA AAAA AAA OOOO O XXXX XX R RRRR
 		(O = Register with offset data)
 LOAD.a
@@ -40,10 +40,10 @@ LOAD.a
 LOAD.c
 11101 RRRR RXX XXXX DDDD DDDD DDDD DDDD
 
-LOAD.wo (with offset)
+LOAD.o (with offset)
 11110 RRRR RCCC CCCC CCCC AAA AAAA AAAA
 
-LOAD.wofr (with offset in register)
+LOAD.or (with offset in register)
 11111 RRRR R OOOO O XXXX XX AAA AAAA AAAA
 
 MOVE - stall
@@ -52,20 +52,20 @@ MOVE - stall
 ---------------------------------------------
 --Branch med offset i register behöver dataforwarding
 
-BRANCH(till adress)
+BRA (till adress)
 01000 XXXX XXXX XXXX XXXX AAA AAAA AAAA
 
-BRANCH(offset i register) - stall
+BRA.OR(offset i register) - stall
 01001 XXX XXXX XXXX XXXX XXXX XXXR RRRR
 
-BRANCH(offset från där man står)
+BRA.O(offset från där man står)
 01010 XXX XXXX XXXX XXXX XXOO OOOO OOOO 
 
 BCC
 10000 SSSS XXXX XXXX XXXX AAA AAAA AAAA
 (S = status flag)
 
-BCC.OFR(offset from reg) - stall
+BCC.OR(offset from reg) - stall
 10001 SSSS XXX XXXX XXXX XXXX XXXR RRRR
 
 BCC.O(offset från där man står)
@@ -75,7 +75,7 @@ BNCC
 10100 SSSS XXXX XXXX XXXX AAA AAAA AAAA
 (S = status flag)
 
-BNCC.OFR(offset from reg) - stall
+BNCC.OR(offset from reg) - stall
 10101 SSSS XXX XXXX XXXX XXXX XXXR RRRR
 
 BNCC.O(offset från där man står)

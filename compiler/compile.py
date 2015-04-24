@@ -2,7 +2,7 @@ from __future__ import print_function
 import xml.etree.ElementTree as ET
 
 # Constants dict
-constants = {} 
+constants = {"SRZ": "0", "SRN": "1", "SRC": "2", "SRO": "3", "SRT1": "4" } 
 
 # Parses and argument and returns its correct form (hex, dec, bin)
 def parse_arg(arg):
@@ -13,7 +13,7 @@ def parse_arg(arg):
    elif arg[0] == '%':
       return arg[1:]
    elif arg[0] == '#':
-      return parse_arg(constants[arg[1:]])
+      return parse_arg(constants[arg[1:].upper()])
    # Dec
    else:
       return bin(int(arg,10))[2:]
@@ -28,17 +28,20 @@ def comp_file(*filenames):
       rules = ET.parse('rules.xml')
       root = rules.getroot()
 
-      # for finding errors
+      # instruction counter
       instr_counter = 0
+
+      # for finding errors
+      line_counter = 0
       instr_found = True     
 
       for instruction in code:
          if instruction == '\n':
             continue
          if instr_found == False:
-            print("Bad instruction found on line", instr_counter)
+            print("Bad instruction found on line", line_counter)
          instr_found = False
-         instr_counter += 1
+         line_counter += 1
          instruction = instruction.split(';',1)[0] # Remove eventual comments
          instr_list = instruction.upper().replace(',',' ').split() # split string, instr_list[1] = arg1 and so on
 
@@ -47,13 +50,25 @@ def comp_file(*filenames):
             constants[instr_list[1].upper()] = instr_list[2].upper()
             instr_found = True
             continue
+         elif instr_list[0][0] == '&':
+            constants[instr_list[0][1:].upper()] = str(instr_counter)
+            instr_found = True
+            continue
          for instr in root.findall('instr'):
             if instr.get('name') == instr_list[0]: # instr is now the needed element
+               instr_counter += 1
                instr_found = True
                OP = instr.find('OP').text
                # 0 arguments
                if len(instr_list) == 1:
                   tempstring = OP + (32-len(OP))*'0'
+                  print(tempstring)
+                  outfile.write(tempstring)
+               # 1 argument
+               elif len(instr_list) == 2:
+                  DEST_LENGTH = instr.find('DEST').find('LENGTH').text
+                  ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
+                  tempstring = OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1
                   print(tempstring)
                   outfile.write(tempstring)
                # 2 arguments

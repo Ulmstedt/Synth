@@ -37,6 +37,7 @@ architecture Behavioral of MainArea is
          regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
          SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
+         audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
          regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
          regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
          regWrite    : in std_logic;
@@ -91,13 +92,11 @@ architecture Behavioral of MainArea is
    
    signal Reg2ASig   : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal Reg2BSig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regAOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regBOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
    
 
    signal ALUOut   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := "00000000";
+   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
    signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
 
    signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);

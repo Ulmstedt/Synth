@@ -11,6 +11,7 @@ entity MainArea is
       pmemSel  : in std_logic_vector(REG_BITS - 1 downto 0);
       pmemOut  : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
       srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
+      audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -37,6 +38,7 @@ architecture Behavioral of MainArea is
          regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
          SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
          SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
+         audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
          regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
          regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
          regWrite    : in std_logic;
@@ -95,7 +97,7 @@ architecture Behavioral of MainArea is
    
 
    signal ALUOut   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := "00000000";
+   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
    signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
 
    signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);
@@ -156,6 +158,7 @@ begin
       regBOut     => reg2BSig,
       SRin        => SR,
       SRout       => srOut,
+      audioOut    => audioOut,
       regWriteSel => regWriteSel,
       regWriteVal => regWriteVal,
       regWrite    => regWrite,

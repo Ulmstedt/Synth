@@ -6,8 +6,9 @@ use work.constants.all;
 
 entity CPUArea is
    port(
-      rst   : in std_logic;
-      clk   : in std_logic
+      audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      rst         : in std_logic;
+      clk         : in std_logic
    );
 end CPUArea;
 
@@ -19,6 +20,7 @@ architecture Behavioral of CPUArea is
          pmemSel  : in std_logic_vector(REG_BITS - 1 downto 0);
          pmemOut  : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
          srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
+         audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
          rst      : in std_logic;
          clk      : in std_logic
       );
@@ -48,7 +50,8 @@ begin
       ir2         => ir2,
       pmemSel     => regSel,
       pmemOut     => regVal,
-      srOut          => sr,
+      srOut       => sr,
+      audioOut    => audioOut,
       rst         => rst,
       clk         => clk
    );
