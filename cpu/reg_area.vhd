@@ -27,7 +27,8 @@ end RegArea;
 architecture Behavioral of RegArea is
    type regVal_t is array(REG_NUM - 1 downto 0) of std_logic_vector(REG_WIDTH - 1 downto 0);
    constant GREGS_NUM         : natural := 8;
-   constant SR_REG_OFFSET     : natural := GREGS_NUM; -- since greg's last ID is one less than the number of gregs
+   constant SR_REG_OFFSET     : natural := GREGS_NUM; 
+   -- since greg's last ID is one less than the number of gregs
 
    component Reg
       generic(regWidth : natural := REG_WIDTH);
