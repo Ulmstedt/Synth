@@ -41,5 +41,6 @@ package Constants is
    constant N_OFFSET             : natural := 1;
    constant C_OFFSET             : natural := 2;
    constant O_OFFSET             : natural := 3;
-   constant T1_OFFSET            : natural := 4;
+   constant LT1_OFFSET           : natural := 4;
+   constant ST1_OFFSET           : natural := 5;
 end Constants;

@@ -12,6 +12,7 @@ entity IR1 is
       ir2in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
       output   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
       stall    : out std_logic_vector(1 downto 0); 
+      nextPCt  : in std_logic_vector(1 downto 0);
       rst      : in std_logic;
       clk      : in std_logic
    );
@@ -36,7 +37,6 @@ architecture Behaviorial of IR1 is
    signal ir1reg2          : std_logic_vector(REG_BITS - 1 downto 0);
    signal ir2reg           : std_logic_vector(REG_BITS - 1 downto 0);
    signal sameReg          : std_logic;
-   signal isJmp            : std_logic;
    signal stalling         : std_logic;
    signal irOut            : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    signal ir1stallCausing  : std_logic;
@@ -55,10 +55,6 @@ begin
    
    -- Convenience signal
    ir1OP <= irOut(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
-   
-   -- decide pcSel depending on input
-   -- Is it a jump? OP code is 10XXX or 01XXX for branches
-   isJmp       <= ir2in(PMEM_WIDTH - 1) xor ir2in(PMEM_WIDTH - 2); -- prev. irOut
    
    -- Stall needed calculations
    ir2isLoad   <= '1' when ir2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "11100"
@@ -108,7 +104,7 @@ begin
             "00";
    
    muxOutput <=   irOut when stalling = '1' else
-                  (others => '0') when isJmp = '1' else
+                  (others => '0') when nextPCt = "01" else
                   input;
    
    

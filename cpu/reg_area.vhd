@@ -68,6 +68,10 @@ architecture Behavioral of RegArea is
    signal lt1lsbs    : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal lt1msbs    : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal lt1done    : std_logic;
+
+   signal st1        : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal st1s       : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal st1done    : std_logic;
 begin
    -- Generic Registers
    gregs : for I in 0 to GREGS_NUM - 1 generate
@@ -118,6 +122,26 @@ begin
    port map(
          loadValue   => lt1,
          finished    => lt1done,
+         rst         => rst,
+         clk         => clk
+   );
+
+   -- Short timer 1 (Register 18)
+   st1s <= regWriteVal when writeReg(18) = '1' else (others => '0');
+   st1r : Reg
+   generic map(regWidth => REG_WIDTH)
+   port map(
+      doRead   => clk,
+      input    => st1s,
+      output   => st1,
+      rst      => rst,
+      clk      => clk
+   );
+   st1t : Timer
+   generic map(timer_width => REG_WIDTH)
+   port map(
+         loadValue   => st1,
+         finished    => st1done,
          rst         => rst,
          clk         => clk
    );
@@ -175,8 +199,8 @@ begin
          end loop;
       end if;
    end process;
-   SRsig <= (( SRin(SR_WIDTH - 1 downto 5) &
-               lt1done)
+   SRsig <= (( SRin(SR_WIDTH - 1 downto 6) &
+               st1done & lt1done)
             or SRlast(SR_WIDTH - 1 downto 4)) & SRin(3 downto 0);
    
    -- Destination (or value to save to memory)

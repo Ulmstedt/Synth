@@ -6,6 +6,10 @@ use work.constants.all;
 
 entity Synth is
    port(
+      mclk        : out std_logic;
+      lrck        : out std_logic;
+      sclk        : out std_logic;
+      sdin        : out std_logic;
       rst         : in std_logic;
       clk         : in std_logic
    );
@@ -35,9 +39,7 @@ architecture Behavioral of Synth is
    end component;
 
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-   signal mclks      : std_logic;
-   signal lrcks       : std_logic;
-   signal sdouts      : std_logic;
+   signal dem        : std_logic := '1'; 
 
 begin
 
@@ -51,9 +53,11 @@ begin
       clk            => clk,
       rst            => rst,
       sampleBuffer   => audio,
-      mclk           => mclkS,
-      lrck           => lrcks,
-      sdout          => sdouts
+      mclk           => mclk,
+      lrck           => lrck,
+      sdout          => sdin
    );
+   
+   sclk <= dem;
 
 end Behavioral;
