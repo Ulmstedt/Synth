@@ -11,7 +11,8 @@ entity SoutArea is
       sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
       mclk              : out std_logic; -- Master clock
       lrck              : out std_logic; -- Left/Right clock
-      sdout             : out std_logic -- Serial data output
+      sdout             : out std_logic; -- Serial data output
+      sclk              : out std_logic
    );
 end SoutArea;
 
@@ -32,12 +33,13 @@ component SoutClkgen is
    port(
       clk               : in std_logic; -- Clock
       rst               : in std_logic; -- Reset
+      sendBit           : out std_logic;
       sclk              : out std_logic; -- Serial clock
       mclk              : out std_logic -- Master clock
    );
 end component;
 
-signal sclkS            : std_logic;
+signal sendBitS            : std_logic;
 
 
 begin
@@ -46,7 +48,7 @@ begin
       clk => clk, 
       rst => rst,
       sampleBuffer => sampleBuffer,
-      sclk => sclkS,
+      sclk => sendBitS,
       lrck => lrck,
       sdout => sdout
    );
@@ -54,7 +56,8 @@ begin
    sound_clkgen  : SoutClkgen port map(
       clk => clk, 
       rst => rst,
-      sclk => sclkS,
+      sendBit => sendBitS,
+      sclk => sclk,
       mclk => mclk
    );
 

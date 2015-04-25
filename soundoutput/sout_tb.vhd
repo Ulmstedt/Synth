@@ -17,17 +17,17 @@ component SoutArea is
       clk               : in std_logic;
       rst               : in std_logic;
       sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-      sclk              : out std_logic; -- Serial clock
       mclk              : out std_logic; -- Master clock
       lrck              : out std_logic; -- Left/Right clock
-      sdout             : out std_logic -- Serial data output
+      sdout             : out std_logic; -- Serial data output
+      sclk              : out std_logic
    );
 end component;
 	
    signal clk 		         : std_logic	:= '0';
    signal rst 		         : std_logic	:= '0';
    signal sampleBuffer     : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-   signal sclk             : std_logic; -- Serial clock
+   signal sclkS            : std_logic; -- Serial clock
    signal mclk             : std_logic; -- Master clock
    signal lrck             : std_logic; -- Left/Right clock
    signal sdout            : std_logic; -- Serial data output
@@ -40,7 +40,7 @@ BEGIN
       clk => clk, 
       rst => rst,
       sampleBuffer => sampleBuffer,
-      sclk => sclk,
+      sclk => sclkS,
       mclk => mclk,
       lrck => lrck,
       sdout => sdout

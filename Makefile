@@ -60,6 +60,10 @@ synth.%: S=synth.vhd cpu/cpu_area.vhd cpu/main_area.vhd cpu/pmem_area.vhd cpu/ir
 synth.%: T=synth_tb.vhd
 synth.%: U=synth.ucf
 
+example.%: S=soundoutput/example/i2s_example.vhd
+example.%: T=soundoutput/example/example_tb.vhd
+example.%: U=main.ucf
+
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)

@@ -10,6 +10,8 @@ entity Synth is
       lrck        : out std_logic;
       sclk        : out std_logic;
       sdin        : out std_logic;
+      seg         : out std_logic_vector(7 downto 0);
+      an          : out std_logic_vector(3 downto 0);
       rst         : in std_logic;
       clk         : in std_logic
    );
@@ -34,12 +36,15 @@ architecture Behavioral of Synth is
          sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
          mclk              : out std_logic; -- Master clock
          lrck              : out std_logic; -- Left/Right clock
-         sdout             : out std_logic -- Serial data output
+         sdout             : out std_logic; -- Serial data output
+         sclk              : out std_logic
       );
    end component;
 
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-   signal dem        : std_logic := '1'; 
+   
+   signal sdouts     : std_logic;
+
 
 begin
 
@@ -55,9 +60,12 @@ begin
       sampleBuffer   => audio,
       mclk           => mclk,
       lrck           => lrck,
-      sdout          => sdin
+      sdout          => sdouts,
+      sclk           => sclk
    );
    
-   sclk <= dem;
+   sdin <= sdouts;
+   seg <= "1111111" & sdouts;
+   an <= "0111";
 
 end Behavioral;
