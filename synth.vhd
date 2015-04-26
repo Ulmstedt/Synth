@@ -12,6 +12,7 @@ entity Synth is
       sdin        : out std_logic;
       seg         : out std_logic_vector(7 downto 0);
       an          : out std_logic_vector(3 downto 0);
+      uart        : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic
    );
@@ -20,10 +21,15 @@ end Synth;
 architecture Behavioral of Synth is
 
    constant SAMPLE_SIZE : natural := 16;
+   constant MIDI_WIDTH  : natural := 8;
 
    component CPUArea is
       port(
          audioOut    : out std_logic_vector(SAMPLE_SIZE - 1 downto 0);
+         mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         midiRdy     : in std_logic;
          rst         : in std_logic;
          clk         : in std_logic
       );
@@ -41,15 +47,36 @@ architecture Behavioral of Synth is
       );
    end component;
 
+   component MidiArea is
+      port(
+         clk      : in std_logic;
+         rst      : in std_logic;
+         uart     : in std_logic;
+         mreg1    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         readRdy  : out std_logic -- pulse when a complete message is ready in Mreg1-3
+      );
+   end component;
+
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
    
    signal sdouts     : std_logic;
+
+   signal mreg1S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
+   signal mreg2S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
+   signal mreg3S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
+   signal midiRdyS   : std_logic;
 
 
 begin
 
    cpu : CPUArea port map(
       audioOut    => audio,
+      mreg1       => mreg1S,
+      mreg2       => mreg2S,
+      mreg3       => mreg3S,
+      midiRdy     => midiRdyS,
       rst         => rst,
       clk         => clk
    );
@@ -63,9 +90,19 @@ begin
       sdout          => sdouts,
       sclk           => sclk
    );
+
+   midi : MidiArea port map(
+      clk      => clk,
+      rst      => rst,
+      uart     => uart,
+      mreg1    => mreg1S,
+      mreg2    => mreg2S,
+      mreg3    => mreg3S,
+      readRdy  => midiRdyS
+   );
    
    sdin <= sdouts;
-   seg <= "1111111" & sdouts;
+   seg <= mreg1S;
    an <= "0111";
 
 end Behavioral;

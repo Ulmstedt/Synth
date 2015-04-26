@@ -9,7 +9,7 @@ entity SoundOutput is
       clk               : in std_logic; -- Clock
       rst               : in std_logic; -- Reset
       sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-      sclk              : in std_logic; -- Serial clock
+      sendBit           : in std_logic; -- Serial clock
       lrck              : out std_logic; -- Left/Right clock
       sdout             : out std_logic -- Serial data output
    );
@@ -22,14 +22,12 @@ architecture Behavioral of SoundOutput is
    signal sample           : std_logic_vector(SAMPLE_SIZE - 1 downto 0) := (others => '0'); -- Current sample
    signal lrckS            : std_logic := '0'; -- Are we sending left/right output?
    
-   signal sclkS            : std_logic; -- Serial clock signal
+   signal sendBitS         : std_logic; -- Serial clock signal
 
-   signal tempsignal       : std_logic_vector(SAMPLE_SIZE_WIDTH-1 downto 0);
-   
+   signal t1               : std_logic := '1';
+   signal t2               : std_logic := '1';
+   signal t3               : std_logic := '0';
 begin
-
-   tempsignal <= std_logic_vector(to_unsigned(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)),SAMPLE_SIZE_WIDTH));
-
 
    process(clk) is
    begin
@@ -39,7 +37,7 @@ begin
             lrckS <= '0';
             bitCounter <= (others => '0');
             sdout <= '0';
-         elsif sclk = '1' then
+         elsif sendBit = '1' then
             if bitCounter = "000000" then
                if lrckS = '0' then
                   lrckS <= '1';
@@ -47,7 +45,10 @@ begin
                   lrckS <= '0';
                end if;
             end if;
-            sdout <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+            t1 <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+            t2 <= t1;
+            t3 <= t2;
+            sdout <= t3;
             -- Check for when the entire sample has been sent
             if bitCounter = std_logic_vector(to_unsigned(SAMPLE_SIZE-1,SAMPLE_SIZE_WIDTH)) then
                bitCounter <= (others => '0');
@@ -62,6 +63,5 @@ begin
    end process;
 
    lrck <= lrckS;
-   sclkS <= sclk;
    
 end Behavioral;

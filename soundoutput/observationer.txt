@@ -1,0 +1,8 @@
+481 - 460.5 = 20.5 us (sclk börjar låg) = 48 780 Hz, 32 sclk / lrck
+exakt 16 mclk / sclk
+exakt 4 clk / mclk
+
+sclk hög
+mclk låg
+clk_counter = 1
+mclk_counter = 111

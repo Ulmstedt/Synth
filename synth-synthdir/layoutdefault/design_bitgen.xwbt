@@ -1,0 +1,7 @@
+INFILE=/edu/matul773/datorkonst/projekt/synth/synth-synthdir/layoutdefault/design.ncd
+OUTFILE=/edu/matul773/datorkonst/projekt/synth/synth-synthdir/layoutdefault/design.bit
+FAMILY=Spartan6
+PART=xc6slx16-3csg324
+WORKINGDIR=/edu/matul773/datorkonst/projekt/synth/synth-synthdir/layoutdefault
+LICENSE=ISE
+USER_INFO=1777494980_210567422_043

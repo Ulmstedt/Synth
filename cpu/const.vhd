@@ -2,6 +2,8 @@ package Constants is
    constant PMEM_WIDTH           : natural := 32;
    constant ADDR_WIDTH           : natural := 11;
    constant PMEM_HEIGHT          : natural := 64;
+
+   constant MIDI_WIDTH           : natural := 8;
    
    constant MEM_HEIGHT           : natural := 64;
     
@@ -43,4 +45,6 @@ package Constants is
    constant O_OFFSET             : natural := 3;
    constant LT1_OFFSET           : natural := 4;
    constant ST1_OFFSET           : natural := 5;
+   constant ST2_OFFSET           : natural := 6;
+   constant MIDI_OFFSET          : natural := 7;
 end Constants;

@@ -14,19 +14,39 @@ ARCHITECTURE behavior OF synth_tb IS
   -- Component Declaration
 component Synth is
    port(
+      mclk        : out std_logic;
+      lrck        : out std_logic;
+      sclk        : out std_logic;
+      sdin        : out std_logic;
+      uart        : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic
    );
 end component;
 	
-  signal clk 		   : std_logic	:= '0';
-  signal rst 		   : std_logic	:= '0';
-  signal tb_running	: boolean 	:= true;
+   signal clk 	       : std_logic	:= '0';
+   signal rst 	       : std_logic	:= '0';
+   signal tb_running	 : boolean 	:= true;
+
+   signal mclkS       : std_logic;
+   signal lrckS       : std_logic;
+   signal sclkS       : std_logic;
+   signal sdinS       : std_logic;
+   signal uartS       : std_logic;
+  
+   signal midi_msg      : std_logic_vector(0 to 34) := "11111" & B"0_1001_0000_1" & B"0_1011_0111_1" & B"0_1010_0011_1";
+
+   constant UART_CLK_PERIOD  		   : natural := 3200;
 
 BEGIN
 
   -- Component Instantiation
    synt : Synth port map(
+      mclk     => mclkS,
+      lrck     => lrckS,
+      sclk     => sclkS,
+      sdin     => sdinS,
+      uart     => uartS,
       rst      => rst,
       clk      => clk
    );
@@ -45,9 +65,10 @@ BEGIN
 
   
 
-  stimuli_generator : process
-    variable i : integer;
-  begin
+   stimuli_generator : process
+   variable i : integer;
+   variable n : integer := 0;
+   begin
     -- Aktivera reset ett litet tag.
     rst <= '1';
     wait for 500 ns;
@@ -61,6 +82,13 @@ BEGIN
 
     for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
       wait until rising_edge(clk);
+      -- Send midi message
+         if i mod UART_CLK_PERIOD = 0 and n < 35 then
+            uartS <= midi_msg(n);
+            -- report "Midi_msg(n): " & std_logic'image(midi_msg(n));
+            --report "(n): " & integer'image(n);
+            n := n+1;
+         end if;
     end loop;  -- i
 	
     tb_running <= false;                -- Stanna klockan (vilket medför att inga

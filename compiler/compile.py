@@ -2,7 +2,7 @@ from __future__ import print_function
 import xml.etree.ElementTree as ET
 
 # Constants dict
-constants = {"SRZ": "0", "SRN": "1", "SRC": "2", "SRO": "3", "SRLT1": "4", "SRST1": "5" } 
+constants = {"SRZ": "0", "SRN": "1", "SRC": "2", "SRO": "3", "SRLT1": "4", "SRST1": "5", "SRST2": "6", "SRMIDI": "7"} 
 
 # Parses and argument and returns its correct form (hex, dec, bin)
 def parse_arg(arg):
@@ -65,32 +65,29 @@ def comp_file(*filenames):
                   print(tempstring)
                   outfile.write(tempstring)
                # 1 argument
-               elif len(instr_list) == 2:
+               elif len(instr_list) >= 2:
                   DEST_LENGTH = instr.find('DEST').find('LENGTH').text
-                  ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
-                  tempstring = OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1
-                  print(tempstring)
-                  outfile.write(tempstring)
-               # 2 arguments
-               elif len(instr_list) >= 3:
-                  DEST_LENGTH = instr.find('DEST').find('LENGTH').text
-                  SRC_LENGTH = instr.find('SRC').find('LENGTH').text
+                  SRC_LENGTH = '0'
                   OFF_LENGTH = '0'
-
-                  # Parse args and make sure that the length is correct
                   ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
-                  ARG2 = parse_arg(instr_list[2]).rjust(int(SRC_LENGTH),'0')[-int(SRC_LENGTH):]
+                  ARG2 = ''
                   ARG3 = ''
+               # 2 arguments
+                  if len(instr_list) >= 3:
+                     SRC_LENGTH = instr.find('SRC').find('LENGTH').text
+                     
+                     # Parse args and make sure that the length is correct
+                     ARG2 = parse_arg(instr_list[2]).rjust(int(SRC_LENGTH),'0')[-int(SRC_LENGTH):]
 
-                  # 3 arguments
-                  if len(instr_list) == 4:
-                     OFF_LENGTH = instr.find('OFFSET').find('LENGTH').text               
-                     ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
+                     # 3 arguments
+                     if len(instr_list) == 4:
+                        OFF_LENGTH = instr.find('OFFSET').find('LENGTH').text               
+                        ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
 
-                  # Make sure the length of instruction is 32
-                  tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
-                  print(tempstring)
-                  outfile.write(tempstring)
+                     # Make sure the length of instruction is 32
+                     tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
+                     print(tempstring)
+                     outfile.write(tempstring)
 
                break # Correct instruction has been found
          

@@ -23,7 +23,7 @@ component SoundOutput is
       clk               : in std_logic; -- Clock
       rst               : in std_logic; -- Reset
       sampleBuffer      : in std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-      sclk              : in std_logic; -- Serial clock
+      sendBit           : in std_logic; -- Serial clock
       lrck              : out std_logic; -- Left/Right clock
       sdout             : out std_logic -- Serial data output
    );
@@ -48,7 +48,7 @@ begin
       clk => clk, 
       rst => rst,
       sampleBuffer => sampleBuffer,
-      sclk => sendBitS,
+      sendBit => sendBitS,
       lrck => lrck,
       sdout => sdout
    );

@@ -1,0 +1,1166 @@
+Release 12.4 - xst M.81d (lin64)
+Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.
+--> 
+Parameter TMPDIR set to tmpdir
+
+
+Total REAL time to Xst completion: 3.00 secs
+Total CPU time to Xst completion: 0.13 secs
+ 
+--> 
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Parsing
+  3) HDL Elaboration
+  4) HDL Synthesis
+       4.1) HDL Synthesis Report
+  5) Advanced HDL Synthesis
+       5.1) Advanced HDL Synthesis Report
+  6) Low Level Synthesis
+  7) Partition Report
+  8) Design Summary
+       8.1) Primitive and Black Box Usage
+       8.2) Device utilization summary
+       8.3) Partition Resource Summary
+       8.4) Timing Report
+            8.4.1) Clock Information
+            8.4.2) Asynchronous Control Signals Information
+            8.4.3) Timing Summary
+            8.4.4) Timing Details
+            8.4.5) Cross Clock Domains Report
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "design.prj"
+
+---- Target Parameters
+Output File Name                   : "design.ngc"
+Target Device                      : xc6slx16-3-csg324
+
+---- Source Options
+Top Module Name                    : synth
+
+=========================================================================
+
+WARNING:Xst:29 - Optimization Effort not specified
+The following parameters have been added:
+Optimization Goal                  : SPEED
+
+=========================================================================
+
+=========================================================================
+*                          HDL Parsing                                  *
+=========================================================================
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/const.vhd" into library work
+Parsing package <Constants>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../synth.vhd" into library work
+Parsing entity <Synth>.
+Parsing architecture <Behavioral> of entity <synth>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/cpu_area.vhd" into library work
+Parsing entity <CPUArea>.
+Parsing architecture <Behavioral> of entity <cpuarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/main_area.vhd" into library work
+Parsing entity <MainArea>.
+Parsing architecture <Behavioral> of entity <mainarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/pmem_area.vhd" into library work
+Parsing entity <PMemArea>.
+Parsing architecture <Behaviorial> of entity <pmemarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/ir1.vhd" into library work
+Parsing entity <IR1>.
+Parsing architecture <Behaviorial> of entity <ir1>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/ir2.vhd" into library work
+Parsing entity <IR2>.
+Parsing architecture <Behavioral> of entity <ir2>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/jmp.vhd" into library work
+Parsing entity <Jmp>.
+Parsing architecture <Behavioral> of entity <jmp>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/pcreg.vhd" into library work
+Parsing entity <PCReg>.
+Parsing architecture <Behavioral> of entity <pcreg>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/records.vhd" into library work
+Parsing package <Records>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/pmem_content.vhd" into library work
+Parsing package <pmemContent>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/pmem.vhd" into library work
+Parsing entity <pMemory>.
+Parsing architecture <Behavioral> of entity <pmemory>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/reg_area.vhd" into library work
+Parsing entity <RegArea>.
+Parsing architecture <Behavioral> of entity <regarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/reg.vhd" into library work
+Parsing entity <Reg>.
+Parsing architecture <Behavioral> of entity <reg>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/mem_area.vhd" into library work
+Parsing entity <MemArea>.
+Parsing architecture <Behavioral> of entity <memarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/mem_content.vhd" into library work
+Parsing package <memContent>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/mem.vhd" into library work
+Parsing entity <Memory>.
+Parsing architecture <Behavioral> of entity <memory>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/z4d4mux.vhd" into library work
+Parsing entity <Z4D4Mux>.
+Parsing architecture <Behavioral> of entity <z4d4mux>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/d_reg.vhd" into library work
+Parsing entity <DReg>.
+Parsing architecture <Behavioral> of entity <dreg>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/alu_area.vhd" into library work
+Parsing entity <ALUArea>.
+Parsing architecture <Behaviorial> of entity <aluarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/alu.vhd" into library work
+Parsing entity <ALU>.
+Parsing architecture <Behavioural> of entity <alu>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/alu_muxes.vhd" into library work
+Parsing entity <MUXbeforeALU>.
+Parsing architecture <Behavourial> of entity <muxbeforealu>.
+Parsing entity <storeMUXBeforeZ3>.
+Parsing architecture <Behavourial> of entity <storemuxbeforez3>.
+Parsing entity <withOffSetMUX>.
+Parsing architecture <Behavourial> of entity <withoffsetmux>.
+Parsing entity <leftForwardMUXALU>.
+Parsing architecture <Behavourial> of entity <leftforwardmuxalu>.
+Parsing entity <rightForwardMUXALU>.
+Parsing architecture <Behavourial> of entity <rightforwardmuxalu>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/rightforwardinglogic.vhd" into library work
+Parsing entity <forwardLogicRight>.
+Parsing architecture <Behavourial> of entity <forwardlogicright>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/leftforwardinglogic.vhd" into library work
+Parsing entity <forwardLogicLeft>.
+Parsing architecture <Behavourial> of entity <forwardlogicleft>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/timer.vhd" into library work
+Parsing entity <Timer>.
+Parsing architecture <Behavioral> of entity <timer>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../soundoutput/sout_constants.vhd" into library work
+Parsing package <sout_constants>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../soundoutput/sout_area.vhd" into library work
+Parsing entity <SoutArea>.
+Parsing architecture <Behavioral> of entity <soutarea>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../soundoutput/sout.vhd" into library work
+Parsing entity <SoundOutput>.
+Parsing architecture <Behavioral> of entity <soundoutput>.
+Parsing VHDL file "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../soundoutput/sout_clkgen.vhd" into library work
+Parsing entity <SoutClkgen>.
+Parsing architecture <Behavioral> of entity <soutclkgen>.
+
+=========================================================================
+*                            HDL Elaboration                            *
+=========================================================================
+
+Elaborating entity <Synth> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <CPUArea> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <MainArea> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <DReg> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <Reg> (architecture <Behavioral>) with generics from library <work>.
+
+Elaborating entity <ALUArea> (architecture <Behaviorial>) from library <work>.
+
+Elaborating entity <leftForwardMUXALU> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <forwardLogicLeft> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <rightForwardMUXALU> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <forwardLogicRight> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <MUXbeforeALU> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <storeMUXBeforeZ3> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <withOffSetMUX> (architecture <Behavourial>) from library <work>.
+
+Elaborating entity <ALU> (architecture <Behavioural>) from library <work>.
+
+Elaborating entity <MemArea> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <Memory> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <Z4D4Mux> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <RegArea> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <Timer> (architecture <Behavioral>) with generics from library <work>.
+
+Elaborating entity <Timer> (architecture <Behavioral>) with generics from library <work>.
+WARNING:HDLCompiler:634 - "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/reg_area.vhd" Line 56: Net <regVal[31][15]> does not have a driver.
+
+Elaborating entity <Reg> (architecture <Behavioral>) with generics from library <work>.
+WARNING:HDLCompiler:634 - "/edu/matul773/datorkonst/projekt/synth/synth-synthdir/xst/synth/../../../cpu/main_area.vhd" Line 100: Net <SR[15]> does not have a driver.
+
+Elaborating entity <PMemArea> (architecture <Behaviorial>) from library <work>.
+
+Elaborating entity <PCReg> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <Reg> (architecture <Behavioral>) with generics from library <work>.
+
+Elaborating entity <IR1> (architecture <Behaviorial>) from library <work>.
+
+Elaborating entity <IR2> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <Jmp> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <pMemory> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <SoutArea> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <SoundOutput> (architecture <Behavioral>) from library <work>.
+
+Elaborating entity <SoutClkgen> (architecture <Behavioral>) from library <work>.
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Synthesizing Unit <Synth>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/synth.vhd".
+    Summary:
+	no macro.
+Unit <Synth> synthesized.
+
+Synthesizing Unit <CPUArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/cpu_area.vhd".
+    Summary:
+	no macro.
+Unit <CPUArea> synthesized.
+
+Synthesizing Unit <MainArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/main_area.vhd".
+WARNING:Xst:2935 - Signal 'SR<15:4>', unconnected in block 'MainArea', is tied to its initial value (000000000000).
+    Summary:
+	no macro.
+Unit <MainArea> synthesized.
+
+Synthesizing Unit <DReg>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/d_reg.vhd".
+    Summary:
+	inferred   3 Multiplexer(s).
+Unit <DReg> synthesized.
+
+Synthesizing Unit <Reg_1>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/reg.vhd".
+        regWidth = 16
+    Found 16-bit register for signal <reg>.
+    Summary:
+	inferred  16 D-type flip-flop(s).
+Unit <Reg_1> synthesized.
+
+Synthesizing Unit <ALUArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu_area.vhd".
+WARNING:Xst:647 - Input <rst> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+	inferred   3 Multiplexer(s).
+Unit <ALUArea> synthesized.
+
+Synthesizing Unit <leftForwardMUXALU>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu_muxes.vhd".
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <leftForwardMUXALU> synthesized.
+
+Synthesizing Unit <forwardLogicLeft>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/leftforwardinglogic.vhd".
+WARNING:Xst:647 - Input <IR2<26:22>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR2<16:5>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR3<16:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR4<16:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR3DestReg[4]_equal_45_o> created at line 101
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR3DestRegALU[4]_equal_49_o> created at line 103
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR3DestReg[4]_equal_59_o> created at line 109
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR3DestRegALU[4]_equal_63_o> created at line 111
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR4DestReg[4]_equal_73_o> created at line 120
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR4DestRegALU[4]_equal_77_o> created at line 122
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR4DestReg[4]_equal_87_o> created at line 128
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR4DestRegALU[4]_equal_91_o> created at line 130
+    Summary:
+	inferred   8 Comparator(s).
+	inferred  29 Multiplexer(s).
+Unit <forwardLogicLeft> synthesized.
+
+Synthesizing Unit <rightForwardMUXALU>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu_muxes.vhd".
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <rightForwardMUXALU> synthesized.
+
+Synthesizing Unit <forwardLogicRight>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/rightforwardinglogic.vhd".
+WARNING:Xst:647 - Input <IR2<26:22>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR2<16:16>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR2<10:5>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR3<16:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <IR4<16:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR3DestReg[4]_equal_46_o> created at line 88
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR3DestRegALU[4]_equal_52_o> created at line 90
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR3DestReg[4]_equal_67_o> created at line 96
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR3DestRegALU[4]_equal_73_o> created at line 98
+    Found 5-bit comparator equal for signal <load_Read_Reg[4]_IR3DestReg[4]_equal_88_o> created at line 104
+    Found 5-bit comparator equal for signal <load_Read_Reg[4]_IR3DestRegALU[4]_equal_94_o> created at line 106
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR4DestReg[4]_equal_109_o> created at line 115
+    Found 5-bit comparator equal for signal <store_Read_Reg[4]_IR4DestRegALU[4]_equal_115_o> created at line 117
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR4DestReg[4]_equal_130_o> created at line 123
+    Found 5-bit comparator equal for signal <ALU_Read_Reg[4]_IR4DestRegALU[4]_equal_136_o> created at line 125
+    Found 5-bit comparator equal for signal <load_Read_Reg[4]_IR4DestReg[4]_equal_151_o> created at line 131
+    Found 5-bit comparator equal for signal <load_Read_Reg[4]_IR4DestRegALU[4]_equal_157_o> created at line 133
+    Summary:
+	inferred  12 Comparator(s).
+	inferred  43 Multiplexer(s).
+Unit <forwardLogicRight> synthesized.
+
+Synthesizing Unit <MUXbeforeALU>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu_muxes.vhd".
+WARNING:Xst:647 - Input <IR2<26:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <MUXbeforeALU> synthesized.
+
+Synthesizing Unit <storeMUXBeforeZ3>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu_muxes.vhd".
+WARNING:Xst:647 - Input <IR2<26:16>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+	inferred   1 Multiplexer(s).
+Unit <storeMUXBeforeZ3> synthesized.
+
+Synthesizing Unit <withOffSetMUX>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu_muxes.vhd".
+WARNING:Xst:647 - Input <IR2<26:22>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+	no macro.
+Unit <withOffSetMUX> synthesized.
+
+Synthesizing Unit <ALU>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/alu.vhd".
+    Found 1-bit register for signal <srZlast>.
+    Found 1-bit register for signal <srNlast>.
+    Found 1-bit register for signal <srClast>.
+    Found 1-bit register for signal <srOlast>.
+    Found 17-bit adder for signal <n0260> created at line 74.
+    Found 16-bit subtractor for signal <leftIn[15]_rightIn[15]_sub_5_OUT<15:0>> created at line 57.
+    Found 4-bit subtractor for signal <GND_18_o_GND_18_o_sub_159_OUT<3:0>> created at line 130.
+    Found 4-bit subtractor for signal <GND_18_o_GND_18_o_sub_157_OUT<3:0>> created at line 132.
+    Found 16x16-bit multiplier for signal <n0235> created at line 67.
+    Found 16-bit shifter logical right for signal <leftIn[15]_rightIn[15]_shift_right_11_OUT> created at line 68
+    Found 16-bit shifter logical left for signal <leftIn[15]_rightIn[15]_shift_left_12_OUT> created at line 69
+    Found 1-bit 16-to-1 multiplexer for signal <rightIn[3]_leftIn[15]_Mux_111_o> created at line 96.
+    Found 1-bit 16-to-1 multiplexer for signal <GND_18_o_leftIn[15]_Mux_157_o> created at line 132.
+    Found 1-bit 16-to-1 multiplexer for signal <GND_18_o_leftIn[15]_Mux_159_o> created at line 130.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<30>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<16>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<15>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<14>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<13>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<12>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<11>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<10>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<9>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<8>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<7>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<6>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<5>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<4>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<3>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<2>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<1>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+WARNING:Xst:737 - Found 1-bit latch for signal <temp<0>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+    Found 16-bit comparator equal for signal <leftIn[15]_rightIn[15]_equal_109_o> created at line 95
+    Found 16-bit comparator lessequal for signal <n0093> created at line 96
+    Found 16-bit comparator greater for signal <leftIn[15]_rightIn[15]_LessThan_129_o> created at line 115
+    Found 16-bit comparator greater for signal <rightIn[15]_leftIn[15]_LessThan_131_o> created at line 116
+    Found 16-bit comparator greater for signal <rightIn[15]_GND_18_o_LessThan_145_o> created at line 132
+    Summary:
+	inferred   1 Multiplier(s).
+	inferred   4 Adder/Subtractor(s).
+	inferred   4 D-type flip-flop(s).
+	inferred  18 Latch(s).
+	inferred   5 Comparator(s).
+	inferred 326 Multiplexer(s).
+	inferred   2 Combinational logic shifter(s).
+Unit <ALU> synthesized.
+
+Synthesizing Unit <MemArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/mem_area.vhd".
+WARNING:Xst:647 - Input <ir3<26:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+	no macro.
+Unit <MemArea> synthesized.
+
+Synthesizing Unit <Memory>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/mem.vhd".
+WARNING:Xst:647 - Input <addr<10:6>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 64x16-bit single-port RAM <Mram_mem> for signal <mem>.
+    Found 16-bit register for signal <outputZ4>.
+    Summary:
+	inferred   1 RAM(s).
+	inferred  16 D-type flip-flop(s).
+Unit <Memory> synthesized.
+
+Synthesizing Unit <Z4D4Mux>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/z4d4mux.vhd".
+WARNING:Xst:647 - Input <IR4<16:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Summary:
+	inferred   3 Multiplexer(s).
+Unit <Z4D4Mux> synthesized.
+
+Synthesizing Unit <RegArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/reg_area.vhd".
+WARNING:Xst:647 - Input <ir2<16:16>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <ir2<10:5>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <SRin<5:4>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <regWrite> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:653 - Signal <regVal<31>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<30>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<29>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<28>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<27>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<26>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<25>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<24>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<23>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<22>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<21>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<20>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<19>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<18>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<17>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<16>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<15>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<14>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<13>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<12>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<11>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<10>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+WARNING:Xst:653 - Signal <regVal<9>> is used but never assigned. This sourceless signal will be automatically connected to value GND.
+    Found 12-bit register for signal <SRlast<15:4>>.
+    Summary:
+	inferred  12 D-type flip-flop(s).
+	inferred  57 Multiplexer(s).
+Unit <RegArea> synthesized.
+
+Synthesizing Unit <Timer_1>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/timer.vhd".
+        timer_width = 32
+    Found 1-bit register for signal <finishedCounting>.
+    Found 32-bit register for signal <counter>.
+    Found 32-bit subtractor for signal <GND_60_o_GND_60_o_sub_5_OUT<31:0>> created at line 1308.
+    Found 31-bit comparator greater for signal <n0004> created at line 32
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  33 D-type flip-flop(s).
+	inferred   1 Comparator(s).
+	inferred   1 Multiplexer(s).
+Unit <Timer_1> synthesized.
+
+Synthesizing Unit <Timer_2>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/timer.vhd".
+        timer_width = 16
+    Found 1-bit register for signal <finishedCounting>.
+    Found 16-bit register for signal <counter>.
+    Found 16-bit subtractor for signal <GND_61_o_GND_61_o_sub_5_OUT<15:0>> created at line 1308.
+    Found 16-bit comparator greater for signal <n0004> created at line 32
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  17 D-type flip-flop(s).
+	inferred   1 Comparator(s).
+	inferred   1 Multiplexer(s).
+Unit <Timer_2> synthesized.
+
+Synthesizing Unit <Reg_2>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/reg.vhd".
+        regWidth = 32
+    Found 32-bit register for signal <reg>.
+    Summary:
+	inferred  32 D-type flip-flop(s).
+Unit <Reg_2> synthesized.
+
+Synthesizing Unit <PMemArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/pmem_area.vhd".
+    Found 2-bit register for signal <stallCount>.
+    Found 2-bit subtractor for signal <GND_63_o_GND_63_o_sub_4_OUT<1:0>> created at line 1308.
+    Found 2-bit subtractor for signal <GND_63_o_GND_63_o_sub_6_OUT<1:0>> created at line 1308.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred   2 D-type flip-flop(s).
+	inferred   1 Multiplexer(s).
+Unit <PMemArea> synthesized.
+
+Synthesizing Unit <PCReg>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/pcreg.vhd".
+    Found 11-bit register for signal <pc>.
+    Found 11-bit adder for signal <pc[10]_GND_64_o_add_1_OUT> created at line 1241.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  11 D-type flip-flop(s).
+	inferred   2 Multiplexer(s).
+Unit <PCReg> synthesized.
+
+Synthesizing Unit <Reg_3>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/reg.vhd".
+        regWidth = 11
+    Found 11-bit register for signal <reg>.
+    Summary:
+	inferred  11 D-type flip-flop(s).
+Unit <Reg_3> synthesized.
+
+Synthesizing Unit <IR1>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/ir1.vhd".
+WARNING:Xst:647 - Input <ir2in<21:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 32x1-bit Read Only RAM for signal <ir1stallCausing>
+    Found 5-bit comparator equal for signal <ir2reg[4]_ir1reg[4]_equal_13_o> created at line 80
+    Found 5-bit comparator equal for signal <ir2reg[4]_ir1reg2[4]_equal_14_o> created at line 80
+    Summary:
+	inferred   1 RAM(s).
+	inferred   2 Comparator(s).
+	inferred   7 Multiplexer(s).
+Unit <IR1> synthesized.
+
+Synthesizing Unit <IR2>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/ir2.vhd".
+    Found 1-bit 16-to-1 multiplexer for signal <condJmp[3]_sr[15]_Mux_5_o> created at line 60.
+    Summary:
+	inferred   6 Multiplexer(s).
+Unit <IR2> synthesized.
+
+Synthesizing Unit <Jmp>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/jmp.vhd".
+WARNING:Xst:647 - Input <ir1<29:29>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <ir1<26:11>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <rst> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+    Found 11-bit register for signal <pc2>.
+    Found 11-bit adder for signal <pc1[10]_regIn[10]_add_3_OUT> created at line 37.
+    Found 11-bit adder for signal <pc1[10]_ir1[10]_add_5_OUT> created at line 40.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred  11 D-type flip-flop(s).
+	inferred   4 Multiplexer(s).
+Unit <Jmp> synthesized.
+
+Synthesizing Unit <pMemory>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/cpu/pmem.vhd".
+WARNING:Xst:647 - Input <addr<10:6>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <clk> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:2999 - Signal 'mem', unconnected in block 'pMemory', is tied to its initial value.
+    Found 64x32-bit single-port Read Only RAM <Mram_mem> for signal <mem>.
+    Summary:
+	inferred   1 RAM(s).
+Unit <pMemory> synthesized.
+
+Synthesizing Unit <SoutArea>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/soundoutput/sout_area.vhd".
+    Summary:
+	no macro.
+Unit <SoutArea> synthesized.
+
+Synthesizing Unit <SoundOutput>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/soundoutput/sout.vhd".
+    Found 1-bit register for signal <lrckS>.
+    Found 6-bit register for signal <bitCounter>.
+    Found 1-bit register for signal <sdout>.
+    Found 1-bit register for signal <t1>.
+    Found 1-bit register for signal <t2>.
+    Found 1-bit register for signal <t3>.
+    Found 16-bit register for signal <sample>.
+    Found 6-bit adder for signal <bitCounter[5]_GND_73_o_add_5_OUT> created at line 1241.
+    Found 4-bit subtractor for signal <GND_73_o_GND_73_o_sub_2_OUT<3:0>> created at line 48.
+    Found 1-bit 16-to-1 multiplexer for signal <GND_73_o_sample[15]_Mux_2_o> created at line 48.
+    Summary:
+	inferred   2 Adder/Subtractor(s).
+	inferred  27 D-type flip-flop(s).
+	inferred   2 Multiplexer(s).
+Unit <SoundOutput> synthesized.
+
+Synthesizing Unit <SoutClkgen>.
+    Related source file is "/edu/matul773/datorkonst/projekt/synth/soundoutput/sout_clkgen.vhd".
+    Found 1-bit register for signal <mclkS>.
+    Found 1-bit register for signal <clk_counter>.
+    Found 1-bit register for signal <mclk_pulse>.
+    Found 3-bit register for signal <mclk_counter>.
+    Found 1-bit register for signal <sclkS>.
+    Found 3-bit adder for signal <mclk_counter[2]_GND_74_o_add_0_OUT> created at line 1241.
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred   7 D-type flip-flop(s).
+Unit <SoutClkgen> synthesized.
+RTL-Simplification CPUSTAT: 0.22 
+RTL-BasicInf CPUSTAT: 0.56 
+RTL-BasicOpt CPUSTAT: 0.02 
+RTL-Remain-Bus CPUSTAT: 0.02 
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 32x1-bit single-port Read Only RAM                    : 1
+ 64x16-bit single-port RAM                             : 1
+ 64x32-bit single-port Read Only RAM                   : 1
+# Multipliers                                          : 1
+ 16x16-bit multiplier                                  : 1
+# Adders/Subtractors                                   : 12
+ 11-bit adder                                          : 2
+ 16-bit subtractor                                     : 2
+ 17-bit adder                                          : 1
+ 2-bit subtractor                                      : 1
+ 3-bit adder                                           : 1
+ 32-bit subtractor                                     : 1
+ 4-bit subtractor                                      : 3
+ 6-bit adder                                           : 1
+# Registers                                            : 47
+ 1-bit register                                        : 15
+ 11-bit register                                       : 3
+ 12-bit register                                       : 1
+ 16-bit register                                       : 20
+ 2-bit register                                        : 1
+ 3-bit register                                        : 1
+ 32-bit register                                       : 5
+ 6-bit register                                        : 1
+# Latches                                              : 18
+ 1-bit latch                                           : 18
+# Comparators                                          : 29
+ 16-bit comparator equal                               : 1
+ 16-bit comparator greater                             : 4
+ 16-bit comparator lessequal                           : 1
+ 31-bit comparator greater                             : 1
+ 5-bit comparator equal                                : 22
+# Multiplexers                                         : 492
+ 1-bit 16-to-1 multiplexer                             : 5
+ 1-bit 2-to-1 multiplexer                              : 401
+ 11-bit 2-to-1 multiplexer                             : 6
+ 16-bit 2-to-1 multiplexer                             : 50
+ 2-bit 2-to-1 multiplexer                              : 8
+ 32-bit 2-to-1 multiplexer                             : 6
+ 5-bit 2-to-1 multiplexer                              : 15
+ 6-bit 2-to-1 multiplexer                              : 1
+# Logic shifters                                       : 2
+ 16-bit shifter logical left                           : 1
+ 16-bit shifter logical right                          : 1
+# Xors                                                 : 3
+ 1-bit xor2                                            : 2
+ 16-bit xor2                                           : 1
+
+=========================================================================
+INFO:Xst:1767 - HDL ADVISOR - Resource sharing has identified that some arithmetic operations in this design can share the same physical resources for reduced device utilization. For improved clock frequency you may try to disable resource sharing.
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+
+Synthesizing (advanced) Unit <IR1>.
+INFO:Xst:3048 - The small RAM <Mram_ir1stallCausing> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 32-word x 1-bit                     |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <irOut<31:27>>  |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to signal <ir1stallCausing> |          |
+    -----------------------------------------------------------------------
+Unit <IR1> synthesized (advanced).
+
+Synthesizing (advanced) Unit <Memory>.
+INFO:Xst:3048 - The small RAM <Mram_mem> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 64-word x 16-bit                    |          |
+    |     clkA           | connected to signal <clk>           | rise     |
+    |     weA            | connected to signal <doWrite>       | high     |
+    |     addrA          | connected to signal <addr>          |          |
+    |     diA            | connected to signal <newValue>      |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+Unit <Memory> synthesized (advanced).
+
+Synthesizing (advanced) Unit <SoundOutput>.
+The following registers are absorbed into counter <bitCounter>: 1 register on signal <bitCounter>.
+Unit <SoundOutput> synthesized (advanced).
+
+Synthesizing (advanced) Unit <SoutClkgen>.
+The following registers are absorbed into counter <mclk_counter>: 1 register on signal <mclk_counter>.
+Unit <SoutClkgen> synthesized (advanced).
+
+Synthesizing (advanced) Unit <Timer_1>.
+The following registers are absorbed into counter <counter>: 1 register on signal <counter>.
+Unit <Timer_1> synthesized (advanced).
+
+Synthesizing (advanced) Unit <Timer_2>.
+The following registers are absorbed into counter <counter>: 1 register on signal <counter>.
+Unit <Timer_2> synthesized (advanced).
+
+Synthesizing (advanced) Unit <pMemory>.
+INFO:Xst:3048 - The small RAM <Mram_mem> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 64-word x 32-bit                    |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <addr>          |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+Unit <pMemory> synthesized (advanced).
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 32x1-bit single-port distributed Read Only RAM        : 1
+ 64x16-bit single-port distributed RAM                 : 1
+ 64x32-bit single-port distributed Read Only RAM       : 1
+# Multipliers                                          : 1
+ 16x16-bit multiplier                                  : 1
+# Adders/Subtractors                                   : 8
+ 11-bit adder                                          : 2
+ 16-bit subtractor                                     : 1
+ 17-bit adder                                          : 1
+ 2-bit subtractor                                      : 1
+ 4-bit subtractor                                      : 3
+# Counters                                             : 4
+ 16-bit down counter                                   : 1
+ 3-bit up counter                                      : 1
+ 32-bit down counter                                   : 1
+ 6-bit up counter                                      : 1
+# Registers                                            : 494
+ Flip-Flops                                            : 494
+# Comparators                                          : 29
+ 16-bit comparator equal                               : 1
+ 16-bit comparator greater                             : 4
+ 16-bit comparator lessequal                           : 1
+ 31-bit comparator greater                             : 1
+ 5-bit comparator equal                                : 22
+# Multiplexers                                         : 490
+ 1-bit 16-to-1 multiplexer                             : 5
+ 1-bit 2-to-1 multiplexer                              : 403
+ 11-bit 2-to-1 multiplexer                             : 6
+ 16-bit 2-to-1 multiplexer                             : 49
+ 2-bit 2-to-1 multiplexer                              : 7
+ 32-bit 2-to-1 multiplexer                             : 5
+ 5-bit 2-to-1 multiplexer                              : 15
+# Logic shifters                                       : 2
+ 16-bit shifter logical left                           : 1
+ 16-bit shifter logical right                          : 1
+# Xors                                                 : 3
+ 1-bit xor2                                            : 2
+ 16-bit xor2                                           : 1
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+WARNING:Xst:1293 - FF/Latch <temp_30> has a constant value of 0 in block <ALU>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <SRlast_6> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_7> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_8> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_9> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_10> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_11> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_12> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_13> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_14> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <SRlast_15> has a constant value of 0 in block <RegArea>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <counter_31> of sequential type is unconnected in block <Timer_1>.
+
+Optimizing unit <Synth> ...
+
+Optimizing unit <MainArea> ...
+
+Optimizing unit <DReg> ...
+
+Optimizing unit <Reg_1> ...
+
+Optimizing unit <ALUArea> ...
+
+Optimizing unit <forwardLogicLeft> ...
+
+Optimizing unit <forwardLogicRight> ...
+
+Optimizing unit <ALU> ...
+
+Optimizing unit <RegArea> ...
+
+Optimizing unit <Timer_1> ...
+
+Optimizing unit <Timer_2> ...
+
+Optimizing unit <Reg_2> ...
+
+Optimizing unit <Memory> ...
+
+Optimizing unit <PMemArea> ...
+
+Optimizing unit <Jmp> ...
+
+Optimizing unit <IR2> ...
+
+Optimizing unit <Reg_3> ...
+
+Optimizing unit <IR1> ...
+
+Optimizing unit <PCReg> ...
+
+Optimizing unit <SoundOutput> ...
+
+Optimizing unit <SoutClkgen> ...
+WARNING:Xst:1710 - FF/Latch <cpu/pmem/ir2c/ir2/reg_12> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_13> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_16> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_17> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_18> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_19> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_20> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_21> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir2c/ir2/reg_28> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_12> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_13> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_16> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_17> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_18> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_19> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_20> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_21> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/pmem/ir1c/ir1/reg_28> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/d2/d2/reg_13> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/d2/d2/reg_12> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_6> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_7> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_8> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_9> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_10> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_11> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_12> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_13> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_14> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/regs/SR/reg_15> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir3/reg_17> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir3/reg_18> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir3/reg_19> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir3/reg_20> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir3/reg_21> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir3/reg_28> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir4/reg_28> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir4/reg_21> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir4/reg_20> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir4/reg_19> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir4/reg_18> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cpu/main/ir4/reg_17> (without init value) has a constant value of 0 in block <Synth>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_16> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_15> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_14> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_13> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_12> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_11> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_10> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_9> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_8> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_7> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_6> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_5> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_4> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_3> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_2> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_1> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir4/reg_0> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_16> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_15> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_14> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_13> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_12> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_11> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_10> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_9> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_8> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_7> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_6> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_5> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_4> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_3> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_2> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_1> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/main/ir3/reg_0> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/jmpc/pc2_10> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/jmpc/pc2_9> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/jmpc/pc2_8> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/jmpc/pc2_7> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/jmpc/pc2_6> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc1/reg_10> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc1/reg_9> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc1/reg_8> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc1/reg_7> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc1/reg_6> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc/pc_10> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc/pc_9> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc/pc_8> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc/pc_7> of sequential type is unconnected in block <Synth>.
+WARNING:Xst:2677 - Node <cpu/pmem/pc/pc_6> of sequential type is unconnected in block <Synth>.
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 0) on block Synth, actual ratio is 12.
+FlipFlop cpu/main/ir4/reg_30 has been replicated 1 time(s)
+FlipFlop cpu/pmem/ir2c/ir2/reg_27 has been replicated 2 time(s)
+FlipFlop cpu/pmem/ir2c/ir2/reg_29 has been replicated 2 time(s)
+FlipFlop cpu/pmem/ir2c/ir2/reg_30 has been replicated 2 time(s)
+FlipFlop cpu/pmem/ir2c/ir2/reg_31 has been replicated 2 time(s)
+
+Final Macro Processing ...
+
+Processing Unit <Synth> :
+	Found 3-bit shift register for signal <sout/sound_output/t3>.
+Unit <Synth> processed.
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 455
+ Flip-Flops                                            : 455
+# Shift Registers                                      : 1
+ 3-bit shift register                                  : 1
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Design Summary                             *
+=========================================================================
+
+Top Level Output File Name         : design.ngc
+
+Primitive and Black Box Usage:
+------------------------------
+# BELS                             : 1178
+#      GND                         : 1
+#      INV                         : 54
+#      LUT1                        : 2
+#      LUT2                        : 22
+#      LUT3                        : 99
+#      LUT4                        : 136
+#      LUT5                        : 190
+#      LUT6                        : 421
+#      MUXCY                       : 114
+#      MUXF7                       : 48
+#      MUXF8                       : 5
+#      VCC                         : 1
+#      XORCY                       : 85
+# FlipFlops/Latches                : 472
+#      FD                          : 25
+#      FDE                         : 9
+#      FDR                         : 4
+#      FDRE                        : 417
+#      LD                          : 17
+# RAMS                             : 16
+#      RAM64X1S                    : 16
+# Shift Registers                  : 1
+#      SRLC16E                     : 1
+# Clock Buffers                    : 1
+#      BUFG                        : 1
+# IO Buffers                       : 18
+#      IBUF                        : 2
+#      OBUF                        : 16
+# DSPs                             : 1
+#      DSP48A1                     : 1
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 6slx16csg324-3 
+
+
+Slice Logic Utilization: 
+ Number of Slice Registers:             472  out of  18224     2%  
+ Number of Slice LUTs:                  941  out of   9112    10%  
+    Number used as Logic:               924  out of   9112    10%  
+    Number used as Memory:               17  out of   2176     0%  
+       Number used as RAM:               16
+       Number used as SRL:                1
+
+Slice Logic Distribution: 
+ Number of LUT Flip Flop pairs used:   1118
+   Number with an unused Flip Flop:     646  out of   1118    57%  
+   Number with an unused LUT:           177  out of   1118    15%  
+   Number of fully used LUT-FF pairs:   295  out of   1118    26%  
+   Number of unique control sets:        22
+
+IO Utilization: 
+ Number of IOs:                          18
+ Number of bonded IOBs:                  18  out of    232     7%  
+
+Specific Feature Utilization:
+ Number of BUFG/BUFGCTRLs:                1  out of     16     6%  
+ Number of DSP48A1s:                      1  out of     32     3%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+Timing Report
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+---------------------------------------------------------------------------------------------------+----------------------------------+-------+
+Clock Signal                                                                                       | Clock buffer(FF name)            | Load  |
+---------------------------------------------------------------------------------------------------+----------------------------------+-------+
+clk                                                                                                | IBUF+BUFG                        | 472   |
+cpu/main/alu/ALUi/ALUInstr[4]_PWR_23_o_Mux_22_o(cpu/main/alu/ALUi/ALUInstr[4]_PWR_23_o_Mux_22_o1:O)| NONE(*)(cpu/main/alu/ALUi/temp_0)| 17    |
+---------------------------------------------------------------------------------------------------+----------------------------------+-------+
+(*) This 1 clock signal(s) are generated by combinatorial logic,
+and XST is not able to identify which are the primary clock signals.
+Please use the CLOCK_SIGNAL constraint to specify the clock signal(s) generated by combinatorial logic.
+INFO:Xst:2169 - HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -3
+
+   Minimum period: 10.202ns (Maximum Frequency: 98.019MHz)
+   Minimum input arrival time before clock: 6.402ns
+   Maximum output required time after clock: 3.791ns
+   Maximum combinational path delay: No path found
+
+Timing Details:
+---------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'clk'
+  Clock period: 10.202ns (frequency: 98.019MHz)
+  Total number of paths / destination ports: 192593 / 847
+-------------------------------------------------------------------------
+Delay:               10.202ns (Levels of Logic = 9)
+  Source:            cpu/main/ir3/reg_22 (FF)
+  Destination:       cpu/main/alu/ALUi/srClast (FF)
+  Source Clock:      clk rising
+  Destination Clock: clk rising
+
+  Data Path: cpu/main/ir3/reg_22 to cpu/main/alu/ALUi/srClast
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDRE:C->Q             7   0.447   1.118  cpu/main/ir3/reg_22 (cpu/main/ir3/reg_22)
+     LUT6:I1->O            1   0.203   0.827  cpu/main/alu/FLR/Mmux_changeInIR314 (cpu/main/alu/FLR/Mmux_changeInIR312)
+     LUT5:I1->O            1   0.203   0.580  cpu/main/alu/FLR/Mmux_changeInIR316 (cpu/main/alu/FLR/Mmux_changeInIR314)
+     LUT6:I5->O            8   0.205   0.907  cpu/main/alu/FLR/Mmux_changeInIR317 (cpu/main/alu/FLR/changeInIR3)
+     LUT4:I2->O           14   0.203   1.062  cpu/main/alu/FLR/Mmux_selectSignal11 (cpu/main/alu/MUX2Select<0>)
+     LUT6:I4->O           12   0.203   1.273  cpu/main/alu/MUX5/out1<4>5 (cpu/main/alu/MUX5Out<11>)
+     LUT6:I0->O            3   0.203   0.651  cpu/main/alu/ALUi/n015521 (cpu/main/alu/ALUi/n01552)
+     LUT6:I5->O            2   0.205   0.721  cpu/main/alu/ALUi/GND_18_o_GND_18_o_AND_538_o1 (cpu/main/alu/ALUi/GND_18_o_GND_18_o_AND_538_o)
+     LUT5:I3->O            1   0.203   0.684  cpu/main/alu/ALUi/Mmux_sRCInternal23 (cpu/main/alu/ALUi/Mmux_sRCInternal22)
+     LUT6:I4->O            2   0.203   0.000  cpu/main/alu/ALUi/Mmux_sRCInternal25 (cpu/main/SR<2>)
+     FD:D                      0.102          cpu/main/alu/ALUi/srClast
+    ----------------------------------------
+    Total                     10.202ns (2.380ns logic, 7.822ns route)
+                                       (23.3% logic, 76.7% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
+  Total number of paths / destination ports: 635 / 599
+-------------------------------------------------------------------------
+Offset:              6.402ns (Levels of Logic = 3)
+  Source:            rst (PAD)
+  Destination:       cpu/pmem/pc/pc_5 (FF)
+  Destination Clock: clk rising
+
+  Data Path: rst to cpu/pmem/pc/pc_5
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O           376   1.222   2.442  rst_IBUF (rst_IBUF)
+     LUT6:I0->O           30   0.203   1.264  cpu/pmem/ir2c/Mmux_pcType11 (cpu/pmem/nextPCType<0>)
+     LUT5:I4->O            6   0.205   0.744  cpu/pmem/pc/_n0029_inv1 (cpu/pmem/pc/_n0029_inv)
+     FDE:CE                    0.322          cpu/pmem/pc/pc_0
+    ----------------------------------------
+    Total                      6.402ns (1.952ns logic, 4.450ns route)
+                                       (30.5% logic, 69.5% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
+  Total number of paths / destination ports: 5 / 5
+-------------------------------------------------------------------------
+Offset:              3.791ns (Levels of Logic = 1)
+  Source:            sout/sound_clkgen/sclkS (FF)
+  Destination:       sclk (PAD)
+  Source Clock:      clk rising
+
+  Data Path: sout/sound_clkgen/sclkS to sclk
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDR:C->Q              7   0.447   0.773  sout/sound_clkgen/sclkS (sout/sound_clkgen/sclkS)
+     OBUF:I->O                 2.571          sclk_OBUF (sclk)
+    ----------------------------------------
+    Total                      3.791ns (3.018ns logic, 0.773ns route)
+                                       (79.6% logic, 20.4% route)
+
+=========================================================================
+
+Cross Clock Domains Report:
+--------------------------
+
+Clock to Setup on destination clock clk
+-----------------------------------------------+---------+---------+---------+---------+
+                                               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock                                   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+-----------------------------------------------+---------+---------+---------+---------+
+clk                                            |   10.202|         |         |         |
+cpu/main/alu/ALUi/ALUInstr[4]_PWR_23_o_Mux_22_o|         |    6.763|         |         |
+-----------------------------------------------+---------+---------+---------+---------+
+
+Clock to Setup on destination clock cpu/main/alu/ALUi/ALUInstr[4]_PWR_23_o_Mux_22_o
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+clk            |         |         |   13.092|         |
+---------------+---------+---------+---------+---------+
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 31.00 secs
+Total CPU time to Xst completion: 26.93 secs
+ 
+--> 
+
+
+Total memory usage is 480324 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :  175 (   0 filtered)
+Number of infos    :    5 (   0 filtered)
+
