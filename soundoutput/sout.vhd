@@ -20,7 +20,7 @@ architecture Behavioral of SoundOutput is
 
    signal bitCounter       : std_logic_vector(SAMPLE_SIZE_WIDTH - 1 downto 0) := (others => '0'); -- Counts the number of bits that has been output
    signal sample           : std_logic_vector(SAMPLE_SIZE - 1 downto 0) := (others => '0'); -- Current sample
-   signal lrckS            : std_logic := '0'; -- Are we sending left/right output?
+   signal lrckS            : std_logic := '1'; -- Are we sending left/right output?
    
    signal sendBitS         : std_logic; -- Serial clock signal
 

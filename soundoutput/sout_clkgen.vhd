@@ -23,7 +23,7 @@ architecture Behavioral of SoutClkgen is
    signal mclkS            : std_logic := '0';
    signal sclkS            : std_logic := '0'; 
    
-   signal hold_counter     : std_logic_vector(15 downto 0) := (others => '0');
+   signal hold_counter     : std_logic_vector(15 downto 0) := (others => '1');
 begin
 
    process(clk) is
@@ -33,8 +33,8 @@ begin
             sclkS <= '0';
             mclkS <= '0';
             clk_counter <= '0';
-            mclk_counter <= '0';
-            hold_counter <= (others => '0');
+            mclk_counter <= "000";
+            hold_counter <= (others => '1');
          else
             if mclk_pulse = '1' then
                mclk_pulse <= '0';
@@ -47,7 +47,12 @@ begin
             clk_counter <= not clk_counter;
             if clk_counter = '1' then
                if mclkS = '0' then
-                  mclk_pulse <= '1';
+                  -- Set the pulse to start counting LRCK/SCLK when the intial delay has passed
+                  if hold_counter /= std_logic_vector(to_unsigned(0, hold_counter'length)) then
+                     hold_counter <= std_logic_vector(unsigned(hold_counter)-1);
+                  else
+                     mclk_pulse <= '1';
+                  end if;
                end if;
                mclkS <= not mclkS;
                

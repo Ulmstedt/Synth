@@ -62,7 +62,7 @@ architecture Behavioral of Synth is
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
    
    signal sdouts     : std_logic;
-   signal sclkS      : std_logic;
+   --signal sclkS      : std_logic;
 
    signal mreg1S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
    signal mreg2S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
@@ -89,7 +89,7 @@ begin
       mclk           => mclk,
       lrck           => lrck,
       sdout          => sdouts,
-      sclk           => sclkS
+      sclk           => sclk
    );
 
    midi : MidiArea port map(
@@ -102,9 +102,9 @@ begin
       readRdy  => midiRdyS
    );
    
-   sclk <= '0'; -- or '1'?
+   --sclk <= '1'; -- or '1'?
    sdin <= sdouts;
-   seg <= mreg1S;
+   seg <= audio(7 downto 0);
    an <= "0111";
 
 end Behavioral;

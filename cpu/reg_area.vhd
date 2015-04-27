@@ -189,7 +189,7 @@ begin
    
    -- Set the bit in the map that is currently being written to
    wsel : for I in 0 to REG_NUM - 1 generate
-      writeReg(I) <= '1' when to_integer(unsigned(regWriteSel)) = I else '0';
+      writeReg(I) <= regWrite when to_integer(unsigned(regWriteSel)) = I else '0';
    end generate wsel;
    --t(0) <= regWrite;
    --writeReg <= std_logic_vector(unsigned(t) sll to_integer(unsigned(regWriteSel)));
