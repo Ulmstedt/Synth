@@ -47,8 +47,8 @@ begin
             end if;
             t1 <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
             t2 <= t1;
-            t3 <= t2;
-            sdout <= t3;
+            t3 <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+            sdout <= t3; -- t3
             -- Check for when the entire sample has been sent
             if bitCounter = std_logic_vector(to_unsigned(SAMPLE_SIZE-1,SAMPLE_SIZE_WIDTH)) then
                bitCounter <= (others => '0');

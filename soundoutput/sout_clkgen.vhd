@@ -21,8 +21,9 @@ architecture Behavioral of SoutClkgen is
    signal mclk_counter     : std_logic_vector(2 downto 0) := (others => '0');
    signal mclk_pulse       : std_logic;
    signal mclkS            : std_logic := '0';
-   signal sclkS            : std_logic := '0';  
-
+   signal sclkS            : std_logic := '0'; 
+   
+   signal hold_counter     : std_logic_vector(15 downto 0) := (others => '0');
 begin
 
    process(clk) is
@@ -32,6 +33,8 @@ begin
             sclkS <= '0';
             mclkS <= '0';
             clk_counter <= '0';
+            mclk_counter <= '0';
+            hold_counter <= (others => '0');
          else
             if mclk_pulse = '1' then
                mclk_pulse <= '0';
