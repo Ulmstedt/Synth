@@ -15,7 +15,7 @@ entity MainArea is
       mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      readRdy     : in std_logic;
+      midiRdy     : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic
    );
@@ -181,7 +181,7 @@ begin
    ir3   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir2,
          output   => ir3out,
          rst      => rst,
@@ -191,7 +191,7 @@ begin
    ir4   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir3out,
          output   => ir4out,
          rst      => rst,

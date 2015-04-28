@@ -109,7 +109,7 @@ begin
    lt1lsb : Reg
    generic map(regWidth => REG_WIDTH)
    port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => lt1lsbs,
       output   => lt1(REG_WIDTH - 1 downto 0),
       rst      => rst,
@@ -119,7 +119,7 @@ begin
    lt1msb : Reg
    generic map(regWidth => REG_WIDTH)
    port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => lt1msbs,
       output   => lt1(2*REG_WIDTH - 1 downto REG_WIDTH),
       rst      => rst,
@@ -139,7 +139,7 @@ begin
    st1r : Reg
    generic map(regWidth => REG_WIDTH)
    port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => st1s,
       output   => st1,
       rst      => rst,

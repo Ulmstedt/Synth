@@ -46,7 +46,7 @@ begin
    ir1   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-               doRead   => clk,
+               doRead   => '1',
                input    => muxOutput,
                output   => irOut,
                rst      => rst,

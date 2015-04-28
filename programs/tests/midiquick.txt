@@ -1,0 +1,31 @@
+CONSTANT wavereg, %11111
+CONSTANT timerreg, 18
+CONSTANT upper, 2
+
+&off
+LOAD.c   #upper, $0
+&start
+MOVE     #wavereg, #upper
+LOAD.C   #timerreg, 65000
+
+&pos1
+BNCC     #SR_ST1, #pos1
+NOP
+LOAD.C   #wavereg, 0
+LOAD.C   #timerreg, 65000
+
+&pos2
+BNCC     #SR_ST1, #pos2
+NOP
+
+BNCC     #SR_MIDI, #start
+NOP
+MOVE     1, #R_MREG12
+AND.C    1, $10
+CMP.C    1, $10
+BNCC     #SR_Z, #off
+NOP
+LOAD.c   #upper, $0FFF
+BRA      #start
+NOP
+

@@ -2,7 +2,19 @@ from __future__ import print_function
 import xml.etree.ElementTree as ET
 
 # Constants dict
-constants = {"SRZ": "0", "SRN": "1", "SRC": "2", "SRO": "3", "SRLT1": "4", "SRST1": "5", "SRST2": "6", "SRMIDI": "7"} 
+constants = {  
+               "SR_Z": "0",
+               "SR_N": "1",
+               "SR_C": "2",
+               "SR_O": "3",
+               "SR_LT1": "4",
+               "SR_ST1": "5",
+               "SR_ST2": "6",
+               "SR_MIDI": "7",
+               "R_MREG12": "29",
+               "R_MREG3": "30",
+               "R_AUDIO": "31"
+            } 
 
 # Parses and argument and returns its correct form (hex, dec, bin)
 def parse_arg(arg):

@@ -16,7 +16,7 @@ end MidiInput;
 
 architecture Behavioral of MidiInput is
    signal m1            : std_logic_vector((MIDI_WIDTH + 1) downto 0) := (others => '0'); -- 10 bit "shiftregister"
-   signal clkCounter    : std_logic_vector(UART_CLK_PERIOD_WIDTH - 1 downto 0) := "011001000000"; -- Counts ck, initialized to 16
+   signal clkCounter    : std_logic_vector(UART_CLK_PERIOD_WIDTH - 1 downto 0) := std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
    signal inputActive   : std_logic := '0'; -- 1 if receiving UART message, 0 if not
    signal bitsReceived  : std_logic_vector(3 downto 0) := (others => '0'); -- How many bits of the message has been received1
    signal msgReadyS     : std_logic := '0';
@@ -33,7 +33,7 @@ begin
          if rst = '1' then
             tmpReg <= (others => '0');
             m1 <= (others => '0');
-            clkCounter <= "011001000000"; -- Reset to 16
+            clkCounter <= std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
             inputActive <= '0';
             bitsReceived <= (others => '0');
             
@@ -60,7 +60,7 @@ begin
                      inputActive <= '0';
                      msgReadyS <= '1';
                      bitsReceived <= (others => '0');
-                     clkCounter <= "011001000000"; -- Reset to 16
+                     clkCounter <= std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
                      tmpReg <= m1(MIDI_WIDTH downto 1); -- Transfer message to tmpReg, excluding start/stop bits
                   end if;
                end if;

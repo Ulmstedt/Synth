@@ -181,7 +181,7 @@ begin
    ir3   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir2,
          output   => ir3out,
          rst      => rst,
@@ -191,7 +191,7 @@ begin
    ir4   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir3out,
          output   => ir4out,
          rst      => rst,
@@ -199,7 +199,7 @@ begin
       );
    
    d3Reg : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => ALUOut,
       output   => d3Out,
       rst      => rst,
@@ -207,7 +207,7 @@ begin
    );
    
    z3Reg : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => z3In,
       output   => z3out,
       rst      => rst,
