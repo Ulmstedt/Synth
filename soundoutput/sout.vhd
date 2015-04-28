@@ -24,9 +24,7 @@ architecture Behavioral of SoundOutput is
    
    signal sendBitS         : std_logic; -- Serial clock signal
 
-   signal t1               : std_logic := '1';
-   signal t2               : std_logic := '1';
-   signal t3               : std_logic := '0';
+   signal t                : std_logic := '0';
 begin
 
    process(clk) is
@@ -37,6 +35,7 @@ begin
             lrckS <= '0';
             bitCounter <= (others => '0');
             sdout <= '0';
+            t <= '0';
          elsif sendBit = '1' then
             if bitCounter = "000000" then
                if lrckS = '0' then
@@ -45,10 +44,8 @@ begin
                   lrckS <= '0';
                end if;
             end if;
-            t1 <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
-            t2 <= t1;
-            t3 <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
-            sdout <= t3; -- t3
+            t <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+            sdout <= t;
             -- Check for when the entire sample has been sent
             if bitCounter = std_logic_vector(to_unsigned(SAMPLE_SIZE-1,SAMPLE_SIZE_WIDTH)) then
                bitCounter <= (others => '0');

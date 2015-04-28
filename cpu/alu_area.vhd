@@ -75,17 +75,18 @@ architecture Behaviorial of ALUArea is
    
    component ALU is
       port(
-         leftIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
-         rightIn : in std_logic_vector(REG_WIDTH-1 downto 0);
-         ALUOut  : out std_logic_vector(REG_WIDTH-1 downto 0);
-         ALUInstr: in std_logic_vector(4 downto 0);
+         leftIn   : in std_logic_vector(REG_WIDTH-1 downto 0);
+         rightIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
+         ALUOut   : out std_logic_vector(REG_WIDTH-1 downto 0);
+         ALUInstr : in std_logic_vector(4 downto 0);
          
-         clk     : in std_logic;
+         rst      : in std_logic;
+         clk      : in std_logic;
          
-         sRZ     : out std_logic;
-         sRN     : out std_logic;
-         sRO     : out std_logic;
-         sRC     : out std_logic
+         sRZ      : out std_logic;
+         sRN      : out std_logic;
+         sRO      : out std_logic;
+         sRC      : out std_logic
       );
    end component;
    
@@ -177,6 +178,7 @@ begin
       ALUOut            => ALUOutSignal,
       ALUInstr          => ALUInstrInternal,
       
+      rst               => rst,
       clk               => clk,
       
       sRZ               => sRZ,

@@ -15,7 +15,7 @@ entity Timer is
 end Timer;
 
 architecture Behavioral of Timer is
-   signal counter          : std_logic_vector(loadValue'range);
+   signal counter          : std_logic_vector(loadValue'range) := (others => '0');
    signal finishedCounting : std_logic := '0';
 begin
    process (clk) is

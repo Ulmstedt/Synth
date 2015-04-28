@@ -18,7 +18,7 @@ architecture Behavioral of MidiInput is
    signal m1            : std_logic_vector((MIDI_WIDTH + 1) downto 0) := (others => '0'); -- 10 bit "shiftregister"
    signal clkCounter    : std_logic_vector(UART_CLK_PERIOD_WIDTH - 1 downto 0) := "011001000000"; -- Counts ck, initialized to 16
    signal inputActive   : std_logic := '0'; -- 1 if receiving UART message, 0 if not
-   signal bitsReceived  : std_logic_vector(3 downto 0) := (others => '0'); -- How many bits of the message has been received
+   signal bitsReceived  : std_logic_vector(3 downto 0) := (others => '0'); -- How many bits of the message has been received1
    signal msgReadyS     : std_logic := '0';
    signal msgReadyCtr   : std_logic := '0';
 begin

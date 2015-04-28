@@ -63,18 +63,18 @@ architecture Behavioral of RegArea is
    signal regBSel    : std_logic_vector(REG_BITS - 1 downto 0);
    
    signal ir2OP      : std_logic_vector(OP_WIDTH - 1 downto 0);
-   --signal t          : std_logic_vector(REG_NUM - 1 downto 0);
+   signal t          : std_logic_vector(REG_NUM - 1 downto 0) := (others => '0');
    signal SRsig      : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
    signal SRlast     : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
-   signal resetSR    : std_logic_vector(SR_WIDTH - 1 downto 0);
+   signal resetSR    : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
 
    signal lt1        : std_logic_vector(2*REG_WIDTH - 1 downto 0);
-   signal lt1lsbs    : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal lt1msbs    : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal lt1lsbs    : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
+   signal lt1msbs    : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
    signal lt1done    : std_logic;
 
    signal st1        : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal st1s       : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal st1s       : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
    signal st1done    : std_logic;
 
    signal mreg12S    : std_logic_vector(REG_WIDTH - 1 downto 0);
@@ -186,7 +186,7 @@ begin
    
    -- Convenience signal
    ir2OP <= ir2(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
-   
+
    -- Set the bit in the map that is currently being written to
    wsel : for I in 0 to REG_NUM - 1 generate
       writeReg(I) <= regWrite when to_integer(unsigned(regWriteSel)) = I else '0';

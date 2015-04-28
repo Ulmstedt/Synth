@@ -69,6 +69,8 @@ architecture Behavioral of Synth is
    signal mreg3S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
    signal midiRdyS   : std_logic;
 
+   signal counter_r :  unsigned(17 downto 0) := "000000000000000000";
+
 
 begin
 
@@ -101,10 +103,22 @@ begin
       mreg3    => mreg3S,
       readRdy  => midiRdyS
    );
+
+   process(clk) begin
+     if rising_edge(clk) then 
+       counter_r <= counter_r + 1;
+
+      case counter_r(17 downto 16) is
+         when "00" => an <= "0111";
+         when "01" => an <= "1011";
+         when "10" => an <= "1101";
+         when others => an <= "1110";
+       end case;
+     end if;
+   end process;
    
    --sclk <= '1'; -- or '1'?
    sdin <= sdouts;
    seg <= audio(7 downto 0);
-   an <= "0111";
 
 end Behavioral;

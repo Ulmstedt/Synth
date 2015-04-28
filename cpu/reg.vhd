@@ -16,7 +16,7 @@ entity Reg is
 end Reg;
 
 architecture Behavioral of Reg is
-   signal reg : std_logic_vector(input'range);
+   signal reg : std_logic_vector(input'range) := (others => '0');
 begin
    process(clk) is
    begin

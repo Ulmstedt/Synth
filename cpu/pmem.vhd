@@ -1,4 +1,3 @@
-
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -10,8 +9,8 @@ use work.pmemContent.all;
 entity pMemory is
    port(
       addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      clk      : in std_logic
+      instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0)
+      --clk      : in std_logic
    );
 end pMemory;
 

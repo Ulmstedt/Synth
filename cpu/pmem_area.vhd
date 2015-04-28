@@ -30,8 +30,7 @@ architecture Behaviorial of PMemArea is
    component pMemory is
       port(
          addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         clk      : in std_logic
+         instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0)
       );
    end component;
    
@@ -143,8 +142,7 @@ begin
 
    mem : pMemory port map (
       addr        => pcAddr,
-      instr       => memOut,
-      clk         => clk
+      instr       => memOut
    );
    
    ir1out <= ir1sig;
