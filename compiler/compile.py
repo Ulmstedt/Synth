@@ -96,10 +96,10 @@ def comp_file(*filenames):
                         OFF_LENGTH = instr.find('OFFSET').find('LENGTH').text               
                         ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
 
-                     # Make sure the length of instruction is 32
-                     tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
-                     print(tempstring)
-                     outfile.write(tempstring)
+                  # Make sure the length of instruction is 32
+                  tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
+                  print(tempstring)
+                  outfile.write(tempstring)
 
                break # Correct instruction has been found
          

@@ -32,7 +32,7 @@ end component;
    signal mreg3         : std_logic_vector(MIDI_WIDTH - 1 downto 0);
    signal readRdy       : std_logic;
    signal tb_running    : boolean 	:= true;
-   signal midi_msg      : std_logic_vector(0 to 34) := "11111" & B"0_1001_0000_1" & B"0_1011_0111_1" & B"0_1010_0011_1";
+   signal midi_msg      : std_logic_vector(0 to 51) := "11111" & B"0_1001_0000_1111111111" & B"0_1011_0111_111111111" & B"0_1010_0011_1";
 
 
 BEGIN
@@ -81,7 +81,7 @@ BEGIN
       for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
          wait until rising_edge(clk);
          -- Send midi message
-         if i mod UART_CLK_PERIOD = 0 and n < 35 then
+         if i mod UART_CLK_PERIOD = 0 and n < 52 then
             uart <= midi_msg(n);
             -- report "Midi_msg(n): " & std_logic'image(midi_msg(n));
             --report "(n): " & integer'image(n);

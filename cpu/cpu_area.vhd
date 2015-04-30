@@ -12,7 +12,6 @@ entity CPUArea is
       mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
       midiRdy     : in std_logic;
       rst         : in std_logic;
-      tempir1out  : out std_logic_vector(31 downto 0);
       clk         : in std_logic
    );
 end CPUArea;
@@ -43,7 +42,6 @@ architecture Behavioral of CPUArea is
          regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
          sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
          rst      : in std_logic;
-         tempir1  : out std_logic_vector(31 downto 0);
          clk      : in std_logic
       );
    end component;
@@ -78,7 +76,6 @@ begin
       regIn       => regVal,
       sr          => sr,
       rst         => rst,
-      tempir1     => tempir1out,
       clk         => clk
    );
 end Behavioral;

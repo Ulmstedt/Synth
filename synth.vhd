@@ -31,7 +31,6 @@ architecture Behavioral of Synth is
          mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
          midiRdy     : in std_logic;
          rst         : in std_logic;
-         tempir1out  : out std_logic_vector(31 downto 0);
          clk         : in std_logic
       );
    end component;
@@ -56,6 +55,7 @@ architecture Behavioral of Synth is
          mreg1    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
          mreg2    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
          mreg3    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         m1out    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
          readRdy  : out std_logic -- pulse when a complete message is ready in Mreg1-3
       );
    end component;
@@ -72,8 +72,7 @@ architecture Behavioral of Synth is
 
    signal counter_r  :  unsigned(17 downto 0) := "000000000000000000";
 
-   signal tempIRsig  : std_logic_vector(31 downto 0);
-   signal tempIRhold : std_logic_vector(31 downto 0) := (others => '0');
+   signal m1         : std_logic_vector(7 downto 0);
 
 
 begin
@@ -84,7 +83,6 @@ begin
       mreg2       => mreg2S,
       mreg3       => mreg3S,
       midiRdy     => midiRdyS,
-      tempir1out  => tempIRsig,
       rst         => rst,
       clk         => clk
    );
@@ -106,6 +104,7 @@ begin
       mreg1    => mreg1S,
       mreg2    => mreg2S,
       mreg3    => mreg3S,
+      m1out    => m1,
       readRdy  => midiRdyS
    );
 
@@ -113,22 +112,25 @@ begin
      if rising_edge(clk) then 
        counter_r <= counter_r + 1;
 
-      if tempIRhold = "00000000000000000000000000000000" then
-         tempIRhold <= tempIRsig;
-      end if;
-
       case counter_r(17 downto 16) is
-         when "00" => an <= "0111";
-         when "01" => an <= "1011";
-         when "10" => an <= "1101";
-         when others => an <= "1110";
-       end case;
+         when "00" => 
+               an <= "0111";
+               seg <= m1;
+         when "01" => 
+               an <= "1011";
+               seg <= mreg1S;
+         when "10" => 
+               an <= "1101";
+               seg <= mreg2S;
+         when others => 
+               an <= "1110";
+               seg <= mreg3S;
+      end case;
      end if;
    end process;
    
    --sclk <= '1'; -- or '1'?
    sdin <= sdouts;
    -- seg <= tempIRhold(7 downto 0);
-   seg <= mreg1S;
 
 end Behavioral;

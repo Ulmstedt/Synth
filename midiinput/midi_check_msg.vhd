@@ -63,13 +63,11 @@ begin
                         readRdyS <= '1';
                when others => null;
             end case;
-         end if;
-         
-         -- When we have a valid midi-msg incoming, set readingValid = 1
-         if valid = '1' then
+
+         elsif valid = '1' then         
+            -- When we have a valid midi-msg incoming, set readingValid = 1
             readingValid <= '1';
-         end if;
-         
+         end if;         
          -- Pulse a delayed msgReady
          if msgReady = '1' then
             msgReadyDelayed <= '1';

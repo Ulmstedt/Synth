@@ -10,6 +10,7 @@ entity MidiInput is
       rst         : in std_logic; -- Reset
       uart        : in std_logic; -- Incoming message bit
       tmpReg      : out std_logic_vector(MIDI_WIDTH - 1 downto 0); -- The full UART message
+      m1out       : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       msgReady    : out std_logic -- 1 if a complete message has been read into m1
    );
 end MidiInput;
@@ -77,5 +78,6 @@ begin
 	end process;
 
 	msgReady <= msgReadyS;
+   m1out <= m1(MIDI_WIDTH downto 1);
 
 end Behavioral; 

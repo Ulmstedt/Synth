@@ -12,7 +12,6 @@ entity PMemArea is
       regIn    : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
       sr       : in std_logic_vector(SR_WIDTH - 1 downto 0);
       rst      : in std_logic;
-      tempir1  : out std_logic_vector(31 downto 0);
       clk      : in std_logic
    );
 end PMemArea;
@@ -94,8 +93,6 @@ architecture Behaviorial of PMemArea is
    signal stallCount : std_logic_vector(1 downto 0);
    
 begin
-   tempir1 <= ir1sig;
-
    pc : PCReg port map (
       nextPCType  => nextPCType,
       nextPC      => nextPC,

@@ -12,6 +12,7 @@ entity MidiArea is
       mreg1    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg2    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       mreg3    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      m1out    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       readRdy  : out std_logic -- pulse when a complete message is ready in Mreg1-3
    );
 end MidiArea;
@@ -24,6 +25,7 @@ component MidiInput is
       rst         : in std_logic; -- Reset
       uart        : in std_logic; -- Incoming message bit
       tmpReg      : out std_logic_vector(MIDI_WIDTH - 1 downto 0); -- The full UART message
+      m1out       : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       msgReady    : out std_logic -- 1 if a complete message has been read into m1
    );
 end component;
@@ -71,6 +73,7 @@ begin
       rst => rst,
       uart => uart,
       tmpReg => tmpRegS,
+      m1out    => m1out,
       msgReady => msgReady
    );
    

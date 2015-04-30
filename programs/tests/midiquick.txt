@@ -28,4 +28,3 @@ NOP
 LOAD.c   #upper, $0FFF
 BRA      #start
 NOP
-
