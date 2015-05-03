@@ -25,13 +25,26 @@ architecture Behavioral of Synth is
 
    component CPUArea is
       port(
-         audioOut    : out std_logic_vector(SAMPLE_SIZE - 1 downto 0);
-         mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         midiRdy     : in std_logic;
-         rst         : in std_logic;
-         clk         : in std_logic
+         audioOut          : out std_logic_vector(SAMPLE_SIZE - 1 downto 0);
+         mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         midiRdy           : in std_logic;
+         srOut             : out std_logic_vector(7 downto 0);
+
+         SVFwriteDelay     : in std_logic;
+         SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay1out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay2in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay2out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFoutput         : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFrun            : out std_logic;
+
+         rst               : in std_logic;
+         clk               : in std_logic
       );
    end component;
 
@@ -60,6 +73,24 @@ architecture Behavioral of Synth is
       );
    end component;
 
+   component SVF is
+      port(
+         sample      : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay1in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay2in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay1out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         loadFilter  : in std_logic;
+         saveDelay   : out std_logic;
+         rst         : in std_logic;
+         clk         : in std_logic
+      );
+   end component;
+
+
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
    
    signal sdouts     : std_logic;
@@ -70,9 +101,22 @@ architecture Behavioral of Synth is
    signal mreg3S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
    signal midiRdyS   : std_logic;
 
+   signal sampleS    : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal delay1inS  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal delay2inS  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal outputS    : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal delay1outS : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal delay2outS : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal fS         : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal qS         : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal loadFilterS: std_logic;
+   signal saveDelayS : std_logic;
+
    signal counter_r  :  unsigned(17 downto 0) := "000000000000000000";
 
    signal m1         : std_logic_vector(7 downto 0);
+
+   signal srSig      : std_logic_vector(7 downto 0);
 
 
 begin
@@ -83,6 +127,19 @@ begin
       mreg2       => mreg2S,
       mreg3       => mreg3S,
       midiRdy     => midiRdyS,
+      srOut       => srSig,
+
+      SVFwriteDelay  => saveDelayS,
+      SVFcur         => sampleS,
+      SVFdelay1in    => delay1inS,
+      SVFdelay1out   => delay1outS,
+      SVFdelay2in    => delay2inS,
+      SVFdelay2out   => delay2outS,
+      SVFoutput      => outputS,
+      SVFf           => fS,
+      SVFq           => qS,
+      SVFrun         => loadFilterS,
+
       rst         => rst,
       clk         => clk
    );
@@ -108,6 +165,21 @@ begin
       readRdy  => midiRdyS
    );
 
+   SVFc : SVF port map(
+      sample      => sampleS,
+      delay1in    => delay1outS,
+      delay2in    => delay2outS,
+      output      => outputS,
+      delay1out   => delay1inS,
+      delay2out   => delay2inS,
+      f           => fS,
+      q           => qS,
+      loadFilter  => loadFilterS,
+      saveDelay   => saveDelayS,
+      rst         => rst,
+      clk         => clk
+   );
+
    process(clk) begin
      if rising_edge(clk) then 
        counter_r <= counter_r + 1;
@@ -115,7 +187,8 @@ begin
       case counter_r(17 downto 16) is
          when "00" => 
                an <= "0111";
-               seg <= m1;
+               --seg <= m1;
+               seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";
                seg <= mreg1S;

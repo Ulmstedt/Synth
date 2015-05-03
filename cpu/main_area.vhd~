@@ -6,18 +6,30 @@ use work.constants.all;
 
 entity MainArea is
    port(
-      ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
-      pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      srOut       : out std_logic_vector(SR_WIDTH - 1 downto 0);
-      audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      midiRdy     : in std_logic;
-      rst         : in std_logic;
-      clk         : in std_logic
+      ir1               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      ir2               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      pmemSel           : in std_logic_vector(REG_BITS - 1 downto 0);
+      pmemOut           : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      srOut             : out std_logic_vector(SR_WIDTH - 1 downto 0);
+      audioOut          : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      midiRdy           : in std_logic;
+
+      SVFwriteDelay     : in std_logic;
+      SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay1out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay2in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay2out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFoutput         : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFrun            : out std_logic;
+
+      rst               : in std_logic;
+      clk               : in std_logic
    );
 end MainArea;
 
@@ -35,23 +47,35 @@ architecture Behavioral of MainArea is
 
    component RegArea is
       port(
-         pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
-         pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
-         SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
-         audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
-         regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
-         regWrite    : in std_logic;
-         mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         midiRdy     : in std_logic;
-         rst         : in std_logic;
-         clk         : in std_logic
+         pmemSel           : in std_logic_vector(REG_BITS - 1 downto 0);
+         pmemOut           : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         ir2               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         regAOut           : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         regBOut           : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         SRin              : in std_logic_vector(SR_WIDTH - 1 downto 0);
+         SRout             : out std_logic_vector(SR_WIDTH - 1 downto 0);
+         audioOut          : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         regWriteSel       : in std_logic_vector(REG_BITS - 1 downto 0);
+         regWriteVal       : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         regWrite          : in std_logic;
+         mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         midiRdy           : in std_logic;
+
+         SVFwriteDelay     : in std_logic;
+         SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay1out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay2in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay2out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFoutput         : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFrun            : out std_logic;
+
+         rst               : in std_logic;
+         clk               : in std_logic
       );
    end component;
    
@@ -159,23 +183,34 @@ begin
    );
 
    regs : RegArea port map(
-      pmemSel     => pmemSel,
-      pmemOut     => pmemOut,
-      ir2         => ir2,
-      regAOut     => reg2ASig,
-      regBOut     => reg2BSig,
-      SRin        => SR,
-      SRout       => srOut,
-      audioOut    => audioOut,
-      regWriteSel => regWriteSel,
-      regWriteVal => regWriteVal,
-      regWrite    => regWrite,
-      mreg1       => mreg1,
-      mreg2       => mreg2,
-      mreg3       => mreg3,
-      midiRdy     => midiRdy,
-      rst         => rst,
-      clk         => clk
+      pmemSel        => pmemSel,
+      pmemOut        => pmemOut,
+      ir2            => ir2,
+      regAOut        => reg2ASig,
+      regBOut        => reg2BSig,
+      SRin           => SR,
+      SRout          => srOut,
+      audioOut       => audioOut,
+      regWriteSel    => regWriteSel,
+      regWriteVal    => regWriteVal,
+      regWrite       => regWrite,
+      mreg1          => mreg1,
+      mreg2          => mreg2,
+      mreg3          => mreg3,
+      midiRdy        => midiRdy,
+
+      SVFwriteDelay  => SVFwriteDelay
+      SVFcur         => SVFcur
+      SVFdelay1in    => SVFdelay1in
+      SVFdelay1out   => SVFdelay1out
+      SVFdelay2in    => SVFdelay2in
+      SVFdelay2out   => SVFdelay2out
+      SVFoutput      => SVFoutput
+      SVFf           => SVFf
+      SVFq           => SVFq
+
+      rst            => rst,
+      clk            => clk
    );
    
    ir3   : Reg
@@ -199,7 +234,7 @@ begin
       );
    
    d3Reg : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => ALUOut,
       output   => d3Out,
       rst      => rst,
@@ -207,7 +242,7 @@ begin
    );
    
    z3Reg : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => z3In,
       output   => z3out,
       rst      => rst,

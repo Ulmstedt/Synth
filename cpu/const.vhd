@@ -4,6 +4,7 @@ package Constants is
    constant PMEM_HEIGHT          : natural := 64;
 
    constant MIDI_WIDTH           : natural := 8;
+   constant AUDIO_WIDTH          : natural := 16;
    
    constant MEM_HEIGHT           : natural := 64;
     

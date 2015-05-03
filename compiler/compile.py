@@ -11,6 +11,12 @@ constants = {
                "SR_ST1": "5",
                "SR_ST2": "6",
                "SR_MIDI": "7",
+               "SVF_IN": "22",
+               "SVF_D1": "23",
+               "SVF_D2": "24",
+               "SVF_OUT": "25",
+               "SVF_F": "26",
+               "SVF_Q": "27",
                "R_MREG12": "29",
                "R_MREG3": "30",
                "R_AUDIO": "31"

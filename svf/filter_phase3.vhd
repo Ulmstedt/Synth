@@ -5,7 +5,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
-use.numeric_std.all;
+use IEEE.numeric_std.all;
 
 use work.FilterConstants.all;
 
@@ -17,7 +17,7 @@ entity Filter_Phase_3 is
       delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       lp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-      f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
    );
 end Filter_Phase_3;
 
