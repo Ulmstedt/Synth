@@ -8,7 +8,11 @@ entity CPUArea is
    port(
       audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
       rst         : in std_logic;
-      clk         : in std_logic
+      clk         : in std_logic;
+      
+      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
    );
 end CPUArea;
 
@@ -22,7 +26,11 @@ architecture Behavioral of CPUArea is
          srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
          audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
          rst      : in std_logic;
-         clk      : in std_logic
+         clk      : in std_logic;
+         
+         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
       );
    end component;
    
@@ -53,7 +61,11 @@ begin
       srOut       => sr,
       audioOut    => audioOut,
       rst         => rst,
-      clk         => clk
+      clk         => clk,
+
+      tileXcnt    => tileXcnt,
+      tileYcnt    => tileYcnt,
+      tileMapOut  => tileMapOut
    );
    
    pmem : PMemArea port map(

@@ -1,0 +1,85 @@
+Release 12.4 - xst M.81d (lin64)
+Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.
+--> 
+Parameter TMPDIR set to tmpdir
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.12 secs
+ 
+--> 
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Parsing
+  3) HDL Elaboration
+  4) HDL Synthesis
+       4.1) HDL Synthesis Report
+  5) Advanced HDL Synthesis
+       5.1) Advanced HDL Synthesis Report
+  6) Low Level Synthesis
+  7) Partition Report
+  8) Design Summary
+       8.1) Primitive and Black Box Usage
+       8.2) Device utilization summary
+       8.3) Partition Resource Summary
+       8.4) Timing Report
+            8.4.1) Clock Information
+            8.4.2) Asynchronous Control Signals Information
+            8.4.3) Timing Summary
+            8.4.4) Timing Details
+            8.4.5) Cross Clock Domains Report
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "design.prj"
+
+---- Target Parameters
+Output File Name                   : "design.ngc"
+Target Device                      : xc6slx16-3-csg324
+
+---- Source Options
+Top Module Name                    : midi_area
+
+=========================================================================
+
+WARNING:Xst:29 - Optimization Effort not specified
+The following parameters have been added:
+Optimization Goal                  : SPEED
+
+=========================================================================
+
+=========================================================================
+*                          HDL Parsing                                  *
+=========================================================================
+Parsing VHDL file "/edu/joast229/synth/Synth/midi_input-synthdir/xst/synth/../../../midiinput/midi_constants.vhd" into library work
+Parsing package <midi_constants>.
+Parsing VHDL file "/edu/joast229/synth/Synth/midi_input-synthdir/xst/synth/../../../midiinput/midi_area.vhd" into library work
+Parsing entity <MidiArea>.
+Parsing architecture <Behavioral> of entity <midiarea>.
+Parsing VHDL file "/edu/joast229/synth/Synth/midi_input-synthdir/xst/synth/../../../midiinput/midi_check_msg.vhd" into library work
+Parsing entity <CheckMsg>.
+Parsing architecture <Behavioral> of entity <checkmsg>.
+Parsing VHDL file "/edu/joast229/synth/Synth/midi_input-synthdir/xst/synth/../../../midiinput/midi_mux_counter.vhd" into library work
+Parsing entity <MuxCounter>.
+Parsing architecture <Behavioral> of entity <muxcounter>.
+Parsing VHDL file "/edu/joast229/synth/Synth/midi_input-synthdir/xst/synth/../../../midiinput/midi_uart_input.vhd" into library work
+Parsing entity <MidiInput>.
+Parsing architecture <Behavioral> of entity <midiinput>.
+
+=========================================================================
+*                            HDL Elaboration                            *
+=========================================================================
+ERROR:Xst:2793 - Top module <midi_area> specified via the -top switch was not found in any library.
+--> 
+
+
+Total memory usage is 396672 kilobytes
+
+Number of errors   :    1 (   0 filtered)
+Number of warnings :    1 (   0 filtered)
+Number of infos    :    0 (   0 filtered)
+

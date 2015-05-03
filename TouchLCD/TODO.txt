@@ -1,0 +1,3 @@
+Klara simuleringen
+Fixa i mem
+Fixa start sequence

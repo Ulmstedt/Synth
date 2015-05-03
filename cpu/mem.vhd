@@ -10,17 +10,24 @@ use work.memContent.all;
 --Z4 now inside of memory
 entity Memory is
    port(
-      addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      outputZ4 : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      doWrite  : in std_logic;
-      newValue : in std_logic_vector(REG_WIDTH - 1 downto 0);
-      clk      : in std_logic
+      addr        : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      outputZ4    : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      doWrite     : in std_logic;
+      newValue    : in std_logic_vector(REG_WIDTH - 1 downto 0);
+      clk         : in std_logic;
+
+      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+      
    );
 end Memory;
 
 architecture Behavioral of Memory is
    signal mem : mem_t := memc;
-   
+   signal rema : std_logic_vector(5 downto 0);
+   signal helpTileMem : std_logic_vector(REG_WIDTH - 1 downto 0);
+
 begin
    process(clk) is
    begin
@@ -31,5 +38,19 @@ begin
          end if;
       end if;
    end process;
+   
+   --varje slot i mem tar 3 tiles
+   --en rad på skärmen = 60 tiles
+   --en kolumn på skärmen = 34 tiles
+   --Antar att tilemappen ligger kontinuerligt med tile 0 som första tilen dvs från offseten dvs tilemap[0][0] (första indexet motsvara raden, andra kolumn) i adress mem(TILE_MAP_OFFSET) och innehållet i bitarna 14 downto 10 i den. tile 60 (minns att det är räknat från 0 alltså i tilemap[1][0] osv
+   --Antar att det gäller heltals division t e x 5/3 = 1, 5 rem 3 = 2
+   rema <= std_logic_vector(to_unsigned(to_integer(unsigned(tileXcnt)) + to_integer(unsigned(tileYcnt)) rem 3, 6));
+   helpTileMem <= mem(TILE_MAP_OFFSET + to_integer(unsigned(tileYcnt)) * 20 + to_integer(unsigned(tileXcnt)) / 3);
+
+   tileMapOut  <= helpTileMem(14 downto 10) when rema = "000000" else
+                  helpTileMem(9 downto 5) when rema = "000001"  else
+                  helpTileMem(4 downto 0) when rema = "000010" else
+                  (others => '0');
+
 end Behavioral;
 
