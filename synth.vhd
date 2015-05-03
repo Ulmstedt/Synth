@@ -12,6 +12,15 @@ entity Synth is
       sdin        : out std_logic;
       seg         : out std_logic_vector(7 downto 0);
       an          : out std_logic_vector(3 downto 0);
+      
+      --LCDtft stuff
+      IOP         : out std_logic_vector(20 downto 1);
+      ION         : out std_logic_vector(20 downto 1);
+      TP_BUSY     : in std_logic;
+      TP_DOUT     : in std_logic;
+      TP_PENIRQ   : in std_logic;
+      -- endLCD
+
       uart        : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic
@@ -64,16 +73,17 @@ architecture Behavioral of Synth is
       );
    end component;
    
-   component LCDInputarea is
+   component LCDArea is
       port(
-         rst               :  in std_logic;
-         clk               :  in std_logic;
-         F                 :  out std_logic;
-         LCD_DE            :  out std_logic;
-         LCD_DATA          :  out std_logic_vector(RGB_BITS - 1 downto 0);
+         rst               : in std_logic;
+         clk               : in std_logic;
+         
          XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
          YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0)
+         TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+         IOPi              : out std_logic_vector(19 downto 0);
+         IONi              : out std_logic_vector(19 downto 0)
       );
    end component;
 
@@ -91,17 +101,11 @@ architecture Behavioral of Synth is
 
    signal m1         : std_logic_vector(7 downto 0);
 
-
-   signal F_LCDclk   : std_logic;
-   signal LCDDEin    : std_logic;
-   signal LCDDATAin  : std_logic_vector(RGB_BITS - 1 downto 0);
-
    signal XCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal YCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal tileAdressfromCPU : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
 begin
-   -- fix someth and add LCDInputarea
    cpu : CPUArea port map(
       audioOut    => audio,
       mreg1       => mreg1S,
@@ -137,15 +141,15 @@ begin
    );
 
 
-   LCDIn :  LCDInputarea port map(
+   LCDareai :  LCDArea port map(
       rst               => rst,
       clk               => clk,
-      F                 => F_LCDclk,
-      LCD_DE            => LCDDEin,
-      LCD_DATA          => LCDDATAin,
       XCountHighBits    => XCountMSBBits,
       YCountHighBits    => YCountMSBBits,
-      TileAdress        => tileAdressfromCPU
+      TileAdress        => tileAdressfromCPU,
+
+      IOPi              => IOP,
+      IONi              => IOn
 
    );
 
