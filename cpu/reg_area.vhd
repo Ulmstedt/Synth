@@ -8,23 +8,38 @@ use work.Constants.all;
 --A2 and B2 are now in here as regAOut and regBOut
 entity RegArea is
    port(
-      pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
-      pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      regAOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      regBOut     : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      SRin        : in std_logic_vector(SR_WIDTH - 1 downto 0);
-      SRout       : out std_logic_vector(SR_WIDTH - 1 downto 0);
-      audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
-      regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
-      regWrite    : in std_logic;
-      mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      midiRdy     : in std_logic;
-      rst         : in std_logic;
-      clk         : in std_logic
+      pmemSel           : in std_logic_vector(REG_BITS - 1 downto 0);
+      pmemOut           : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      ir2               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      regAOut           : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      regBOut           : out std_logic_vector(REG_WIDTH - 1 downto 0);
+
+      SRin              : in std_logic_vector(SR_WIDTH - 1 downto 0);
+      SRout             : out std_logic_vector(SR_WIDTH - 1 downto 0);
+      audioOut          : out std_logic_vector(REG_WIDTH - 1 downto 0);
+
+      regWriteSel       : in std_logic_vector(REG_BITS - 1 downto 0);
+      regWriteVal       : in std_logic_vector(REG_WIDTH - 1 downto 0);
+      regWrite          : in std_logic;
+
+      mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      midiRdy           : in std_logic;
+      
+      SVFwriteDelay     : in std_logic;
+      SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay1out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay2in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay2out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFoutput         : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFrun            : out std_logic;
+
+      rst               : in std_logic;
+      clk               : in std_logic
    );
 end RegArea;
    
@@ -79,6 +94,11 @@ architecture Behavioral of RegArea is
 
    signal mreg12S    : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal mreg3S     : std_logic_vector(REG_WIDTH - 1 downto 0);
+
+   signal delay1in   : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal delay2in   : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal delay1read : std_logic;
+   signal delay2read : std_logic;
 
 begin
    -- Generic Registers
@@ -153,6 +173,70 @@ begin
       rst         => rst,
       clk         => clk
    );
+
+   -- 6 Filter registers
+
+
+   -- SVF current sample (Register 22) remember to send load filter signal to SVF 
+   SVFcur <= regVal(22);
+   SVFin : Reg port map(
+      doRead   => writeReg(22),
+      input    => regWriteVal,
+      output   => regVal(22),
+      rst      => rst,
+      clk      => clk
+   );
+
+   -- SVF delay1in (Register 23)
+   SVFdelay1out <= regVal(23);
+   delay1in <= SVFdelay1in when SVFwriteDelay = '1' else regWriteVal;
+   delay1read <= writeReg(23) or SVFwriteDelay;
+   SVFd1 : Reg port map(
+      doRead   => delay1read,
+      input    => delay1in,
+      output   => regVal(23),
+      rst      => rst,
+      clk      => clk
+   );
+
+   -- SVF delay2in (Register 24)
+   SVFdelay2out <= regVal(24);
+   delay2in <= SVFdelay2in when SVFwriteDelay = '1' else regWriteVal;
+   delay2read <= writeReg(24) or SVFwriteDelay;
+   SVFd2 : Reg port map(
+      doRead   => delay2read,
+      input    => delay2in,
+      output   => regVal(24),
+      rst      => rst,
+      clk      => clk
+   );
+
+   -- SVF output (Register 25)
+   SVFout : Reg port map(
+      doRead   => SVFwriteDelay,
+      input    => SVFoutput,
+      output   => regVal(25),
+      rst      => rst,
+      clk      => clk
+   );
+
+   -- SVF f (frequency) (Register 26)
+   SVFfr : Reg port map(
+      doRead   => writeReg(26),
+      input    => regWriteVal,
+      output   => SVFf,
+      rst      => rst,
+      clk      => clk
+   );
+
+   -- SVF q (resonance) (Register 27)
+   SVFqr : Reg port map(
+      doRead   => writeReg(27),
+      input    => regWriteVal,
+      output   => SVFq,
+      rst      => rst,
+      clk      => clk
+   );
    
    -- Midi register 1 & 2 (Register 29)
    mreg12S <= mreg1 & mreg2;
@@ -216,8 +300,11 @@ begin
    process (clk) is
    begin
       if rising_edge(clk) then
+
+         SVFrun <= writeReg(22); -- If SVFin reg was written to, run the filter         
+
          for I in SR_WIDTH - 1 downto 0 loop
-            if resetSR(I) = '1' then
+            if resetSR(I) = '1' or rst = '1' then
                SRlast(I) <= '0';
                -- Reset on read
             else

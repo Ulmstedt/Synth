@@ -19,7 +19,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
-use.numeric_std.all;
+use IEEE.numeric_std.all;
 
 use work.FilterConstants.all;
 
@@ -45,8 +45,8 @@ architecture Behavioral of SVF is
       port(
          input    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          output   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         hp_out   : out std_logic_vector(AUDIO_WIDTH);
-         f        : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         hp_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         f        : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
       );
    end component;
 
@@ -56,7 +56,7 @@ architecture Behavioral of SVF is
          delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         bp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         bp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0)
       );
    end component;
 
@@ -66,7 +66,7 @@ architecture Behavioral of SVF is
          delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          lp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
       );
    end component;
    
@@ -77,8 +77,8 @@ architecture Behavioral of SVF is
    signal bp_out     : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal hp_out     : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
 
-   signal phase1out  : std_logic_vector(AUDIO_WIDHT - 1 downto 0);
-   signal phase2out  : std_logic_vector(AUDIO_WIDHT - 1 downto 0);
+   signal phase1out  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal phase2out  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
 
    signal loadedVal  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal savePulse  : std_logic; 
@@ -110,14 +110,14 @@ begin
 
    sub   <= std_logic_vector(
                unsigned(loadedVal) - unsigned(lp_out) -
-               unsigned(qmult(2*AUDIO_WIDTH - 1 downto AUDIO_WIDTH)
+               unsigned(qmult(2*AUDIO_WIDTH - 1 downto AUDIO_WIDTH))
             );
 
    process(clk) is
    begin
       if rising_edge(clk) then
          if rst = '1' then
-            savePulse = '0';
+            savePulse <= '0';
             loadedVal <= (others => '0');
          else
             if loadFilter = '1' then
@@ -125,11 +125,13 @@ begin
                savePulse <= '1';
             end if;
             if savePulse = '1' then
-               savePulse = '0';
+               savePulse <= '0';
             end if;
          end if;
       end if;
    end process;
    
    saveDelay <= savePulse;
+   output <= lp_out;
+
 end Behavioral;

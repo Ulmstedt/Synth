@@ -6,33 +6,58 @@ use work.constants.all;
 
 entity CPUArea is
    port(
-      audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-      midiRdy     : in std_logic;
-      rst         : in std_logic;
-      clk         : in std_logic;
-      
+      audioOut          : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      midiRdy           : in std_logic;
+      srOut             : out std_logic_vector(7 downto 0);
+
+      SVFwriteDelay     : in std_logic;
+      SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay1out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay2in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFdelay2out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFoutput         : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      SVFrun            : out std_logic;
+
       tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+   
+      rst               : in std_logic;
+      clk               : in std_logic      
    );
 end CPUArea;
 
 architecture Behavioral of CPUArea is
    component MainArea is
+<<<<<<< HEAD
       port(
-         ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
-         pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         srOut       : out std_logic_vector(SR_WIDTH - 1 downto 0);
-         audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
-         midiRdy     : in std_logic;
+         ir1               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         ir2               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         pmemSel           : in std_logic_vector(REG_BITS - 1 downto 0);
+         pmemOut           : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         srOut             : out std_logic_vector(SR_WIDTH - 1 downto 0);
+         audioOut          : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         midiRdy           : in std_logic;
+
+         SVFwriteDelay     : in std_logic;
+         SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay1out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay2in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFdelay2out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFoutput         : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         SVFrun            : out std_logic;
 
          tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
@@ -63,6 +88,8 @@ architecture Behavioral of CPUArea is
    
 begin
 
+   srOut <= sr(7 downto 0);
+
    main : MainArea port map(
       ir1         => ir1,
       ir2         => ir2,
@@ -74,6 +101,18 @@ begin
       mreg2       => mreg2,
       mreg3       => mreg3,
       midiRdy     => midiRdy,
+
+      SVFwriteDelay  => SVFwriteDelay,
+      SVFcur         => SVFcur,
+      SVFdelay1in    => SVFdelay1in,
+      SVFdelay1out   => SVFdelay1out,
+      SVFdelay2in    => SVFdelay2in,
+      SVFdelay2out   => SVFdelay2out,
+      SVFoutput      => SVFoutput,
+      SVFf           => SVFf,
+      SVFq           => SVFq,
+      SVFrun         => SVFrun,
+
       rst         => rst,
       clk         => clk,
 
