@@ -1,0 +1,30 @@
+CONSTANT timerreg, 18
+
+LOAD.C   3, $0F0F
+
+&start
+
+NOP
+LOAD.C   3, $0000
+BCC #SR_ST1, #swap
+NOP
+BNCC #SR_MIDI, #start
+NOP
+MOVE 1, #R_MREG12
+AND 1, $10
+CMP 1,$10
+BCC #SR_Z, #timer
+NOP
+BRA #start
+NOP
+
+&timer
+LOAD.C   #timerreg, 65000
+BRA #start
+
+&swap
+NOT.c 3,0
+MOVE #R_AUDIO, 3
+LOAD.C #timerreg, 65000
+BRA #start
+NOP

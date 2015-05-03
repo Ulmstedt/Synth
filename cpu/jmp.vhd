@@ -27,20 +27,24 @@ begin
    process(clk)
    begin
       if rising_edge(clk) then
-         if isJmp = '1' then
-            -- The branch test doesn't fail or it's a regular jump, do the jump
-            if ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "00" then
-               -- XXX00: Absolute address
-               pc2 <= std_logic_vector(unsigned(ir1(ADDR_WIDTH - 1 downto 0)));
-            elsif ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "01" then
-               -- XXX01: Address in register
-               pc2 <= std_logic_vector(unsigned(pc1) + unsigned(regIn));
-            elsif ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "10" then
-               -- XXX10: Offset from current address
-               pc2 <= std_logic_vector(unsigned(pc1) + unsigned(ir1(ADDR_WIDTH - 1 downto 0)));
-            end if;
-         else
+         if rst = '1' then
             pc2 <= (others => '0');
+         else
+            if isJmp = '1' then
+               -- The branch test doesn't fail or it's a regular jump, do the jump
+               if ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "00" then
+                  -- XXX00: Absolute address
+                  pc2 <= std_logic_vector(unsigned(ir1(ADDR_WIDTH - 1 downto 0)));
+               elsif ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "01" then
+                  -- XXX01: Address in register
+                  pc2 <= std_logic_vector(unsigned(pc1) + unsigned(regIn));
+               elsif ir1(PMEM_WIDTH - 4 downto PMEM_WIDTH - 5) = "10" then
+                  -- XXX10: Offset from current address
+                  pc2 <= std_logic_vector(unsigned(pc1) + unsigned(ir1(ADDR_WIDTH - 1 downto 0)));
+               end if;
+            else
+               pc2 <= (others => '0');
+            end if;
          end if;
       end if;
    end process;

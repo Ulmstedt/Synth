@@ -6,17 +6,18 @@ use work.Constants.all;
 
 entity ALU is
    port(
-      leftIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
-      rightIn : in std_logic_vector(REG_WIDTH-1 downto 0);
-      ALUOut  : out std_logic_vector(REG_WIDTH-1 downto 0);
-      ALUInstr  : in std_logic_vector(4 downto 0);
+      leftIn   : in std_logic_vector(REG_WIDTH-1 downto 0);
+      rightIn  : in std_logic_vector(REG_WIDTH-1 downto 0);
+      ALUOut   : out std_logic_vector(REG_WIDTH-1 downto 0);
+      ALUInstr : in std_logic_vector(4 downto 0);
       
       clk      : in std_logic;
+      rst      : in std_logic;
       
-      sRZ     : out std_logic;
-      sRN     : out std_logic;
-      sRO     : out std_logic;
-      sRC     : out std_logic
+      sRZ      : out std_logic;
+      sRN      : out std_logic;
+      sRO      : out std_logic;
+      sRC      : out std_logic
    );
 end ALU;
 
@@ -73,11 +74,11 @@ begin
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (not leftIn) when "01011",                                                                                                  --NOT
                (REG_WIDTH*2 - 1 downto REG_WIDTH + 1 => '0') & std_logic_vector(to_unsigned(to_integer(unsigned(leftIn)) + to_integer(unsigned(rightIn)), REG_WIDTH+1)) when "10000",  --ADD unsigned without affecting flags
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & leftIn when "11111",                                                                                                        --let leftIn go through ALU
-               temp when "00000",                                                                                                                                                      --DO nothing
-               temp when "01100",                                                                                                                                                      --CMP unsigned
-               temp when "01101",                                                                                                                                                      --CMP signed
-               temp when "01111",                                                                                                                                                      --BITTEST
-               temp when others;                                                                                                                                                       --catch all
+               (others => '0') when "00000",                                                                                                                                           --DO nothing
+               (others => '0') when "01100",                                                                                                                                           --CMP unsigned
+               (others => '0') when "01101",                                                                                                                                           --CMP signed
+               (others => '0') when "01111",                                                                                                                                           --BITTEST
+               (others => '0') when others;                                                                                                                                            --catch all
    
    --set ZERO flag
    sRZInternal   <= '1' when ALUInstr = "00001" and unsigned(temp) = 0 else                                                                           --ADD unsigned
@@ -181,10 +182,17 @@ begin
    process (clk) is
    begin
       if rising_edge(clk) then
-         srZlast <= sRZInternal;
-         srNlast <= sRNInternal;
-         srClast <= sRCInternal;
-         srOlast <= sROInternal;
+         if rst = '1' then
+            srZlast <= '0';
+            srNlast <= '0';
+            srClast <= '0';
+            srOlast <= '0';
+         else
+            srZlast <= sRZInternal;
+            srNlast <= sRNInternal;
+            srClast <= sRCInternal;
+            srOlast <= sROInternal;
+         end if;
       end if;
    end process;
    

@@ -7,6 +7,10 @@ use work.constants.all;
 entity CPUArea is
    port(
       audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      midiRdy     : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic;
       
@@ -19,18 +23,23 @@ end CPUArea;
 architecture Behavioral of CPUArea is
    component MainArea is
       port(
-         ir1      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         ir2      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         pmemSel  : in std_logic_vector(REG_BITS - 1 downto 0);
-         pmemOut  : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-         srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
-         audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         rst      : in std_logic;
-         clk      : in std_logic;
-         
+         ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
+         pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+         srOut       : out std_logic_vector(SR_WIDTH - 1 downto 0);
+         audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         midiRdy     : in std_logic;
+
          tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+         rst         : in std_logic;
+         clk         : in std_logic
       );
    end component;
    
@@ -53,6 +62,7 @@ architecture Behavioral of CPUArea is
    signal sr      : std_logic_vector(SR_WIDTH - 1 downto 0);
    
 begin
+
    main : MainArea port map(
       ir1         => ir1,
       ir2         => ir2,
@@ -60,6 +70,10 @@ begin
       pmemOut     => regVal,
       srOut       => sr,
       audioOut    => audioOut,
+      mreg1       => mreg1,
+      mreg2       => mreg2,
+      mreg3       => mreg3,
+      midiRdy     => midiRdy,
       rst         => rst,
       clk         => clk,
 

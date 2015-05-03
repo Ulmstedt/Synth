@@ -8,6 +8,7 @@ entity SoutClkgen is
    port(
       clk               : in std_logic; -- Clock
       rst               : in std_logic; -- Reset
+      sendBit           : out std_logic;
       sclk              : out std_logic; -- Serial clock
       mclk              : out std_logic -- Master clock
    );
@@ -16,10 +17,13 @@ end SoutClkgen;
 
 architecture Behavioral of SoutClkgen is
    
-   signal sclkS            : std_logic; -- Serial clock signal
-   signal mclkS            : std_logic; -- Master clock signal
-   signal clk_counter      : std_logic_vector(11 downto 0) := (others => '0'); -- Clk counter
+   signal clk_counter      : std_logic := '0';
+   signal mclk_counter     : std_logic_vector(2 downto 0) := (others => '0');
+   signal mclk_pulse       : std_logic;
+   signal mclkS            : std_logic := '0';
+   signal sclkS            : std_logic := '0'; 
    
+   signal hold_counter     : std_logic_vector(15 downto 0) := (others => '1');
 begin
 
    process(clk) is
@@ -28,35 +32,44 @@ begin
          if rst = '1' then
             sclkS <= '0';
             mclkS <= '0';
-            clk_counter <= (others => '0');
+            clk_counter <= '0';
+            mclk_counter <= "000";
+            hold_counter <= (others => '1');
          else
+            if mclk_pulse = '1' then
+               mclk_pulse <= '0';
+               mclk_counter <= std_logic_vector(unsigned(mclk_counter)+1);
+            end if;
+
             -- Generate clocks
 
-            clk_counter <= std_logic_vector(unsigned(clk_counter)+1);
-            if clk_counter = std_logic_vector(to_unsigned(70,12)) then -- 2267?
-
-               -- "Shift" clock
-               sclkS <= '1';
-               clk_counter <= (others => '0');
-
-               -- Master clock 
+            -- Master clock
+            clk_counter <= not clk_counter;
+            if clk_counter = '1' then
                if mclkS = '0' then
-                  mclkS <= '1';
-               else
-                  mclkS <= '0';
+                  -- Set the pulse to start counting LRCK/SCLK when the intial delay has passed
+                  if hold_counter /= std_logic_vector(to_unsigned(0, hold_counter'length)) then
+                     hold_counter <= std_logic_vector(unsigned(hold_counter)-1);
+                  else
+                     mclk_pulse <= '1';
+                  end if;
                end if;
-
+               mclkS <= not mclkS;
+               
+               -- Serial clock
+               if mclk_counter = "111" and mclkS = '0' then
+                  sclkS <= not sclkS;
+               end if;
             end if;
-         end if;
-
-         if sclkS = '1' then
-            sclkS <= '0';
-         end if;
-
+         end if;           
       end if;
    end process;
 
    mclk <= mclkS;
    sclk <= sclkS;
+   sendBit <= '1' when sclkS = '1' and mclkS = '0' and clk_counter = '1' and mclk_counter = "111" else '0';
    
 end Behavioral;
+
+-- clk_counter <= std_logic_vector(unsigned(clk_counter)+1);
+-- if clk_counter = std_logic_vector(to_unsigned(35,12)) then -- 2267?

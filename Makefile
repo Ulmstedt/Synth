@@ -56,13 +56,19 @@ cpu.%: S=cpu/cpu_area.vhd cpu/main_area.vhd cpu/pmem_area.vhd cpu/ir1.vhd cpu/ir
 cpu.%: T=cpu/cpu_tb.vhd
 cpu.%: U=main.ucf
 
-synth.%: S=synth.vhd cpu/cpu_area.vhd cpu/main_area.vhd cpu/pmem_area.vhd cpu/ir1.vhd cpu/ir2.vhd cpu/jmp.vhd cpu/pcreg.vhd cpu/pmem.vhd cpu/reg_area.vhd cpu/reg.vhd cpu/mem_area.vhd cpu/mem.vhd cpu/z4d4mux.vhd cpu/d_reg.vhd cpu/alu_area.vhd cpu/alu.vhd cpu/alu_muxes.vhd cpu/rightforwardinglogic.vhd cpu/leftforwardinglogic.vhd cpu/timer.vhd cpu/mem_content.vhd cpu/pmem_content.vhd cpu/records.vhd cpu/const.vhd soundoutput/sout_area.vhd soundoutput/sout.vhd soundoutput/sout_clkgen.vhd soundoutput/sout_constants.vhd
+synth.%: S=synth.vhd cpu/cpu_area.vhd cpu/main_area.vhd cpu/pmem_area.vhd cpu/ir1.vhd cpu/ir2.vhd cpu/jmp.vhd cpu/pcreg.vhd cpu/pmem.vhd cpu/reg_area.vhd cpu/reg.vhd cpu/mem_area.vhd cpu/mem.vhd cpu/z4d4mux.vhd cpu/d_reg.vhd cpu/alu_area.vhd cpu/alu.vhd cpu/alu_muxes.vhd cpu/rightforwardinglogic.vhd cpu/leftforwardinglogic.vhd cpu/timer.vhd cpu/mem_content.vhd cpu/pmem_content.vhd cpu/records.vhd cpu/const.vhd soundoutput/sout_area.vhd soundoutput/sout.vhd soundoutput/sout_clkgen.vhd soundoutput/sout_constants.vhd midiinput/midi_area.vhd midiinput/midi_check_msg.vhd midiinput/midi_mux_counter.vhd midiinput/midi_uart_input.vhd midiinput/midi_constants.vhd
 synth.%: T=synth_tb.vhd
 synth.%: U=synth.ucf
 
 lcdin.%: S=TouchLCD/InputtoLCD/LCDInputarea.vhd TouchLCD/InputtoLCD/updatefrequency.vhd TouchLCD/InputtoLCD/XCounter.vhd TouchLCD/InputtoLCD/YCounter.vhd TouchLCD/InputtoLCD/GK1.vhd TouchLCD/InputtoLCD/GK2.vhd TouchLCD/InputtoLCD/GK3.vhd TouchLCD/InputtoLCD/GK4.vhd TouchLCD/InputtoLCD/tilemem.vhd TouchLCD/InputtoLCD/tilememcontent.vhd cpu/const.vhd 
 lcdin.%: T=TouchLCD/InputtoLCD/LCDinput_tb.vhd
 lcdin.%: U=main.ucf
+
+
+example.%: S=soundoutput/example/i2s_example.vhd
+example.%: T=soundoutput/example/example_tb.vhd
+example.%: U=main.ucf
+
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)

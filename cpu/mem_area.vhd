@@ -68,7 +68,7 @@ begin
 
    -- D4
    d4 : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => d3,
       output   => d4out,
       rst      => rst,

@@ -21,7 +21,7 @@ entity PCReg is
 end PCReg;
 
 architecture Behavioral of PCReg is
-   signal pc     : std_logic_vector(ADDR_WIDTH - 1 downto 0);
+   signal pc     : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
 begin
    process(clk) is
    begin

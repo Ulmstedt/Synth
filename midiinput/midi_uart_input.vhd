@@ -10,15 +10,16 @@ entity MidiInput is
       rst         : in std_logic; -- Reset
       uart        : in std_logic; -- Incoming message bit
       tmpReg      : out std_logic_vector(MIDI_WIDTH - 1 downto 0); -- The full UART message
+      m1out       : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
       msgReady    : out std_logic -- 1 if a complete message has been read into m1
    );
 end MidiInput;
 
 architecture Behavioral of MidiInput is
    signal m1            : std_logic_vector((MIDI_WIDTH + 1) downto 0) := (others => '0'); -- 10 bit "shiftregister"
-   signal clkCounter    : std_logic_vector(UART_CLK_PERIOD_WIDTH - 1 downto 0) := "010000"; -- Counts ck, initialized to 16
+   signal clkCounter    : std_logic_vector(UART_CLK_PERIOD_WIDTH - 1 downto 0) := std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
    signal inputActive   : std_logic := '0'; -- 1 if receiving UART message, 0 if not
-   signal bitsReceived  : std_logic_vector(3 downto 0) := (others => '0'); -- How many bits of the message has been received
+   signal bitsReceived  : std_logic_vector(3 downto 0) := (others => '0'); -- How many bits of the message has been received1
    signal msgReadyS     : std_logic := '0';
    signal msgReadyCtr   : std_logic := '0';
 begin
@@ -33,7 +34,7 @@ begin
          if rst = '1' then
             tmpReg <= (others => '0');
             m1 <= (others => '0');
-            clkCounter <= "010000"; -- Reset to 16
+            clkCounter <= std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
             inputActive <= '0';
             bitsReceived <= (others => '0');
             
@@ -60,7 +61,7 @@ begin
                      inputActive <= '0';
                      msgReadyS <= '1';
                      bitsReceived <= (others => '0');
-                     clkCounter <= "010000"; -- Reset to 16
+                     clkCounter <= std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
                      tmpReg <= m1(MIDI_WIDTH downto 1); -- Transfer message to tmpReg, excluding start/stop bits
                   end if;
                end if;
@@ -77,5 +78,6 @@ begin
 	end process;
 
 	msgReady <= msgReadyS;
+   m1out <= m1(MIDI_WIDTH downto 1);
 
 end Behavioral; 

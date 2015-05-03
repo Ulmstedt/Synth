@@ -1,5 +1,5 @@
 package midi_constants is
-   constant UART_CLK_PERIOD  		   : natural := 32;
-	constant UART_CLK_PERIOD_WIDTH	: natural := 6;
-   constant MIDI_WIDTH       		   : natural := 8;
+   constant UART_CLK_PERIOD  	      : natural := 2600; -- MIDI: 3200
+	constant UART_CLK_PERIOD_WIDTH   : natural := 12;
+   constant MIDI_WIDTH       	      : natural := 8;
 end midi_constants;

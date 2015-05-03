@@ -6,18 +6,23 @@ use work.constants.all;
 
 entity MainArea is
    port(
-      ir1      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      ir2      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-      pmemSel  : in std_logic_vector(REG_BITS - 1 downto 0);
-      pmemOut  : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
-      srOut    : out std_logic_vector(SR_WIDTH - 1 downto 0);
-      audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
-      rst      : in std_logic;
-      clk      : in std_logic;
-      
+      ir1         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      ir2         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+      pmemSel     : in std_logic_vector(REG_BITS - 1 downto 0);
+      pmemOut     : out std_logic_vector(ADDR_WIDTH - 1 downto 0);
+      srOut       : out std_logic_vector(SR_WIDTH - 1 downto 0);
+      audioOut    : out std_logic_vector(REG_WIDTH - 1 downto 0);
+      mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+      midiRdy     : in std_logic;
+
       tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);      
+
+      rst         : in std_logic;
+      clk         : in std_logic
    );
 end MainArea;
 
@@ -46,6 +51,10 @@ architecture Behavioral of MainArea is
          regWriteSel : in std_logic_vector(REG_BITS - 1 downto 0);
          regWriteVal : in std_logic_vector(REG_WIDTH - 1 downto 0);
          regWrite    : in std_logic;
+         mreg1       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg2       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         mreg3       : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
+         midiRdy     : in std_logic;
          rst         : in std_logic;
          clk         : in std_logic
       );
@@ -173,6 +182,10 @@ begin
       regWriteSel => regWriteSel,
       regWriteVal => regWriteVal,
       regWrite    => regWrite,
+      mreg1       => mreg1,
+      mreg2       => mreg2,
+      mreg3       => mreg3,
+      midiRdy     => midiRdy,
       rst         => rst,
       clk         => clk
    );
@@ -180,7 +193,7 @@ begin
    ir3   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir2,
          output   => ir3out,
          rst      => rst,
@@ -190,7 +203,7 @@ begin
    ir4   : Reg
       generic map(regWidth => PMEM_WIDTH)
       port map(
-         doRead   => clk,
+         doRead   => '1',
          input    => ir3out,
          output   => ir4out,
          rst      => rst,
@@ -198,7 +211,7 @@ begin
       );
    
    d3Reg : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => ALUOut,
       output   => d3Out,
       rst      => rst,
@@ -206,7 +219,7 @@ begin
    );
    
    z3Reg : Reg port map(
-      doRead   => clk,
+      doRead   => '1',
       input    => z3In,
       output   => z3out,
       rst      => rst,
