@@ -1,0 +1,5 @@
+vhdl work "../../../midiinput/midi_area.vhd"
+vhdl work "../../../midiinput/midi_check_msg.vhd"
+vhdl work "../../../midiinput/midi_mux_counter.vhd"
+vhdl work "../../../midiinput/midi_uart_input.vhd"
+vhdl work "../../../midiinput/midi_constants.vhd"

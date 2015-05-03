@@ -24,13 +24,18 @@ entity CPUArea is
       SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFrun            : out std_logic;
 
+      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+   
       rst               : in std_logic;
-      clk               : in std_logic
+      clk               : in std_logic      
    );
 end CPUArea;
 
 architecture Behavioral of CPUArea is
    component MainArea is
+<<<<<<< HEAD
       port(
          ir1               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          ir2               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
@@ -54,8 +59,12 @@ architecture Behavioral of CPUArea is
          SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFrun            : out std_logic;
 
-         rst               : in std_logic;
-         clk               : in std_logic
+         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+         rst         : in std_logic;
+         clk         : in std_logic
       );
    end component;
    
@@ -105,7 +114,11 @@ begin
       SVFrun         => SVFrun,
 
       rst         => rst,
-      clk         => clk
+      clk         => clk,
+
+      tileXcnt    => tileXcnt,
+      tileYcnt    => tileYcnt,
+      tileMapOut  => tileMapOut
    );
    
    pmem : PMemArea port map(

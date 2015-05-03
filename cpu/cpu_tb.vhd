@@ -16,7 +16,11 @@ component CPUArea is
    port(
       audioOut : out std_logic_vector(REG_WIDTH - 1 downto 0);
       rst      : in std_logic;
-      clk      : in std_logic
+      clk      : in std_logic;
+
+      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
    );
 end component;
 	
@@ -25,13 +29,20 @@ end component;
   signal audioOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
   signal tb_running	: boolean 	:= true;
 
+  signal tileX       : std_logic_vector(HIGHER_BITS -1 downto 0) := "000000";
+  signal tileY       : std_logic_vector(HIGHER_BITS -1 downto 0) := "000000";
+  signal tileMap     : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0) := "00000";
+
 BEGIN
 
   -- Component Instantiation
    cpu : CPUArea port map(
       audioOut => audioOut,
       rst      => rst,
-      clk      => clk
+      clk      => clk,
+      tileXcnt    => tileX,
+      tileYcnt    => tileY,
+      tileMapOut  => tileMap
    );
 
 

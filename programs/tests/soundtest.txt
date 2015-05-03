@@ -6,12 +6,12 @@ LOAD.C   #wavereg, #upper
 LOAD.C   #timerreg, 1000
 
 &pos1
-BNCC     #SRST1, #pos1
+BNCC     #SR_ST1, #pos1
 NOP
 LOAD.C   #wavereg, 0
 LOAD.C   #timerreg, 1000
 
 &pos2
-BNCC     #SRST1, #pos2
+BNCC     #SR_ST1, #pos2
 NOP
 BRA      #start

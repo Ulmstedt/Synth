@@ -28,8 +28,12 @@ entity MainArea is
       SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFrun            : out std_logic;
 
-      rst               : in std_logic;
-      clk               : in std_logic
+      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);      
+
+      rst         : in std_logic;
+      clk         : in std_logic
    );
 end MainArea;
 
@@ -110,7 +114,11 @@ architecture Behavioral of MainArea is
          regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
          doWrite  : out std_logic;
          rst      : in std_logic;
-         clk      : in std_logic
+         clk      : in std_logic;
+
+         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
       );
    end component;
 
@@ -179,7 +187,10 @@ begin
       regSel   => regWriteSel,
       doWrite  => regWrite,
       rst      => rst,
-      clk      => clk
+      clk      => clk,
+      tileXcnt => tileXcnt,
+      tileYcnt => tileYcnt,
+      tileMapOut  => tileMapOut
    );
 
    regs : RegArea port map(

@@ -14,7 +14,11 @@ entity MemArea is
       regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
       doWrite  : out std_logic;
       rst      : in std_logic;
-      clk      : in std_logic
+      clk      : in std_logic;
+
+      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
    );
 end MemArea;
 
@@ -25,7 +29,11 @@ architecture Behavioral of MemArea is
          outputZ4 : out std_logic_vector(REG_WIDTH - 1 downto 0);
          doWrite  : in std_logic;
          newValue : in std_logic_vector(REG_WIDTH - 1 downto 0);
-         clk      : in std_logic
+         clk      : in std_logic;
+
+         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
       );
    end component;
    
@@ -72,7 +80,11 @@ begin
       outputZ4 => memZ4Out,
       doWrite  => memWrite,
       newValue => z3,
-      clk      => clk
+      clk      => clk,
+
+      tileXcnt => tileXcnt,
+      tileYcnt => tileYcnt,
+      tileMapOut => tileMapOut
    );
    
    d4z4mux : Z4D4Mux port map(

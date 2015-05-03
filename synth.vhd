@@ -25,6 +25,7 @@ architecture Behavioral of Synth is
 
    component CPUArea is
       port(
+<<<<<<< HEAD
          audioOut          : out std_logic_vector(SAMPLE_SIZE - 1 downto 0);
          mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
          mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
@@ -42,6 +43,10 @@ architecture Behavioral of Synth is
          SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFrun            : out std_logic;
+
+         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
          rst               : in std_logic;
          clk               : in std_logic
@@ -70,6 +75,19 @@ architecture Behavioral of Synth is
          mreg3    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
          m1out    : out std_logic_vector(MIDI_WIDTH - 1 downto 0);
          readRdy  : out std_logic -- pulse when a complete message is ready in Mreg1-3
+      );
+   end component;
+   
+   component LCDInputarea is
+      port(
+         rst               :  in std_logic;
+         clk               :  in std_logic;
+         F                 :  out std_logic;
+         LCD_DE            :  out std_logic;
+         LCD_DATA          :  out std_logic_vector(RGB_BITS - 1 downto 0);
+         XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
+         YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
+         TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0)
       );
    end component;
 
@@ -119,8 +137,16 @@ architecture Behavioral of Synth is
    signal srSig      : std_logic_vector(7 downto 0);
 
 
-begin
+   signal F_LCDclk   : std_logic;
+   signal LCDDEin    : std_logic;
+   signal LCDDATAin  : std_logic_vector(RGB_BITS - 1 downto 0);
 
+   signal XCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
+   signal YCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
+   signal tileAdressfromCPU : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+begin
+   -- fix someth and add LCDInputarea
    cpu : CPUArea port map(
       audioOut    => audio,
       mreg1       => mreg1S,
@@ -141,7 +167,10 @@ begin
       SVFrun         => loadFilterS,
 
       rst         => rst,
-      clk         => clk
+      clk         => clk,
+      tileXcnt    => XCountMSBBits,
+      tileYcnt    => YCountMSBBits,
+      tileMapOut  => tileAdressfromCPU
    );
 
    sout : SoutArea port map(
@@ -165,6 +194,7 @@ begin
       readRdy  => midiRdyS
    );
 
+<<<<<<< HEAD
    SVFc : SVF port map(
       sample      => sampleS,
       delay1in    => delay1outS,
@@ -178,6 +208,19 @@ begin
       saveDelay   => saveDelayS,
       rst         => rst,
       clk         => clk
+=======
+
+   LCDIn :  LCDInputarea port map(
+      rst               => rst,
+      clk               => clk,
+      F                 => F_LCDclk,
+      LCD_DE            => LCDDEin,
+      LCD_DATA          => LCDDATAin,
+      XCountHighBits    => XCountMSBBits,
+      YCountHighBits    => YCountMSBBits,
+      TileAdress        => tileAdressfromCPU
+
+>>>>>>> 7a5ad2cce31df6e778adfb71c2d4f24832705a89
    );
 
    process(clk) begin
@@ -205,5 +248,6 @@ begin
    --sclk <= '1'; -- or '1'?
    sdin <= sdouts;
    -- seg <= tempIRhold(7 downto 0);
+
 
 end Behavioral;
