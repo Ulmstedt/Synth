@@ -22,5 +22,5 @@ architecture Behavioral of Filter_Phase_1 is
 begin
    o <= std_logic_vector(unsigned(input) * unsigned(f));
    hp_out <= input;
-   output <= o(2*AUDIO_WIDTH - 1 downto AUDIO_WIDTH);
+   output <= o(7 * AUDIO_WIDTH / 4 - 1 downto 3* AUDIO_WIDTH / 4);
 end Behavioral;

@@ -9,9 +9,9 @@ entity LCDArea is
       rst               : in std_logic;
       clk               : in std_logic;
       
-      XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-      YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-      TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0);
+      XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+      YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+      TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
       IOPi              : out std_logic_vector(20 downto 1);
       IONi              : out std_logic_vector(20 downto 1)
@@ -29,7 +29,7 @@ architecture Behavioral of LCDArea is
          LCD_DATA          :  out std_logic_vector(RGB_BITS - 1 downto 0);
          XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
          YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0)
+         TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
       );
    end component;
    
@@ -43,9 +43,9 @@ architecture Behavioral of LCDArea is
 
    signal XCountMSBBits    : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal YCountMSBBits    : std_logic_vector(HIGHER_BITS - 1 downto 0);
-   signal tileAdressfromCPU   : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+   signal tileAdressfromCPU: std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
    
-   signal complStartUp     : std_logic =: '0';
+   signal complStartUp     : std_logic := '0';
    
    signal TFT_EN           : std_logic;
    
@@ -53,17 +53,16 @@ architecture Behavioral of LCDArea is
 begin
 
    lcdin : LCDInputarea port map(   
-         rst               => rst,
-         clk               => clk,
-         F                 => F_LCDclk,
-         LCD_DE            => LCDEin,
-         LCD_DATA          => LCDDATAin,
-         XCountHighBits    => XCountHighBits,
-         YCountHighBits    => YCountHighBits,
-         TileAdress        => TileAdress
-         );
+      rst               => rst,
+      clk               => clk,
+      F                 => F_LCDclk,
+      LCD_DE            => LCDDEin,
+      LCD_DATA          => LCDDATAin,
+      XCountHighBits    => XCountHighBits,
+      YCountHighBits    => YCountHighBits,
+      TileAdress        => TileAdress
+   );
 
-begin
    process(clk, rst)
    begin
       if(rst = '1') then

@@ -33,6 +33,7 @@ entity SVF is
       delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      svfType     : in std_logic_vector(1 downto 0);
       loadFilter  : in std_logic;
       saveDelay   : out std_logic;
       rst         : in std_logic;
@@ -109,8 +110,8 @@ begin
    qmult <= std_logic_vector(unsigned(q) * unsigned(phase2out));
 
    sub   <= std_logic_vector(
-               unsigned(loadedVal) - unsigned(lp_out) -
-               unsigned(qmult(2*AUDIO_WIDTH - 1 downto AUDIO_WIDTH))
+               unsigned(sample) - unsigned(lp_out) -
+               unsigned(qmult(7*AUDIO_WIDTH / 4 - 1 downto 3 * AUDIO_WIDTH / 4))
             );
 
    process(clk) is
@@ -132,6 +133,9 @@ begin
    end process;
    
    saveDelay <= savePulse;
-   output <= lp_out;
+   output <= lp_out when svfType = "00" else
+             hp_out when svfType = "01" else
+             bp_out when svfType = "10" else
+             (others => '0');
 
 end Behavioral;

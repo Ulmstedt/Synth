@@ -37,6 +37,7 @@ entity RegArea is
       SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFrun            : out std_logic;
+      SVFType           : out std_logic_vector(1 downto 0);
 
       rst               : in std_logic;
       clk               : in std_logic
@@ -99,6 +100,7 @@ architecture Behavioral of RegArea is
    signal delay2in   : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal delay1read : std_logic;
    signal delay2read : std_logic;
+
 
 begin
    -- Generic Registers
@@ -237,6 +239,16 @@ begin
       rst      => rst,
       clk      => clk
    );
+
+   -- Setup register (Register 28)
+   Setup : Reg port map(
+      doRead   => writeReg(28),
+      input    => regWriteVal,
+      output   => regVal(28),
+      rst      => rst,
+      clk      => clk
+   );
+   SVFType <= regVal(28)(1 downto 0);
    
    -- Midi register 1 & 2 (Register 29)
    mreg12S <= mreg1 & mreg2;

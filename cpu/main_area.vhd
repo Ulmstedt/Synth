@@ -27,13 +27,14 @@ entity MainArea is
       SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFrun            : out std_logic;
+      SVFType           : out std_logic_vector(1 downto 0);
 
-      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);      
+      tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);      
 
-      rst         : in std_logic;
-      clk         : in std_logic
+      rst               : in std_logic;
+      clk               : in std_logic
    );
 end MainArea;
 
@@ -77,6 +78,7 @@ architecture Behavioral of MainArea is
          SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFrun            : out std_logic;
+         SVFType           : out std_logic_vector(1 downto 0);
 
          rst               : in std_logic;
          clk               : in std_logic
@@ -106,15 +108,15 @@ architecture Behavioral of MainArea is
    
    component MemArea is
       port(
-         ir3      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         ir4      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         z3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
-         d3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
-         z4d4     : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
-         doWrite  : out std_logic;
-         rst      : in std_logic;
-         clk      : in std_logic;
+         ir3         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         ir4         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         z3          : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         d3          : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         z4d4        : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         regSel      : out std_logic_vector(REG_BITS - 1 downto 0);
+         doWrite     : out std_logic;
+         rst         : in std_logic;
+         clk         : in std_logic;
 
          tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
@@ -131,20 +133,20 @@ architecture Behavioral of MainArea is
       );
    end component;
    
-   signal Reg2ASig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal Reg2BSig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal Reg2ASig      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal Reg2BSig      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal regDOut       : std_logic_vector(REG_WIDTH - 1 downto 0);
    
 
-   signal ALUOut   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
-   signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal ALUOut        : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal SR            : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
+   signal d3Out         : std_logic_vector(REG_WIDTH - 1 downto 0);
 
-   signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal z3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal z3In          : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal z3Out         : std_logic_vector(REG_WIDTH - 1 downto 0);
    
-   signal ir3out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
-   signal ir4out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
+   signal ir3out        : std_logic_vector(PMEM_WIDTH - 1 downto 0);
+   signal ir4out        : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    
    signal regWriteSel   : std_logic_vector(REG_BITS - 1 downto 0);
    signal regWriteVal   : std_logic_vector(REG_WIDTH - 1 downto 0);
@@ -153,43 +155,43 @@ architecture Behavioral of MainArea is
 begin
 
    d2  : DReg port map(   
-         ir1in    => ir1,
-         output   => regDOut,
-         rst      => rst,
-         clk      => clk
-         );
+      ir1in    => ir1,
+      output   => regDOut,
+      rst      => rst,
+      clk      => clk
+   );
 
    alu : ALUArea port map(
-         ALUOut  => ALUOut,
-         Z3in    => z3In,
-         sRZ     => SR(Z_OFFSET),
-         sRN     => SR(N_OFFSET),
-         sRO     => SR(O_OFFSET),
-         sRC     => SR(C_OFFSET),
-         D2Out   => regDOut,
-         B2Out   => reg2BSig,
-         A2Out   => reg2ASig,
-         D3Out   => d3Out,
-         Z4D4Out => regWriteVal,
-         rst     => rst,
-         clk     => clk,
-         IR2     => ir2,
-         IR3     => ir3out,
-         IR4     => ir4out
-      );
-      
+      ALUOut  => ALUOut,
+      Z3in    => z3In,
+      sRZ     => SR(Z_OFFSET),
+      sRN     => SR(N_OFFSET),
+      sRO     => SR(O_OFFSET),
+      sRC     => SR(C_OFFSET),
+      D2Out   => regDOut,
+      B2Out   => reg2BSig,
+      A2Out   => reg2ASig,
+      D3Out   => d3Out,
+      Z4D4Out => regWriteVal,
+      rst     => rst,
+      clk     => clk,
+      IR2     => ir2,
+      IR3     => ir3out,
+      IR4     => ir4out
+   );
+   
    mem : MemArea port map(
-      ir3      => ir3out,
-      ir4      => ir4out,
-      z3       => z3Out,
-      d3       => d3Out,
-      z4d4     => regWriteVal,
-      regSel   => regWriteSel,
-      doWrite  => regWrite,
-      rst      => rst,
-      clk      => clk,
-      tileXcnt => tileXcnt,
-      tileYcnt => tileYcnt,
+      ir3         => ir3out,
+      ir4         => ir4out,
+      z3          => z3Out,
+      d3          => d3Out,
+      z4d4        => regWriteVal,
+      regSel      => regWriteSel,
+      doWrite     => regWrite,
+      rst         => rst,
+      clk         => clk,
+      tileXcnt    => tileXcnt,
+      tileYcnt    => tileYcnt,
       tileMapOut  => tileMapOut
    );
 
@@ -220,6 +222,7 @@ begin
       SVFf           => SVFf,
       SVFq           => SVFq,
       SVFrun         => SVFrun,
+      SVFType        => SVFType,
 
       rst            => rst,
       clk            => clk
