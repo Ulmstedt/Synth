@@ -68,6 +68,10 @@ lcdin.%: S=TouchLCD/InputtoLCD/LCDInputarea.vhd TouchLCD/InputtoLCD/updatefreque
 lcdin.%: T=TouchLCD/InputtoLCD/LCDinput_tb.vhd
 lcdin.%: U=main.ucf
 
+lcd.%: S=TouchLCD/lcdarea.vhd TouchLCD/InputtoLCD/LCDInputarea.vhd TouchLCD/InputtoLCD/updatefrequency.vhd TouchLCD/InputtoLCD/XCounter.vhd TouchLCD/InputtoLCD/YCounter.vhd TouchLCD/InputtoLCD/GK1.vhd TouchLCD/InputtoLCD/GK2.vhd TouchLCD/InputtoLCD/GK3.vhd TouchLCD/InputtoLCD/GK4.vhd TouchLCD/InputtoLCD/tilemem.vhd TouchLCD/InputtoLCD/tilememcontent.vhd cpu/const.vhd 
+lcd.%: T=TouchLCD/LCD_tb.vhd
+lcd.%: U=main.ucf
+
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
