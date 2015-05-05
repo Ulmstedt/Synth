@@ -1,0 +1,8 @@
+
+Version 1:
+OSCs (only 1, 3 voices)
+   => Mixer 
+      => Filter (up to 2)
+         => Mixer
+            => Output
+

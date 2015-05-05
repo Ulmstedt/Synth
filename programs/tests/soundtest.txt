@@ -1,15 +1,19 @@
-CONSTANT wavereg, %11111
-CONSTANT timerreg, 18
 CONSTANT upper, $0FFF
+
+LOAD.C   #SVF_F, $0020
+LOAD.C   #SVF_Q, $0100
+
 &start
-LOAD.C   #wavereg, #upper
-LOAD.C   #timerreg, 1000
+LOAD.C   #SVF_IN, #upper
+MOVE     #R_AUDIO, #SVF_OUT
+LOAD.C   #R_ST1, 62000
 
 &pos1
 BNCC     #SR_ST1, #pos1
 NOP
-LOAD.C   #wavereg, 0
-LOAD.C   #timerreg, 1000
+LOAD.C   #SVF_IN, 0
+MOVE     #R_AUDIO, #SVF_OUT
+LOAD.C   #R_ST1, 62000
 
 &pos2
 BNCC     #SR_ST1, #pos2

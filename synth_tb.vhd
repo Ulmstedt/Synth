@@ -18,6 +18,14 @@ component Synth is
       lrck        : out std_logic;
       sclk        : out std_logic;
       sdin        : out std_logic;
+      
+      --LCDtft stuff
+      IOP         : out std_logic_vector(20 downto 1);
+      ION         : out std_logic_vector(20 downto 1);
+      TP_BUSY     : in std_logic;
+      TP_DOUT     : in std_logic;
+      TP_PENIRQ   : in std_logic;
+
       uart        : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic
@@ -42,13 +50,18 @@ BEGIN
 
   -- Component Instantiation
    synt : Synth port map(
-      mclk     => mclkS,
-      lrck     => lrckS,
-      sclk     => sclkS,
-      sdin     => sdinS,
-      uart     => uartS,
-      rst      => rst,
-      clk      => clk
+      mclk        => mclkS,
+      lrck        => lrckS,
+      sclk        => sclkS,
+      sdin        => sdinS,
+
+      TP_BUSY     => '1',
+      TP_DOUT     => '1',
+      TP_PENIRQ   => '1',
+
+      uart        => uartS,
+      rst         => rst,
+      clk         => clk
    );
 
 
