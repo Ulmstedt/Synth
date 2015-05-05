@@ -7,7 +7,8 @@ entity updatefreq is
    port(
       rst   : in std_logic;
       clk   : in std_logic;
-      F     : out std_logic --desired frequency 10 MHz
+      F     : out std_logic; --desired frequency 10 MHz
+      clkStop  : in std_logic   
    );
 end updatefreq;
 
@@ -21,7 +22,7 @@ begin
       if(rst = '1') then
          temp <= '0'; --0
          counter <= 0;
-      elsif(rising_edge(clk)) then
+      elsif(rising_edge(clk) and clkStop = '0') then
          if(counter = 4) then
             temp <= not(temp);
             counter <= 0;
