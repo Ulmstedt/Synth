@@ -238,8 +238,8 @@ begin
       case counter_r(17 downto 16) is
          when "00" => 
                an <= "0111";
-               --seg <= m1;
-               seg <= (others => srSig(7));
+               seg <= m1;
+               --seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";
                seg <= mreg1S;

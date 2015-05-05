@@ -72,6 +72,10 @@ lcd.%: S=TouchLCD/lcdarea.vhd TouchLCD/InputtoLCD/LCDInputarea.vhd TouchLCD/Inpu
 lcd.%: T=TouchLCD/LCD_tb.vhd
 lcd.%: U=main.ucf
 
+touch.%: S=TouchLCD/touch/touch_interface.vhd 
+touch.%: T=TouchLCD/touch/touch_tb.vhd
+touch.%: U=main.ucf
+
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
