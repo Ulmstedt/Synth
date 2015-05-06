@@ -13,7 +13,8 @@ entity LCDInputarea is
       LCD_DATA          :  out std_logic_vector(RGB_BITS - 1 downto 0);
       XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
       YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-      TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+      TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+      clkStop           :  in std_logic
 
    );
 end LCDInputarea;
@@ -24,7 +25,8 @@ architecture Behaviorial of LCDInputarea is
       port(
          rst   : in std_logic;
          clk   : in std_logic;
-         F     : out std_logic --desired frequency 10 MHz
+         F     : out std_logic; --desired frequency 10 MHz
+         clkStop : in std_logic
       );
    end component;
    
@@ -107,7 +109,8 @@ begin
    UF : updatefreq port map (
       rst      => rst,
       clk      => clk,
-      F        => newclkF
+      F        => newclkF,
+      stopClk  => stopClk
    );
    
    x_cntr : X_COUNTER port map(

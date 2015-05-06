@@ -1,0 +1,36 @@
+MIDI read:
+   Check type:
+   if on:
+      
+      if not NumOfKeypress >= KeypressMax 
+         FreeSlot = find first slot with NoteIsPlayed == false
+         ( memory written at FreeSlot * (Struct length) )
+         Save NoteID to memory (NoteStruct)
+         Save NoteIsPlayed to memory
+         Save pitch to memory
+         for each oscillator used: 
+            Save waveform ID to memory (OscillatorStruct)
+            Save detune to memory
+            Save wave-step to memory
+            Save amplitude to memory
+            Save filter dest to memory
+         Increase NumOfKeypress
+   if off:
+      if NoteID is in saved in memory and NoteIsPlayed
+         set NoteIsPlayed false
+         decrease NumOfKeypress
+
+
+Audio output (each fs = 488XXHz):
+   for each NoteStruct with NoteIsPlayed = true
+      set FilterRegN = 0 (N = 0..NumberOfFilters)
+      set FiltersSum = 0
+      for each OscillatorStruct in NoteStruct grouped by filter dest
+         get waveform step from osc in memory (using pitch, wavestep and detune)
+         add result to FilterRegN (and scale)
+      for each FilterStruct
+         Load values from FilterStruct from memory to filter registers
+         Move FilterRegN to filter input register
+         Save filter registers to FilterStruct
+         Add filter output register to FilterSum (and scale)
+      move FiltersSum to audio out register

@@ -27,7 +27,7 @@ architecture Behavioral of Filter_Phase_3 is
 begin
    multiplication <= std_logic_vector(unsigned(input) * unsigned(f));
    addition <= std_logic_vector(
-                  unsigned(multiplication(2 * AUDIO_WIDTH - 1 downto AUDIO_WIDTH))
+                  unsigned(multiplication(7 * AUDIO_WIDTH / 4 - 1 downto 3* AUDIO_WIDTH / 4))
                   + unsigned(delay_in)
                );
 

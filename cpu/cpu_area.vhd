@@ -23,10 +23,11 @@ entity CPUArea is
       SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFrun            : out std_logic;
+      SVFType           : out std_logic_vector(1 downto 0);
 
-      tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
+      tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+      tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
    
       rst               : in std_logic;
       clk               : in std_logic      
@@ -35,7 +36,6 @@ end CPUArea;
 
 architecture Behavioral of CPUArea is
    component MainArea is
-<<<<<<< HEAD
       port(
          ir1               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
          ir2               : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
@@ -58,13 +58,14 @@ architecture Behavioral of CPUArea is
          SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFrun            : out std_logic;
+         SVFType           : out std_logic_vector(1 downto 0);
 
-         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+         tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
-         rst         : in std_logic;
-         clk         : in std_logic
+         rst               : in std_logic;
+         clk               : in std_logic
       );
    end component;
    
@@ -91,16 +92,16 @@ begin
    srOut <= sr(7 downto 0);
 
    main : MainArea port map(
-      ir1         => ir1,
-      ir2         => ir2,
-      pmemSel     => regSel,
-      pmemOut     => regVal,
-      srOut       => sr,
-      audioOut    => audioOut,
-      mreg1       => mreg1,
-      mreg2       => mreg2,
-      mreg3       => mreg3,
-      midiRdy     => midiRdy,
+      ir1            => ir1,
+      ir2            => ir2,
+      pmemSel        => regSel,
+      pmemOut        => regVal,
+      srOut          => sr,
+      audioOut       => audioOut,
+      mreg1          => mreg1,
+      mreg2          => mreg2,
+      mreg3          => mreg3,
+      midiRdy        => midiRdy,
 
       SVFwriteDelay  => SVFwriteDelay,
       SVFcur         => SVFcur,
@@ -112,13 +113,14 @@ begin
       SVFf           => SVFf,
       SVFq           => SVFq,
       SVFrun         => SVFrun,
+      SVFType        => SVFType,
 
-      rst         => rst,
-      clk         => clk,
+      rst            => rst,
+      clk            => clk,
 
-      tileXcnt    => tileXcnt,
-      tileYcnt    => tileYcnt,
-      tileMapOut  => tileMapOut
+      tileXcnt       => tileXcnt,
+      tileYcnt       => tileYcnt,
+      tileMapOut     => tileMapOut
    );
    
    pmem : PMemArea port map(

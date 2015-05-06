@@ -12,6 +12,14 @@ entity Synth is
       sdin        : out std_logic;
       seg         : out std_logic_vector(7 downto 0);
       an          : out std_logic_vector(3 downto 0);
+      
+      --LCDtft stuff
+      IOP         : out std_logic_vector(20 downto 1);
+      ION         : out std_logic_vector(20 downto 1);
+      TP_BUSY     : in std_logic;
+      TP_DOUT     : in std_logic;
+      TP_PENIRQ   : in std_logic;
+
       uart        : in std_logic;
       rst         : in std_logic;
       clk         : in std_logic
@@ -25,7 +33,6 @@ architecture Behavioral of Synth is
 
    component CPUArea is
       port(
-<<<<<<< HEAD
          audioOut          : out std_logic_vector(SAMPLE_SIZE - 1 downto 0);
          mreg1             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
          mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
@@ -43,10 +50,11 @@ architecture Behavioral of Synth is
          SVFf              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFrun            : out std_logic;
+         SVFType           : out std_logic_vector(1 downto 0);
 
-         tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-         tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-         tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+         tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
+         tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
          rst               : in std_logic;
          clk               : in std_logic
@@ -78,16 +86,17 @@ architecture Behavioral of Synth is
       );
    end component;
    
-   component LCDInputarea is
+   component LCDArea is
       port(
-         rst               :  in std_logic;
-         clk               :  in std_logic;
-         F                 :  out std_logic;
-         LCD_DE            :  out std_logic;
-         LCD_DATA          :  out std_logic_vector(RGB_BITS - 1 downto 0);
-         XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0)
+         rst               : in std_logic;
+         clk               : in std_logic;
+         
+         XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+         YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+         TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+         IOPi              : out std_logic_vector(19 downto 0);
+         IONi              : out std_logic_vector(19 downto 0)
       );
    end component;
 
@@ -101,6 +110,7 @@ architecture Behavioral of Synth is
          delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         svfType     : in std_logic_vector(1 downto 0);
          loadFilter  : in std_logic;
          saveDelay   : out std_logic;
          rst         : in std_logic;
@@ -129,31 +139,28 @@ architecture Behavioral of Synth is
    signal qS         : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal loadFilterS: std_logic;
    signal saveDelayS : std_logic;
+   signal svfType    : std_logic_vector(1 downto 0);
 
    signal counter_r  :  unsigned(17 downto 0) := "000000000000000000";
 
    signal m1         : std_logic_vector(7 downto 0);
 
+
    signal srSig      : std_logic_vector(7 downto 0);
 
-
-   signal F_LCDclk   : std_logic;
-   signal LCDDEin    : std_logic;
-   signal LCDDATAin  : std_logic_vector(RGB_BITS - 1 downto 0);
 
    signal XCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal YCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal tileAdressfromCPU : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
 begin
-   -- fix someth and add LCDInputarea
    cpu : CPUArea port map(
-      audioOut    => audio,
-      mreg1       => mreg1S,
-      mreg2       => mreg2S,
-      mreg3       => mreg3S,
-      midiRdy     => midiRdyS,
-      srOut       => srSig,
+      audioOut       => audio,
+      mreg1          => mreg1S,
+      mreg2          => mreg2S,
+      mreg3          => mreg3S,
+      midiRdy        => midiRdyS,
+      srOut          => srSig,
 
       SVFwriteDelay  => saveDelayS,
       SVFcur         => sampleS,
@@ -165,12 +172,13 @@ begin
       SVFf           => fS,
       SVFq           => qS,
       SVFrun         => loadFilterS,
+      SVFType        => svfType,
 
-      rst         => rst,
-      clk         => clk,
-      tileXcnt    => XCountMSBBits,
-      tileYcnt    => YCountMSBBits,
-      tileMapOut  => tileAdressfromCPU
+      rst            => rst,
+      clk            => clk,
+      tileXcnt       => XCountMSBBits,
+      tileYcnt       => YCountMSBBits,
+      tileMapOut     => tileAdressfromCPU
    );
 
    sout : SoutArea port map(
@@ -194,7 +202,7 @@ begin
       readRdy  => midiRdyS
    );
 
-<<<<<<< HEAD
+
    SVFc : SVF port map(
       sample      => sampleS,
       delay1in    => delay1outS,
@@ -204,23 +212,23 @@ begin
       delay2out   => delay2inS,
       f           => fS,
       q           => qS,
+      svfType     => svfType,
       loadFilter  => loadFilterS,
       saveDelay   => saveDelayS,
       rst         => rst,
       clk         => clk
-=======
+   );
 
-   LCDIn :  LCDInputarea port map(
+
+   LCDareai :  LCDArea port map(
       rst               => rst,
       clk               => clk,
-      F                 => F_LCDclk,
-      LCD_DE            => LCDDEin,
-      LCD_DATA          => LCDDATAin,
       XCountHighBits    => XCountMSBBits,
       YCountHighBits    => YCountMSBBits,
-      TileAdress        => tileAdressfromCPU
+      TileAdress        => tileAdressfromCPU,
 
->>>>>>> 7a5ad2cce31df6e778adfb71c2d4f24832705a89
+      IOPi              => IOP,
+      IONi              => IOn
    );
 
    process(clk) begin
@@ -230,8 +238,8 @@ begin
       case counter_r(17 downto 16) is
          when "00" => 
                an <= "0111";
-               --seg <= m1;
-               seg <= (others => srSig(7));
+               seg <= m1;
+               --seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";
                seg <= mreg1S;
