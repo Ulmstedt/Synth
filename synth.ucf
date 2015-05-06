@@ -47,7 +47,13 @@ Net "an<3>" LOC = P17 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L49P_M1D
 # Usb-RS232 interface
 #######################################################################
 
-Net "uart" LOC = N17 | IOSTANDARD=LVCMOS33; #Bank = 1, pin name = IO_L48P_HDC_M1DQ8, Sch name = MCU-RX
+#Net "uart" LOC = N17 | IOSTANDARD=LVCMOS33; #Bank = 1, pin name = IO_L48P_HDC_M1DQ8, Sch name = MCU-RX
+
+#######################################################################
+# MIDI
+#######################################################################
+
+Net "uart" LOC = E12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_XXXX, Sch name = JD10
 
 #######################################################################
 ## LCDTouch VHDCI Connector

@@ -86,6 +86,7 @@ architecture Behavioral of Synth is
       );
    end component;
    
+<<<<<<< HEAD
    component LCDArea is
       port(
          rst               : in std_logic;
@@ -102,6 +103,21 @@ architecture Behavioral of Synth is
          TP_PENIRQi        : in std_logic
       );
    end component;
+=======
+   --component LCDArea is
+   --   port(
+   --      rst               : in std_logic;
+   --      clk               : in std_logic;
+   --      
+   --      XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+   --      YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+   --      TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+   --      IOPi              : out std_logic_vector(19 downto 0);
+   --      IONi              : out std_logic_vector(19 downto 0)
+   --   );
+   --end component;
+>>>>>>> 3d468942da286aab0fae29be12f57ead5ca1c1ae
 
    component SVF is
       port(
@@ -223,19 +239,25 @@ begin
    );
 
 
-   LCDareai :  LCDArea port map(
-      rst               => rst,
-      clk               => clk,
-      XCountHighBits    => XCountMSBBits,
-      YCountHighBits    => YCountMSBBits,
-      TileAdress        => tileAdressfromCPU,
+   --LCDareai :  LCDArea port map(
+   --   rst               => rst,
+   --   clk               => clk,
+   --   XCountHighBits    => XCountMSBBits,
+   --   YCountHighBits    => YCountMSBBits,
+   --   TileAdress        => tileAdressfromCPU,
 
+<<<<<<< HEAD
       IOPi              => IOP,
       IONi              => IOn,  
       TP_BUSYi          => TP_BUSY,
       TP_DOUTi          => TP_DOUT,
       TP_PENIRQi        => TP_PENIRQ
    );
+=======
+   --   IOPi              => IOP,
+   --   IONi              => IOn
+   --);
+>>>>>>> 3d468942da286aab0fae29be12f57ead5ca1c1ae
 
    process(clk) begin
      if rising_edge(clk) then 
@@ -244,8 +266,8 @@ begin
       case counter_r(17 downto 16) is
          when "00" => 
                an <= "0111";
-               --seg <= m1;
-               seg <= (others => srSig(7));
+               seg <= m1;
+               --seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";
                seg <= mreg1S;
