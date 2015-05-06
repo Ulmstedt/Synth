@@ -3,23 +3,27 @@ import xml.etree.ElementTree as ET
 
 # Constants dict
 constants = {  
-               "SR_Z": "0",
-               "SR_N": "1",
-               "SR_C": "2",
-               "SR_O": "3",
-               "SR_LT1": "4",
-               "SR_ST1": "5",
-               "SR_ST2": "6",
-               "SR_MIDI": "7",
-               "SVF_IN": "22",
-               "SVF_D1": "23",
-               "SVF_D2": "24",
-               "SVF_OUT": "25",
-               "SVF_F": "26",
-               "SVF_Q": "27",
-               "R_MREG12": "29",
-               "R_MREG3": "30",
-               "R_AUDIO": "31"
+               "SR_Z"      : "0",
+               "SR_N"      : "1",
+               "SR_C"      : "2",
+               "SR_O"      : "3",
+               "SR_LT1"    : "4",
+               "SR_ST1"    : "5",
+               "SR_ST2"    : "6",
+               "SR_MIDI"   : "7",
+               
+               "R_LT1L"    : "16",
+               "R_LT1H"    : "17",
+               "R_ST1"     : "18",
+               "SVF_IN"    : "22",
+               "SVF_D1"    : "23",
+               "SVF_D2"    : "24",
+               "SVF_OUT"   : "25",
+               "SVF_F"     : "26",
+               "SVF_Q"     : "27",
+               "R_MREG12"  : "29",
+               "R_MREG3"   : "30",
+               "R_AUDIO"   : "31"
             }
 
 # Parses and argument and returns its correct form (hex, dec, bin)
@@ -79,14 +83,14 @@ def comp_file(*filenames):
                OP = instr.find('OP').text
                # 0 arguments
                if len(instr_list) == 1:
-                  tempstring = OP + (32-len(OP))*'0'
+                  tempstring = "(\"" + OP + (32-len(OP))*'0' + "\"),"
                   print(tempstring)
                   outfile.write(tempstring)
                # 1 argument
                elif len(instr_list) == 2:
                   DEST_LENGTH = instr.find('DEST').find('LENGTH').text
                   ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
-                  tempstring = OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1
+                  tempstring = "(\"" + OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1 + "\"),"
                   print(tempstring)
                   outfile.write(tempstring)
                # 2 arguments
@@ -106,12 +110,13 @@ def comp_file(*filenames):
                      ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
 
                   # Make sure the length of instruction is 32
-                  tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
+                  tempstring = "(\"" + OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2 + "\"),"
                   print(tempstring)
                   outfile.write(tempstring)
 
                break # Correct instruction has been found
          
+
 
 
 
