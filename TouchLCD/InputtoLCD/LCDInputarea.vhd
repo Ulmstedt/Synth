@@ -13,8 +13,7 @@ entity LCDInputarea is
       LCD_DATA          :  out std_logic_vector(RGB_BITS - 1 downto 0);
       XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
       YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-      TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
-      clkStop           :  in std_logic
+      TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
 
    );
 end LCDInputarea;
@@ -25,8 +24,7 @@ architecture Behaviorial of LCDInputarea is
       port(
          rst   : in std_logic;
          clk   : in std_logic;
-         F     : out std_logic; --desired frequency 10 MHz
-         clkStop : in std_logic
+         F     : out std_logic --desired frequency 10 MHz
       );
    end component;
    
@@ -51,8 +49,8 @@ architecture Behaviorial of LCDInputarea is
    component TileMemory is
       port(
          tileAddr : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
-         YCoord   : in std_logic_vector(2 downto 0);
-         XCoord   : in std_logic_vector(2 downto 0);
+         YCoord   : in std_logic_vector(LOWER_BITS - 1 downto 0);
+         XCoord   : in std_logic_vector(LOWER_BITS - 1 downto 0);
          output   : out std_logic_vector(RGB_BITS - 1 downto 0)
       );
    end component;
@@ -78,7 +76,7 @@ architecture Behaviorial of LCDInputarea is
       port(
          YCounter       : in std_logic_vector(YCOUNT_BITS - 1 downto 0);
          toTileMap      : out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         toTileMem      : out std_logic_vector(2 downto 0)
+         toTileMem      : out std_logic_vector(LOWER_BITS - 1 downto 0)
       );
    end component;
    
@@ -86,7 +84,7 @@ architecture Behaviorial of LCDInputarea is
       port(
          XCounter       : in std_logic_vector(XCOUNT_BITS - 1 downto 0);
          toTileMap      : out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         toTileMem      : out std_logic_vector(2 downto 0)
+         toTileMem      : out std_logic_vector(LOWER_BITS - 1 downto 0)
       );
    end component;
    
@@ -96,8 +94,8 @@ architecture Behaviorial of LCDInputarea is
    signal xcount              : std_logic_vector(XCOUNT_BITS - 1 downto 0);
    signal ycount              : std_logic_vector(YCOUNT_BITS - 1 downto 0);
    
-   signal xlsb                : std_logic_vector(2 downto 0);
-   signal ylsb                : std_logic_vector(2 downto 0);
+   signal xlsb                : std_logic_vector(LOWER_BITS - 1 downto 0);
+   signal ylsb                : std_logic_vector(LOWER_BITS - 1 downto 0);
 
    signal tilememtoGK3        : std_logic_vector(RGB_BITS - 1 downto 0);
    
@@ -109,8 +107,7 @@ begin
    UF : updatefreq port map (
       rst      => rst,
       clk      => clk,
-      F        => newclkF,
-      stopClk  => stopClk
+      F        => newclkF
    );
    
    x_cntr : X_COUNTER port map(

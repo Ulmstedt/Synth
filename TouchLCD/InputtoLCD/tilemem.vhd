@@ -9,8 +9,8 @@ use work.tilememcontent.all;
 entity TileMemory is
    port(
       tileAddr : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
-      YCoord   : in std_logic_vector(2 downto 0);
-      XCoord   : in std_logic_vector(2 downto 0);
+      YCoord   : in std_logic_vector(LOWER_BITS - 1 downto 0);
+      XCoord   : in std_logic_vector(LOWER_BITS - 1 downto 0);
       output   : out std_logic_vector(RGB_BITS - 1 downto 0)
    );
 end TileMemory;

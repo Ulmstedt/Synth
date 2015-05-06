@@ -83,7 +83,7 @@ BEGIN
       wait until rising_edge(clk);
       if( i = 5 ) then
          tileMap <= "00001";
-      elsif ( i = 1000000) then
+      elsif ( i = 10000) then
          tileMap <= "00000";
       end if;
     end loop;  -- i

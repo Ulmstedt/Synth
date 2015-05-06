@@ -20,7 +20,7 @@ component LCDarea is
       
       XCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
       YCountHighBits    :  out std_logic_vector(HIGHER_BITS - 1 downto 0);
-      TileAdress        :  in std_logic(TILE_MEM_ADRESS_BITS - 1 downto 0);
+      TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
       IOPi              : out std_logic_vector(20 downto 1);
       IONi              : out std_logic_vector(20 downto 1) 
@@ -41,7 +41,7 @@ end component;
 BEGIN
 
   -- Component Instantiation
-   lcdin : LCDInputarea port map(
+   lcdinternal : LCDarea port map(
       rst               => rst,
       clk               => clk,
       XCountHighBits    => tileXMSBBits,

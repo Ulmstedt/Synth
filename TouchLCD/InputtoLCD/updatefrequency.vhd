@@ -7,8 +7,7 @@ entity updatefreq is
    port(
       rst   : in std_logic;
       clk   : in std_logic;
-      F     : out std_logic; --desired frequency 10 MHz
-      clkStop  : in std_logic   
+      F     : out std_logic --desired frequency 10 MHz 
    );
 end updatefreq;
 
@@ -17,19 +16,19 @@ architecture freq of updatefreq is
    signal counter: integer range 0 to 4 := 0; --(100 000 000 / 10 000 000)/2
 
 begin
-   process(rst, clk)
+   process(clk)
    begin
+   if(rising_edge(clk)) then
       if(rst = '1') then
          temp <= '0'; --0
          counter <= 0;
-      elsif(rising_edge(clk) and clkStop = '0') then
-         if(counter = 4) then
-            temp <= not(temp);
-            counter <= 0;
-         else
-            counter <= counter + 1;
-         end if;
+      elsif(counter = 4) then
+         temp <= not(temp);
+         counter <= 0;
+      else
+         counter <= counter + 1;
       end if;
+   end if;
    end process;
 
    F <= temp;
