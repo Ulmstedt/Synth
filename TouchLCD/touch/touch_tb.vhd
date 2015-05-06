@@ -24,6 +24,14 @@ component TouchInterface is
       rst      : in std_logic
    );
 end component;
+
+component CoordConverter is
+   port(
+      voltage  : in std_logic_vector(11 downto 0);
+      coord    : out std_logic_vector(8 downto 0);
+      Xaxis    : in std_logic
+   );
+end component;
 	
    SIGNAL clk 		      : std_logic	:= '0';
    SIGNAL rst 		      : std_logic	:= '0';
@@ -33,7 +41,6 @@ end component;
    signal DOUTS         : std_logic := '1';
    
 
-
 BEGIN
 
    touch : TouchInterface port map(
@@ -42,6 +49,11 @@ BEGIN
       DOUT     => DOUTS,
       clk      => clk,
       rst      => rst
+   );
+
+   converter : CoordConverter port map(
+      voltage  => "010111111111",
+      Xaxis    => '0'
    );
 
 
@@ -76,10 +88,16 @@ BEGIN
 
          if i = 100 then
             PENIRQS <= '0';
-         elsif i = 3000 then
+         elsif i = 500000 then
             BUSYS <= '1';
-         elsif i = 4000 then
+         elsif i = 505000 then
             BUSYS <= '0';         
+         elsif i = 1000000 then
+            PENIRQS <= '1';
+         elsif i = 1050000 then
+            BUSYS <= '1';
+         elsif i = 1055000 then
+            BUSYS <= '0';
          end if;
          
 

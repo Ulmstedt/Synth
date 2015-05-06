@@ -22,6 +22,8 @@ architecture Behavioral of MidiInput is
    signal bitsReceived  : std_logic_vector(3 downto 0) := (others => '0'); -- How many bits of the message has been received1
    signal msgReadyS     : std_logic := '0';
    signal msgReadyCtr   : std_logic := '0';
+
+   signal tempPulse     : std_logic;
 begin
 
 
@@ -30,6 +32,8 @@ begin
 	begin
       -- Check for incoming message
       if rising_edge(clk) then
+
+         if tempPulse = '1' then tempPulse <= '0'; end if;
       
          if rst = '1' then
             tmpReg <= (others => '0');
@@ -52,7 +56,11 @@ begin
                -- Read a bit from uart to m1
                if clkCounter = std_logic_vector(to_unsigned(UART_CLK_PERIOD,UART_CLK_PERIOD_WIDTH)) then
                --if clkCounter = "100000" then
-                  m1(MIDI_WIDTH+1 - to_integer(unsigned(bitsReceived))) <= uart; -- Save the bit to the correct location in m1
+                  --m1(MIDI_WIDTH+1 - to_integer(unsigned(bitsReceived))) <= uart; -- Save the bit to the correct location in m1
+                  m1(to_integer(unsigned(bitsReceived))) <= uart; -- Save the bit to the correct location in m1
+
+                  tempPulse <= '1';
+
                   bitsReceived <= std_logic_vector(unsigned(bitsReceived)+1); -- Increment bits received counter
                   clkCounter <= (others => '0');
                 

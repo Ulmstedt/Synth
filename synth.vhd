@@ -86,19 +86,19 @@ architecture Behavioral of Synth is
       );
    end component;
    
-   component LCDArea is
-      port(
-         rst               : in std_logic;
-         clk               : in std_logic;
-         
-         XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+   --component LCDArea is
+   --   port(
+   --      rst               : in std_logic;
+   --      clk               : in std_logic;
+   --      
+   --      XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+   --      YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+   --      TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
-         IOPi              : out std_logic_vector(19 downto 0);
-         IONi              : out std_logic_vector(19 downto 0)
-      );
-   end component;
+   --      IOPi              : out std_logic_vector(19 downto 0);
+   --      IONi              : out std_logic_vector(19 downto 0)
+   --   );
+   --end component;
 
    component SVF is
       port(
@@ -220,16 +220,16 @@ begin
    );
 
 
-   LCDareai :  LCDArea port map(
-      rst               => rst,
-      clk               => clk,
-      XCountHighBits    => XCountMSBBits,
-      YCountHighBits    => YCountMSBBits,
-      TileAdress        => tileAdressfromCPU,
+   --LCDareai :  LCDArea port map(
+   --   rst               => rst,
+   --   clk               => clk,
+   --   XCountHighBits    => XCountMSBBits,
+   --   YCountHighBits    => YCountMSBBits,
+   --   TileAdress        => tileAdressfromCPU,
 
-      IOPi              => IOP,
-      IONi              => IOn
-   );
+   --   IOPi              => IOP,
+   --   IONi              => IOn
+   --);
 
    process(clk) begin
      if rising_edge(clk) then 
