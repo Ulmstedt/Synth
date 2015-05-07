@@ -46,6 +46,9 @@ end component;
 
    constant UART_CLK_PERIOD  		   : natural := 3200;
 
+   signal IOPinternal   : std_logic_vector(20 downto 1);
+   signal IONinternal   : std_logic_vector(20 downto 1);
+
 BEGIN
 
   -- Component Instantiation
@@ -54,7 +57,9 @@ BEGIN
       lrck        => lrckS,
       sclk        => sclkS,
       sdin        => sdinS,
-
+      
+      IOP         => IOPinternal,
+      ION         => IONinternal,
       TP_BUSY     => '1',
       TP_DOUT     => '1',
       TP_PENIRQ   => '1',

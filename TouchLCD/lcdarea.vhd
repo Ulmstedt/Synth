@@ -13,8 +13,11 @@ entity LCDArea is
       YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
       TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
-      IOPi              : out std_logic_vector(20 downto 1);
-      IONi              : out std_logic_vector(20 downto 1)
+      IOPi              : out std_logic_vector(20 downto 1) := "00000000000000000000";
+      IONi              : out std_logic_vector(20 downto 1) := "00000000000000000000";
+      TP_BUSYi          : in std_logic;
+      TP_DOUTi          : in std_logic;
+      TP_PENIRQi        : in std_logic
    );
 end LCDArea;
 
@@ -37,8 +40,7 @@ architecture Behavioral of LCDArea is
       port(
          rst   : in std_logic;
          clk   : in std_logic;
-         F     : out std_logic; --desired frequency 50 kHz
-         clkStop  : in std_logic  
+         F     : out std_logic --desired frequency 50 kHz
       );
    end component;  
    
@@ -53,9 +55,9 @@ architecture Behavioral of LCDArea is
    
    signal complStartUp     : std_logic := '0';
    
-   signal TFT_EN           : std_logic =: '0';
-   signal LCD_DE_from_input: std_logic =: '0';
-   signal TFT_DISPLAY           : std_logic =: '0';
+   signal TFT_EN           : std_logic := '0';
+   signal LCD_DE_from_input: std_logic := '0';
+   signal TFT_DISPLAY           : std_logic := '0';
 
 
    constant CLOCKFREQ : natural := 10; --MHZ
@@ -72,7 +74,7 @@ architecture Behavioral of LCDArea is
 	signal waitCntEn : std_logic;
    
    type state_type is (stOff, stPowerUp, stLEDWarmup, stLEDCooldown, stPowerDown, stOn); 
-   signal state, nstate : state_type := stPowerDown;
+   signal state, nstate : state_type := stOff;
    
    signal LED_EN, int_De, clkStop : std_logic := '0';
 
@@ -92,15 +94,13 @@ begin
          LCD_DATA          => LCDDATAin,
          XCountHighBits    => XCountHighBits,
          YCountHighBits    => YCountHighBits,
-         TileAdress        => TileAdress,
-         clkStop           => clkStop
+         TileAdress        => TileAdress
          );
 
    pwmsiggenerator : backlightpwmsignal port map(
          rst   => rst,
          clk   => clk,
-         F     => backLightFreq, --desired frequency 50 kHz
-         clkStop  => clkStop
+         F     => backLightFreq --desired frequency 50 kHz
          );
 
 ----------------------------------------------------------------------------------
@@ -116,11 +116,11 @@ TFT_DISPLAY <= 	'0' when state = stOff or state = stPowerUp or state = stPowerDo
 TFT_DE <= 		'0' when state = stOff or state = stPowerUp or state = stPowerDown else --TFT_DE
 				LCD_DE_from_input;
 RED <= 		(others => '0') when state = stOff or state = stPowerUp or state = stPowerDown else
-				LCD_DATA(RGB_BITS - 1 downto RGB_BITS - 8);
+				LCDDATAin(RGB_BITS - 1 downto RGB_BITS - 8);
 GREEN <= 		(others => '0') when state = stOff or state = stPowerUp or state = stPowerDown else
-				LCD_DATA(RGB_BITS - 8 - 1 downto RGB_BITS - 2*8);
+				LCDDATAin(RGB_BITS - 8 - 1 downto RGB_BITS - 2*8);
 BLUE <= 		(others => '0') when state = stOff or state = stPowerUp or state = stPowerDown else
-				LCD_DATA(RGB_BITS - 2*8 -1 downto 0);
+				LCDDATAin(RGB_BITS - 2*8 -1 downto 0);
 --Clock signal
 clkStop <= 	'1' when state = stOff or state = stPowerUp or state = stPowerDown else
 				'0';
@@ -133,17 +133,6 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
 					'0';
 					
    SYNC_PROC: process (F_LCDclk)
-      rst               => rst,
-      clk               => clk,
-      F                 => F_LCDclk,
-      LCD_DE            => LCDDEin,
-      LCD_DATA          => LCDDATAin,
-      XCountHighBits    => XCountHighBits,
-      YCountHighBits    => YCountHighBits,
-      TileAdress        => TileAdress
-   );
-
-   process(clk, rst)
    begin
       if (F_LCDclk'event and F_LCDclk = '1') then
          state <= nstate;
@@ -168,6 +157,7 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
             end if;
          when stOn => --turn on backlight too
 				if (rst = '1') then
+               --kan behöva reseta räknarna här
 					nstate <= stLEDCooldown;
 				end if;
 			when stLEDCooldown =>
@@ -193,10 +183,6 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
 			end if;
 		end if;
 	end process;
-
-begin
-
-
 
 --SET correct bits in the vectors
 
@@ -232,12 +218,13 @@ IONi(4) <= BLUE(7);
 
 --TFT Signals and backlight control
 IOPi(19) <= TFT_EN;
-IOPi(18) <= TFT_DISP;
+IOPi(18) <= TFT_DISPLAY;
 IONi(18) <= TFT_DE;
 IONi(19) <= LED_EN;
 
 --TFT_CLK
-IOP1(11) <= F_LCDclk;
+IOPi(11) <= F_LCDclk when clkStop = '0' else
+            '0';
 
 end Behavioral;
 

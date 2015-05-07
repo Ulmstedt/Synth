@@ -15,23 +15,23 @@ entity Y_COUNTER is
 end Y_COUNTER;
 
 architecture ycount of Y_COUNTER is
-   signal i_cnt   :  unsigned(YCOUNT_BITS -1 downto 0); --internal cnt signal
+   signal i_cnt   :  unsigned(YCOUNT_BITS -1 downto 0) := "0000000000"; --internal cnt signal
 
 begin
-   process(rst, clk)
+   process(clk)
    begin
+   if(rising_edge(clk)) then
       if(rst = '1') then
          i_cnt <= (others => '0'); --0
-      elsif(rising_edge(clk)) then
-         if(to_integer(unsigned(xcount)) = THA + THB -1) then -- if xcount is on 524 we do something
-            if (to_integer(i_cnt) = TVA + TVB - 1) then -- if counted 0-287
-               i_cnt <= (others => '0'); --0
-            else
-               i_cnt <= i_cnt + 1;
-            end if;
+      elsif(to_integer(unsigned(xcount)) = THA + THB - 1) then -- if xcount is on 524 we do something
+         if (to_integer(i_cnt) = TVA + TVB - 1) then -- if counted 0-287
+            i_cnt <= (others => '0'); --0
          else
+            i_cnt <= i_cnt + 1;
          end if;
+      else
       end if;
+   end if;
    end process;
    count <= std_logic_vector(i_cnt);
 end ycount;
