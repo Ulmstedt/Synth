@@ -95,8 +95,8 @@ architecture Behavioral of Synth is
          YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
          TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
-         IOPi              : out std_logic_vector(19 downto 0);
-         IONi              : out std_logic_vector(19 downto 0);
+         IOPi              : out std_logic_vector(20 downto 1);
+         IONi              : out std_logic_vector(20 downto 1);
          TP_BUSYi          : in std_logic;
          TP_DOUTi          : in std_logic;
          TP_PENIRQi        : in std_logic

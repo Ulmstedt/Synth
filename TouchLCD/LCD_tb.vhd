@@ -23,7 +23,10 @@ component LCDarea is
       TileAdress        :  in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
       IOPi              : out std_logic_vector(20 downto 1);
-      IONi              : out std_logic_vector(20 downto 1) 
+      IONi              : out std_logic_vector(20 downto 1);
+      TP_BUSYi          : in std_logic;
+      TP_DOUTi          : in std_logic;
+      TP_PENIRQi        : in std_logic 
    );
 end component;
 	
@@ -37,6 +40,10 @@ end component;
   signal tileMap     : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0) := "00000";
   signal IOP              : std_logic_vector(20 downto 1) := "00000000000000000000";
   signal ION              : std_logic_vector(20 downto 1) := "00000000000000000000";
+  
+  signal BUSY        : std_logic;
+  signal DOUT        : std_logic;
+  signal PENIRQ      : std_logic;
 
 BEGIN
 
@@ -48,7 +55,10 @@ BEGIN
       YCountHighBits    => tileYMSBBits,
       TileAdress        => tileMap,
       IOPi              => IOP,
-      IONi              => ION
+      IONi              => ION,
+      TP_BUSYi          => BUSY,
+      TP_DOUTi          => DOUT,
+      TP_PENIRQi        => PENIRQ   
    );
 
 
