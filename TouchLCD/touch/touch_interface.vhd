@@ -21,8 +21,10 @@ end TouchInterface;
 
 
 architecture Behavioural of TouchInterface is
-  
-   signal reqMsg        : std_logic_vector(7 downto 0) := "10010111";--(others => '0');
+   constant GET_X_MSG   : std_logic_vector(7 downto 0) := "11010010";
+   constant GET_Y_MSG   : std_logic_vector(7 downto 0) := "10010010";
+
+   signal reqMsg        : std_logic_vector(7 downto 0) := GET_X_MSG;--(others => '0');
    signal counter       : std_logic_vector(3 downto 0) := (others => '0');
    signal clkCounter    : std_logic_vector(11 downto 0) := (others => '0');
    signal touchMsg      : std_logic_vector(11 downto 0) := (others => '0');
@@ -32,6 +34,7 @@ architecture Behavioural of TouchInterface is
    signal beenBusy      : std_logic := '0';
    signal receivedX     : std_logic := '0';
    signal XaxisS        : std_logic := '1';
+   signal savePulseS    : std_logic := '0';
    
 begin 
 
@@ -44,12 +47,12 @@ begin
             sendPulse <= '0';
             receivedMsg <= '1';
             DIN <= '0';
-            reqMsg <= "00000000"; -- Msg for requesting X
-            savePulse <= '0';
+            reqMsg <= GET_X_MSG; -- Msg for requesting X
+            savePulseS <= '0';
             XaxisS <= '1';
          else
-            if savePulse = '1' then
-               savePulse <= '0';
+            if savePulseS = '1' then
+               savePulseS <= '0';
                XaxisS <= not XaxisS;
             end if;
             if (PENIRQ = '0' or receivedX = '1') and receivedMsg = '1' then
@@ -87,21 +90,19 @@ begin
                      elsif BUSY = '0' and beenBusy = '1' then
                         voltage <= touchMsg;
                         receivedMsg <= '1';
-                        savePulse <= '1';
+                        savePulseS <= '1';
                         -- Remember that we have received the X coord (meaning Y is next)
                         if receivedX = '0' then
                            receivedX <= '1';
-                           reqMsg <= "11111111"; -- Msg for requesting Y
+                           reqMsg <= GET_Y_MSG; -- Msg for requesting Y
                         else
                            receivedX <= '0';
-                           reqMsg <= "00000000"; -- Msg for requesting X
+                           reqMsg <= GET_X_MSG; -- Msg for requesting X
                         end if;
                      end if;
                   end if;
                end if;
             end if;
-            
-
          end if;
       end if;
    end process;
@@ -109,5 +110,6 @@ begin
    DCLK <= clkCounter(clkCounter'high) and (not receivedMsg);
    CS <= receivedMsg;
    Xaxis <= XaxisS;
+   savePulse <= savePulseS;
  
 end Behavioural;

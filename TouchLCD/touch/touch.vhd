@@ -11,6 +11,10 @@ entity Touch is
       DIN         : out std_logic;
       DCLK        : out std_logic;
       CS          : out std_logic;
+      coordOut    : out std_logic_vector(8 downto 0);
+      writeX      : out std_logic;
+      writeY      : out std_logic;
+      coordReady  : out std_logic;
       clk         : in std_logic;
       rst         : in std_logic
    );
@@ -64,7 +68,12 @@ begin
 
    converter : CoordConverter port map(
       voltage     => voltageS,
-      Xaxis       => XaxisS,
+      coord       => coordOut,
+      Xaxis       => XaxisS
    );
+
+   writeX <= XaxisS and savePulseS;
+   writeY <= (not XaxisS) and savePulseS;
+   coordReady <= (not XaxisS) and savePulseS;
  
 end Behavioural;

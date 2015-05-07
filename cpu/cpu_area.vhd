@@ -25,6 +25,11 @@ entity CPUArea is
       SVFrun            : out std_logic;
       SVFType           : out std_logic_vector(1 downto 0);
 
+      coordOut          : in std_logic_vector(8 downto 0);
+      writeX            : in std_logic;
+      writeY            : in std_logic;
+      coordReady        : in std_logic;
+
       tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
@@ -63,6 +68,11 @@ architecture Behavioral of CPUArea is
          tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+         coordOut          : in std_logic_vector(8 downto 0);
+         writeX            : in std_logic;
+         writeY            : in std_logic;
+         coordReady        : in std_logic;
 
          rst               : in std_logic;
          clk               : in std_logic
@@ -114,6 +124,11 @@ begin
       SVFq           => SVFq,
       SVFrun         => SVFrun,
       SVFType        => SVFType,
+
+      coordOut       => coordOut,
+      writeX         => writeX,
+      writeY         => writeY,
+      coordReady     => coordReady,
 
       rst            => rst,
       clk            => clk,

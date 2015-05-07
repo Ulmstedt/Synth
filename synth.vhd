@@ -18,7 +18,10 @@ entity Synth is
       ION         : out std_logic_vector(20 downto 1) := "00000000000000000000";
       TP_BUSY     : in std_logic;
       TP_DOUT     : in std_logic;
+      TP_DIN      : out std_logic;
       TP_PENIRQ   : in std_logic;
+      TP_CS       : out std_logic;
+      TP_DCLK     : out std_logic;
 
       uart        : in std_logic;
       rst         : in std_logic;
@@ -55,6 +58,11 @@ architecture Behavioral of Synth is
          tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+
+         coordOut          : in std_logic_vector(8 downto 0);
+         writeX            : in std_logic;
+         writeY            : in std_logic;
+         coordReady        : in std_logic;
 
          rst               : in std_logic;
          clk               : in std_logic
@@ -122,6 +130,22 @@ architecture Behavioral of Synth is
       );
    end component;
 
+   component Touch is
+      port(
+         PENIRQ      : in std_logic;
+         BUSY        : in std_logic;
+         DOUT        : in std_logic;
+         DIN         : out std_logic;
+         DCLK        : out std_logic;
+         CS          : out std_logic;
+         coordOut    : out std_logic_vector(8 downto 0);
+         writeX      : out std_logic;
+         writeY      : out std_logic;
+         coordReady  : out std_logic;
+         clk         : in std_logic;
+         rst         : in std_logic
+      );
+   end component;
 
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
    
@@ -149,13 +173,17 @@ architecture Behavioral of Synth is
 
    signal m1         : std_logic_vector(7 downto 0);
 
-
    signal srSig      : std_logic_vector(7 downto 0);
 
+   signal XCountMSBBits       : std_logic_vector(HIGHER_BITS - 1 downto 0);
+   signal YCountMSBBits       : std_logic_vector(HIGHER_BITS - 1 downto 0);
+   signal tileAdressfromCPU   : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
-   signal XCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
-   signal YCountMSBBits     : std_logic_vector(HIGHER_BITS - 1 downto 0);
-   signal tileAdressfromCPU : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+   -- Touch
+   signal coordOutS   : std_logic_vector(8 downto 0);
+   signal writeXS     : std_logic;
+   signal writeYS     : std_logic;
+   signal coordReadyS : std_logic;
 
 begin
    cpu : CPUArea port map(
@@ -177,6 +205,11 @@ begin
       SVFq           => qS,
       SVFrun         => loadFilterS,
       SVFType        => svfType,
+
+      coordOut       => coordOutS,
+      writeX         => writeXS,
+      writeY         => writeYS,
+      coordReady     => coordReadyS,
 
       rst            => rst,
       clk            => clk,
@@ -238,6 +271,21 @@ begin
       TP_PENIRQi        => TP_PENIRQ
    );
 
+   touchc : Touch port map(
+      PENIRQ      => TP_PENIRQ,
+      BUSY        => TP_BUSY,
+      DOUT        => TP_DOUT,
+      DIN         => TP_DIN,
+      DCLK        => TP_DCLK,
+      CS          => TP_CS,
+      coordOut    => coordOutS,
+      writeX      => writeXS,
+      writeY      => writeYS,
+      coordReady  => coordReadyS,
+      clk         => clk,
+      rst         => rst
+   );
+
    process(clk) begin
      if rising_edge(clk) then 
        counter_r <= counter_r + 1;
@@ -246,12 +294,12 @@ begin
          when "00" => 
                an <= "0111";
                --seg <= m1;
+               seg <= coordOutS(7 downto 0);
                --seg <= (others => srSig(7));
-               seg <= "01111111"; -- Framlänges
-               seg <= "11111110"; -- Baklänges
          when "01" => 
                an <= "1011";
-               seg <= mreg1S;
+               --seg <= mreg1S;
+               seg <= coordOutS(8 downto 1);
          when "10" => 
                an <= "1101";
                seg <= mreg2S;

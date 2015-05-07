@@ -31,7 +31,12 @@ entity MainArea is
 
       tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);      
+      tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);  
+
+      coordOut          : in std_logic_vector(8 downto 0);
+      writeX            : in std_logic;
+      writeY            : in std_logic;
+      coordReady        : in std_logic;    
 
       rst               : in std_logic;
       clk               : in std_logic
@@ -80,6 +85,11 @@ architecture Behavioral of MainArea is
          SVFrun            : out std_logic;
          SVFType           : out std_logic_vector(1 downto 0);
 
+         coordIn           : in std_logic_vector(8 downto 0);
+         writeX            : in std_logic;
+         writeY            : in std_logic;
+         coordReady        : in std_logic;
+
          rst               : in std_logic;
          clk               : in std_logic
       );
@@ -108,15 +118,15 @@ architecture Behavioral of MainArea is
    
    component MemArea is
       port(
-         ir3      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         ir4      : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
-         z3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
-         d3       : in std_logic_vector(REG_WIDTH - 1 downto 0);
-         z4d4     : out std_logic_vector(REG_WIDTH - 1 downto 0);
-         regSel   : out std_logic_vector(REG_BITS - 1 downto 0);
-         doWrite  : out std_logic;
-         rst      : in std_logic;
-         clk      : in std_logic;
+         ir3         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         ir4         : in std_logic_vector(PMEM_WIDTH - 1 downto 0);
+         z3          : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         d3          : in std_logic_vector(REG_WIDTH - 1 downto 0);
+         z4d4        : out std_logic_vector(REG_WIDTH - 1 downto 0);
+         regSel      : out std_logic_vector(REG_BITS - 1 downto 0);
+         doWrite     : out std_logic;
+         rst         : in std_logic;
+         clk         : in std_logic;
 
          tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
@@ -133,20 +143,19 @@ architecture Behavioral of MainArea is
       );
    end component;
    
-   signal Reg2ASig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal Reg2BSig   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal regDOut    : std_logic_vector(REG_WIDTH - 1 downto 0);
-   
+   signal Reg2ASig      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal Reg2BSig      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal regDOut       : std_logic_vector(REG_WIDTH - 1 downto 0);
 
-   signal ALUOut   : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal SR         : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
-   signal d3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal ALUOut        : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal SR            : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
+   signal d3Out         : std_logic_vector(REG_WIDTH - 1 downto 0);
 
-   signal z3In       : std_logic_vector(REG_WIDTH - 1 downto 0);
-   signal z3Out      : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal z3In          : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal z3Out         : std_logic_vector(REG_WIDTH - 1 downto 0);
    
-   signal ir3out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
-   signal ir4out     : std_logic_vector(PMEM_WIDTH - 1 downto 0);
+   signal ir3out        : std_logic_vector(PMEM_WIDTH - 1 downto 0);
+   signal ir4out        : std_logic_vector(PMEM_WIDTH - 1 downto 0);
    
    signal regWriteSel   : std_logic_vector(REG_BITS - 1 downto 0);
    signal regWriteVal   : std_logic_vector(REG_WIDTH - 1 downto 0);
@@ -223,6 +232,11 @@ begin
       SVFq           => SVFq,
       SVFrun         => SVFrun,
       SVFType        => SVFType,
+
+      coordIn        => coordOut,
+      writeX         => writeX,
+      writeY         => writeY,
+      coordReady     => coordReady,
 
       rst            => rst,
       clk            => clk

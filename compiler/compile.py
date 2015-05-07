@@ -11,6 +11,7 @@ constants = {
                "SR_ST1"    : "5",
                "SR_ST2"    : "6",
                "SR_MIDI"   : "7",
+               "SR_TOUCH"  : "8",
                
                "R_LT1L"    : "16",
                "R_LT1H"    : "17",

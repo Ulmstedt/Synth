@@ -24,11 +24,12 @@ entity Memory is
 end Memory;
 
 architecture Behavioral of Memory is
-   signal mem : mem_t := memc;
-   signal rema : std_logic_vector(5 downto 0);
-   signal helpTileMem : std_logic_vector(0 to REG_WIDTH - 1);
+   signal mem              : mem_t := memc;
+   signal rema             : std_logic_vector(5 downto 0);
+   signal helpTileMem      : std_logic_vector(0 to REG_WIDTH - 1);
    signal reversedHelpTile : std_logic_vector(REG_WIDTH - 1 downto 0);
-
+   signal maxXcnt          : std_logic_vector(HIGHER_BITS - 1 downto 0); -- Max 30
+   signal maxYcnt          : std_logic_vector(HIGHER_BITS - 1 downto 0); -- Max 17
    
 begin
    process(clk) is
@@ -47,15 +48,18 @@ begin
    --Antar att tilemappen ligger kontinuerligt med tile 0 som första tilen dvs från offseten dvs tilemap[0][0] (första indexet motsvara raden, andra kolumn) i adress mem(TILE_MAP_OFFSET) och innehållet i bitarna 14 downto 10 i den. tile 60 (minns att det är räknat från 0 alltså i tilemap[1][0] osv
    --Antar att det gäller heltals division t e x 5/3 = 1, 5 rem 3 = 2
    -- XXXX XXXX XXXX XXXX
-   rema <= std_logic_vector(to_unsigned(to_integer(unsigned(tileXcnt)) rem 2, 6));
-   helpTileMem <= mem(TILE_MAP_OFFSET + to_integer(unsigned(tileYcnt)) * 15 + to_integer(unsigned(tileXcnt)) / 2);
+
+   maxXcnt <= tileXcnt when to_integer(unsigned(tileXcnt)) <= 29 else std_logic_vector(to_unsigned(29,HIGHER_BITS));
+   maxYcnt <= tileYcnt when to_integer(unsigned(tileYcnt)) <= 16 else std_logic_vector(to_unsigned(16,HIGHER_BITS)); 
+   rema <= std_logic_vector(to_unsigned(to_integer(unsigned(maxXcnt)) rem 2, 6));
+   helpTileMem <= mem(TILE_MAP_OFFSET + to_integer(unsigned(maxYcnt)) * 15 + to_integer(unsigned(maxXcnt)) / 2);
    
-   reverse : for i in helpTileMem'range generate
+   reverseslice : for i in helpTileMem'range generate
       reversedHelpTile(i) <= helpTileMem(i);
    end generate;
    
-   tileMapOut  <= reversedHelpTile(4 downto 0) when rema = "000000" else
-                  reversedHelpTile(12 downto 8) when rema = "000001"  else
+   tileMapOut  <= helpTilemem(3 to 7) when rema = "000000" else
+                  helpTilemem(11 to 15) when rema = "000001"  else
                   (others => '0');
 
 end Behavioral;

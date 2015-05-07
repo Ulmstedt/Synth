@@ -39,6 +39,11 @@ entity RegArea is
       SVFrun            : out std_logic;
       SVFType           : out std_logic_vector(1 downto 0);
 
+      writeX            : in std_logic;
+      writeY            : in std_logic;
+      coordIn           : in std_logic_vector(8 downto 0);
+      coordReady        : in std_logic;
+
       rst               : in std_logic;
       clk               : in std_logic
    );
@@ -84,15 +89,22 @@ architecture Behavioral of RegArea is
    signal SRlast     : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
    signal resetSR    : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
 
+   -- Long timer signals
    signal lt1        : std_logic_vector(2*REG_WIDTH - 1 downto 0);
    signal lt1lsbs    : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
    signal lt1msbs    : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
    signal lt1done    : std_logic;
 
+   -- Short timer signals
    signal st1        : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal st1s       : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
    signal st1done    : std_logic;
 
+   signal st2        : std_logic_vector(REG_WIDTH - 1 downto 0);
+   signal st2s       : std_logic_vector(REG_WIDTH - 1 downto 0) := (others => '0');
+   signal st2done    : std_logic;
+
+   -- Midi signals
    signal mreg12S    : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal mreg3S     : std_logic_vector(REG_WIDTH - 1 downto 0);
 
@@ -176,9 +188,46 @@ begin
       clk         => clk
    );
 
-   -- 6 Filter registers
+   -- Short timer 2 (Register 19)
+   st2s <= regWriteVal when writeReg(19) = '1' else (others => '0');
+   st2r : Reg
+   generic map(regWidth => REG_WIDTH)
+   port map(
+      doRead   => '1',
+      input    => st2s,
+      output   => st2,
+      rst      => rst,
+      clk      => clk
+   );
+   st2t : Timer
+   generic map(timer_width => REG_WIDTH)
+   port map(
+      loadValue   => st2,
+      finished    => st2done,
+      rst         => rst,
+      clk         => clk
+   );
 
+   -- Touch coord regs (20-21)
+   touchX : Reg port map(
+      doRead            => writeX,
+      input(15 downto 9)=> (others => '0'),
+      input(8 downto 0) => coordIn, -- coordIn is only 9 bits wide
+      output            => regVal(20),
+      rst               => rst,
+      clk               => clk
+   );
 
+   touchY : Reg port map(
+      doRead            => writeY,
+      input(15 downto 9)=> (others => '0'),
+      input(8 downto 0) => coordIn, -- coordIn is only 9 bits wide
+      output            => regVal(21),
+      rst               => rst,
+      clk               => clk
+   );
+
+   -- 6 Filter registers ---
    -- SVF current sample (Register 22) remember to send load filter signal to SVF 
    SVFcur <= regVal(22);
    SVFin : Reg port map(
@@ -326,8 +375,8 @@ begin
          end loop;
       end if;
    end process;
-   SRsig <= (( SRin(SR_WIDTH - 1 downto 8) &
-               midiRdy & '0' & st1done & lt1done)
+   SRsig <= (( SRin(SR_WIDTH - 1 downto 9) &
+               coordReady & midiRdy & st2done & st1done & lt1done)
             or SRlast(SR_WIDTH - 1 downto 4)) & SRin(3 downto 0);
    
    -- Destination (or value to save to memory)

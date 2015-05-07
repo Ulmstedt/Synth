@@ -61,9 +61,9 @@ Net "uart" LOC = E12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_XXXX, Sch
 
 Net "TP_BUSY" LOC = B2 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L2P, Sch name = EXP_IO1_P
 Net "ION<1>" LOC = A2 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L2N, Sch name = EXP_IO1_N
-Net "IOP<2>" LOC = D6 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L3P, Sch name = EXP_IO2_P
+Net "TP_DIN" LOC = D6 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L3P, Sch name = EXP_IO2_P
 Net "TP_DOUT" LOC = C6 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L3N, Sch name = EXP_IO2_N
-Net "IOP<3>" LOC = B3 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L4P, Sch name = EXP_IO3_P
+Net "TP_CS" LOC = B3 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L4P, Sch name = EXP_IO3_P
 Net "TP_PENIRQ" LOC = A3 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L4N, Sch name = EXP_IO3_N
 Net "IOP<4>" LOC = B4 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L5P, Sch name = EXP_IO4_P
 Net "ION<4>" LOC = A4 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L5N, Sch name = EXP_IO4_N
@@ -77,7 +77,7 @@ Net "IOP<8>" LOC = D8 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L11P, Sc
 Net "ION<8>" LOC = C8 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L11N, Sch name = EXP_IO8_N
 Net "IOP<9>" LOC = B9 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L35P_GCLK17, Sch name = EXP_IO9_P
 Net "ION<9>" LOC = A9 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L35N_GCLK16, Sch name = EXP_IO9_N
-Net "IOP<10>" LOC = D11 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L36P_GCLK15, Sch name = EXP_IO10_P
+Net "TP_DCLK" LOC = D11 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L36P_GCLK15, Sch name = EXP_IO10_P
 Net "ION<10>" LOC = C11 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L36N_GCLK14, Sch name = EXP_IO10_N
 Net "IOP<11>" LOC = C10 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L37P_GCLK13, Sch name = EXP_IO11_P
 Net "ION<11>" LOC = A10 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L37N_GCLK12, Sch name = EXP_IO11_N

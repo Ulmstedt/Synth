@@ -31,7 +31,12 @@ entity MainArea is
 
       tileXcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt          : in std_logic_vector(HIGHER_BITS - 1 downto 0);
-      tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);      
+      tileMapOut        : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);  
+
+      coordOut          : in std_logic_vector(8 downto 0);
+      writeX            : in std_logic;
+      writeY            : in std_logic;
+      coordReady        : in std_logic;    
 
       rst               : in std_logic;
       clk               : in std_logic
@@ -79,6 +84,11 @@ architecture Behavioral of MainArea is
          SVFq              : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFrun            : out std_logic;
          SVFType           : out std_logic_vector(1 downto 0);
+
+         coordIn           : in std_logic_vector(8 downto 0);
+         writeX            : in std_logic;
+         writeY            : in std_logic;
+         coordReady        : in std_logic;
 
          rst               : in std_logic;
          clk               : in std_logic
@@ -136,7 +146,6 @@ architecture Behavioral of MainArea is
    signal Reg2ASig      : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal Reg2BSig      : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal regDOut       : std_logic_vector(REG_WIDTH - 1 downto 0);
-   
 
    signal ALUOut        : std_logic_vector(REG_WIDTH - 1 downto 0);
    signal SR            : std_logic_vector(SR_WIDTH - 1 downto 0) := (others => '0');
@@ -223,6 +232,11 @@ begin
       SVFq           => SVFq,
       SVFrun         => SVFrun,
       SVFType        => SVFType,
+
+      coordIn        => coordOut,
+      writeX         => writeX,
+      writeY         => writeY,
+      coordReady     => coordReady,
 
       rst            => rst,
       clk            => clk
