@@ -2,11 +2,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
+use work.TouchConstants.all;
 
 entity CoordConverter is
    port(
-      voltage  : in std_logic_vector(11 downto 0);
-      coord    : out std_logic_vector(8 downto 0);
+      voltage  : in std_logic_vector(VOLTAGE_WIDTH - 1 downto 0);
+      coord    : out std_logic_vector(COORD_WIDTH - 1 downto 0);
       Xaxis    : in std_logic
    );
 end CoordConverter;

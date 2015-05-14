@@ -28,7 +28,6 @@ begin
          if rst = '1' then
             count <= "00";
          else
-         
            if validMsgI = '1' and msgReadyDelayed = '1' then
                case count is
                   when "00" =>

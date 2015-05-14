@@ -137,7 +137,7 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
       if (F_LCDclk'event and F_LCDclk = '1') then
          state <= nstate;
       end if;
-   end process;				
+   end process;
 
    NEXT_STATE_DECODE: process (state, waitCnt)
    begin
