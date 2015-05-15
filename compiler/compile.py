@@ -3,28 +3,23 @@ import xml.etree.ElementTree as ET
 
 # Constants dict
 constants = {  
-               "SR_Z"      : "0",
-               "SR_N"      : "1",
-               "SR_C"      : "2",
-               "SR_O"      : "3",
-               "SR_LT1"    : "4",
-               "SR_ST1"    : "5",
-               "SR_ST2"    : "6",
-               "SR_MIDI"   : "7",
-               "SR_TOUCH"  : "8",
-               
-               "R_LT1L"    : "16",
-               "R_LT1H"    : "17",
-               "R_ST1"     : "18",
-               "SVF_IN"    : "22",
-               "SVF_D1"    : "23",
-               "SVF_D2"    : "24",
-               "SVF_OUT"   : "25",
-               "SVF_F"     : "26",
-               "SVF_Q"     : "27",
-               "R_MREG12"  : "29",
-               "R_MREG3"   : "30",
-               "R_AUDIO"   : "31"
+               "SR_Z": "0",
+               "SR_N": "1",
+               "SR_C": "2",
+               "SR_O": "3",
+               "SR_LT1": "4",
+               "SR_ST1": "5",
+               "SR_ST2": "6",
+               "SR_MIDI": "7",
+               "SVF_IN": "22",
+               "SVF_D1": "23",
+               "SVF_D2": "24",
+               "SVF_OUT": "25",
+               "SVF_F": "26",
+               "SVF_Q": "27",
+               "R_MREG12": "29",
+               "R_MREG3": "30",
+               "R_AUDIO": "31"
             }
 
 # Parses and argument and returns its correct form (hex, dec, bin)
@@ -44,80 +39,89 @@ def parse_arg(arg):
 # Compiles the given files to binary format
 def comp_file(*filenames):
    outfile = open("binary_out", "wb+")
-   for curfile in filenames:
-      f = open(curfile,'r')
-      code = f.readlines()
+   rules = ET.parse('rules.xml')
+   root = rules.getroot()
 
-      rules = ET.parse('rules.xml')
-      root = rules.getroot()
+   for i in range(0,2):
 
       # instruction counter
       instr_counter = 0
-
       # for finding errors
       line_counter = 0
-      instr_found = True     
 
-      for instruction in code:
-         if instruction == '\n':
-            continue
-         if instr_found == False:
-            print("Bad instruction found on line", line_counter)
-         instr_found = False
-         line_counter += 1
-         instruction = instruction.split(';',1)[0] # Remove eventual comments
-         instr_list = instruction.upper().replace(',',' ').split() # split string, instr_list[1] = arg1 and so on
+      for curfile in filenames:
+         f = open(curfile,'r')
+         code = f.readlines()
+      
+         instr_found = True
 
-         # Constants
-         if instr_list[0].upper() == 'CONSTANT':
-            constants[instr_list[1].upper()] = instr_list[2].upper()
-            instr_found = True
-            continue
-         elif instr_list[0][0] == '&':
-            constants[instr_list[0][1:].upper()] = str(instr_counter)
-            instr_found = True
-            continue
-         for instr in root.findall('instr'):
-            if instr.get('name') == instr_list[0]: # instr is now the needed element
-               instr_counter += 1
+         for instruction in code:
+            if instruction == '\n':
+               continue
+            if instr_found == False:
+               print("Bad instruction found on line", line_counter)
+            instr_found = False
+            line_counter += 1
+            instruction = instruction.split(';',1)[0] # Remove eventual comments
+            instr_list = instruction.upper().replace(',',' ').split() # split string, instr_list[1] = arg1 and so on
+
+            # Check for only constants the first iteration
+            if instr_list[0][0] == '&':
+               if i == 0:
+                  constants[instr_list[0][1:].upper()] = str(instr_counter)
                instr_found = True
-               OP = instr.find('OP').text
-               # 0 arguments
-               if len(instr_list) == 1:
-                  tempstring = "(\"" + OP + (32-len(OP))*'0' + "\"),"
-                  print(tempstring)
-                  outfile.write(tempstring)
-               # 1 argument
-               elif len(instr_list) == 2:
-                  DEST_LENGTH = instr.find('DEST').find('LENGTH').text
-                  ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
-                  tempstring = "(\"" + OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1 + "\"),"
-                  print(tempstring)
-                  outfile.write(tempstring)
-               # 2 arguments
-               elif len(instr_list) >= 3:
-                  DEST_LENGTH = instr.find('DEST').find('LENGTH').text
-                  SRC_LENGTH = instr.find('SRC').find('LENGTH').text
-                  OFF_LENGTH = '0'
+               continue
+            
+            if instr_list[0].upper() == 'CONSTANT':
+               if i == 0:
+                  constants[instr_list[1].upper()] = instr_list[2].upper()
+               instr_found = True
+               continue
 
-                  # Parse args and make sure that the length is correct
-                  ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
-                  ARG2 = parse_arg(instr_list[2]).rjust(int(SRC_LENGTH),'0')[-int(SRC_LENGTH):]
-                  ARG3 = ''
+            for instr in root.findall('instr'):
+               if instr.get('name') == instr_list[0]: # instr is now the needed element
+                  instr_counter += 1
+                  instr_found = True
 
-                  # 3 arguments
-                  if len(instr_list) == 4:
-                     OFF_LENGTH = instr.find('OFFSET').find('LENGTH').text               
-                     ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
+                  # Only go further if its the second iteration
+                  if i == 0:
+                     continue
 
-                  # Make sure the length of instruction is 32
-                  tempstring = "(\"" + OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2 + "\"),"
-                  print(tempstring)
-                  outfile.write(tempstring)
+                  OP = instr.find('OP').text
+                  # 0 arguments
+                  if len(instr_list) == 1:
+                     tempstring = OP + (32-len(OP))*'0'
+                     print(tempstring)
+                     outfile.write(tempstring)
+                  # 1 argument
+                  elif len(instr_list) == 2:
+                     DEST_LENGTH = instr.find('DEST').find('LENGTH').text
+                     ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
+                     tempstring = OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1
+                     print(tempstring)
+                     outfile.write(tempstring)
+                  # 2 arguments
+                  elif len(instr_list) >= 3:
+                     DEST_LENGTH = instr.find('DEST').find('LENGTH').text
+                     SRC_LENGTH = instr.find('SRC').find('LENGTH').text
+                     OFF_LENGTH = '0'
 
-               break # Correct instruction has been found
-         
+                     # Parse args and make sure that the length is correct
+                     ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
+                     ARG2 = parse_arg(instr_list[2]).rjust(int(SRC_LENGTH),'0')[-int(SRC_LENGTH):]
+                     ARG3 = ''
 
+                     # 3 arguments
+                     if len(instr_list) == 4:
+                        OFF_LENGTH = instr.find('OFFSET').find('LENGTH').text               
+                        ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
+
+                     # Make sure the length of instruction is 32
+                     tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
+                     print(tempstring)
+                     outfile.write(tempstring)
+
+                  break # Correct instruction has been found
 
 
 
