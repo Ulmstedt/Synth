@@ -142,6 +142,9 @@ architecture Behavioral of Synth is
          writeX      : out std_logic;
          writeY      : out std_logic;
          coordReady  : out std_logic;
+
+         tmp         : out std_logic_vector(11 downto 0);
+
          clk         : in std_logic;
          rst         : in std_logic
       );
@@ -181,6 +184,7 @@ architecture Behavioral of Synth is
 
    -- Touch
    signal coordOutS   : std_logic_vector(8 downto 0);
+   signal tmpS        : std_logic_vector(11 downto 0);
    signal writeXS     : std_logic;
    signal writeYS     : std_logic;
    signal coordReadyS : std_logic;
@@ -282,6 +286,9 @@ begin
       writeX      => writeXS,
       writeY      => writeYS,
       coordReady  => coordReadyS,
+
+      tmp         => tmpS,
+
       clk         => clk,
       rst         => rst
    );
@@ -294,12 +301,12 @@ begin
          when "00" => 
                an <= "0111";
                --seg <= m1;
-               seg <= coordOutS(7 downto 0);
+               seg <= tmpS(11 downto 4);
                --seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";
                --seg <= mreg1S;
-               seg <= coordOutS(8 downto 1);
+               seg <= tmpS(3 downto 0)&"1111";
          when "10" => 
                an <= "1101";
                seg <= mreg2S;
@@ -313,6 +320,5 @@ begin
    --sclk <= '1'; -- or '1'?
    sdin <= sdouts;
    -- seg <= tempIRhold(7 downto 0);
-
 
 end Behavioral;
