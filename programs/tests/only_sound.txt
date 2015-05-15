@@ -1,0 +1,17 @@
+CONSTANT wavereg, %11111
+CONSTANT upper, $0FFF
+&start
+LOAD.C   #wavereg, #upper
+LOAD.C   #R_ST1, 65000
+
+&pos1
+BNCC     #SR_ST1, #pos1
+NOP
+LOAD.C   #wavereg, 0
+LOAD.C   #R_ST1, 65000
+
+&pos2
+BNCC     #SR_ST1, #pos2
+NOP
+BRA      #start
+

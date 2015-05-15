@@ -3,23 +3,42 @@ import xml.etree.ElementTree as ET
 
 # Constants dict
 constants = {  
-               "SR_Z": "0",
-               "SR_N": "1",
-               "SR_C": "2",
-               "SR_O": "3",
-               "SR_LT1": "4",
-               "SR_ST1": "5",
-               "SR_ST2": "6",
-               "SR_MIDI": "7",
-               "SVF_IN": "22",
-               "SVF_D1": "23",
-               "SVF_D2": "24",
-               "SVF_OUT": "25",
-               "SVF_F": "26",
-               "SVF_Q": "27",
+               # Status flags
+               "SR_Z":     "0",
+               "SR_N":     "1",
+               "SR_C":     "2",
+               "SR_O":     "3",
+               "SR_LT1":   "4",
+               "SR_ST1":   "5",
+               "SR_ST2":   "6",
+               "SR_MIDI":  "7",
+
+               # General registers
+               "R_G1":     "0",
+               "R_G2":     "1",
+               "R_G3":     "2",
+               "R_G4":     "3",
+               "R_G5":     "4",
+               "R_G6":     "5",
+               "R_G7":     "6",
+               "R_G8":     "7",
+
+               "R_SR":     "8",
+               "R_LT1_L":  "16",
+               "R_LT1_H":  "17",
+               "R_ST1":    "18",
+               "R_ST2":    "19",
+               "R_TOUCHX"  "20",
+               "R_TOUCHY"  "21",
+               "SVF_IN":   "22",
+               "SVF_D1":   "23",
+               "SVF_D2":   "24",
+               "SVF_OUT":  "25",
+               "SVF_F":    "26",
+               "SVF_Q":    "27",
                "R_MREG12": "29",
-               "R_MREG3": "30",
-               "R_AUDIO": "31"
+               "R_MREG3":  "30",
+               "R_AUDIO":  "31"
             }
 
 # Parses and argument and returns its correct form (hex, dec, bin)
@@ -38,7 +57,8 @@ def parse_arg(arg):
 
 # Compiles the given files to binary format
 def comp_file(*filenames):
-   outfile = open("binary_out", "wb+")
+   outfile = open("binary_out.mem", "w+")
+   outfile.write("@00\n")
    rules = ET.parse('rules.xml')
    root = rules.getroot()
 
@@ -91,15 +111,21 @@ def comp_file(*filenames):
                   # 0 arguments
                   if len(instr_list) == 1:
                      tempstring = OP + (32-len(OP))*'0'
-                     print(tempstring)
-                     outfile.write(tempstring)
+                     tempstring2 = "(\"" + tempstring + "\"),"
+                     print(tempstring2)
+                     tempstring3 = hex(int(tempstring,2))[2:]
+                     tempstring4 = (8 - len(tempstring3)) * "0" + tempstring3
+                     outfile.write(tempstring4 + " ")
                   # 1 argument
                   elif len(instr_list) == 2:
                      DEST_LENGTH = instr.find('DEST').find('LENGTH').text
                      ARG1 = parse_arg(instr_list[1]).rjust(int(DEST_LENGTH),'0')[-int(DEST_LENGTH):]
                      tempstring = OP + (32-len(OP)-int(DEST_LENGTH))*'0' + ARG1
-                     print(tempstring)
-                     outfile.write(tempstring)
+                     tempstring2 = "(\"" + tempstring + "\"),"
+                     print(tempstring2)
+                     tempstring3 = hex(int(tempstring,2))[2:]
+                     tempstring4 = (8 - len(tempstring3)) * "0" + tempstring3
+                     outfile.write(tempstring4 + " ")
                   # 2 arguments
                   elif len(instr_list) >= 3:
                      DEST_LENGTH = instr.find('DEST').find('LENGTH').text
@@ -118,8 +144,11 @@ def comp_file(*filenames):
 
                      # Make sure the length of instruction is 32
                      tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
-                     print(tempstring)
-                     outfile.write(tempstring)
+                     tempstring2 = "(\"" + tempstring + "\"),"
+                     print(tempstring2)
+                     tempstring3 = hex(int(tempstring,2))[2:]
+                     tempstring4 = (8 - len(tempstring3)) * "0" + tempstring3
+                     outfile.write(tempstring4 + " ")
 
                   break # Correct instruction has been found
 

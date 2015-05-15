@@ -104,7 +104,6 @@
    </instr>
 
    <instr name="BCC.O">
-      <OP>10010</OP>
       <DEST>
          <LENGTH>4</LENGTH>
       </DEST>

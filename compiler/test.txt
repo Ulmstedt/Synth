@@ -1,7 +1,7 @@
 &hej
 NOP
 &hej2
-BRA #hej3
+BRA #hej3   ; Kommentar
 NOP
 NOP
 &hej3
