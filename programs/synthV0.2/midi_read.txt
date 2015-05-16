@@ -1,0 +1,14 @@
+&MIDI_START
+
+BNCC     #SR_MIDI, #POST_MIDI
+NOP
+MOVE     #R_NOTE, #R_MREG12   ; Store note
+AND.C    #R_NOTE, $00FF
+MOVE     #R_VEL, #R_MREG3     ; Store velocity
+CMPU.C   #R_VEL, 0            ; Check if velocity is 0
+BNCC     #SR_Z, #POST_MIDI    ; If vel != 0, we are done here
+NOP
+LOAD.C   #R_NOTE, 0           ; Reset note if note off
+BRA      #POST_MIDI
+NOP
+

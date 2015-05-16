@@ -383,8 +383,7 @@ begin
    regBSel <=  ir2(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1)
                   when  ir2OP = "11100"         -- LOAD.a
                      OR ir2OP = "11101"         -- LOAD.c
-                     OR ir2OP = "11110"         -- LOAD.wo
-                     OR ir2OP = "11111" else    -- LOAD.wro
+                     OR ir2OP = "11110" else    -- LOAD.wo
                ir2(REG_BITS - 1 downto 0)
                   when  ir2OP = "11001"         -- STORE.r
                      OR ir2OP = "11010"         -- STORE.wo

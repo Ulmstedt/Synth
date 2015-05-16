@@ -1,0 +1,16 @@
+&AUDIO_START
+LOAD.C   #R_ST1, #FSTIME   ; Load timer register
+ADD.C    #R_STEP, 1        ; Increment step counter
+CMPU.C   #R_NOTE, 0        
+BNCC     #SR_Z, #SOUNDGEN  ; Play sound if note on
+NOP
+LOAD.C   #R_AUDIO, 0       ; No sound
+BRA      #POST_AUDIO
+NOP
+&SOUNDGEN
+LOAD.A   #R_NOTEMUL, #TONE
+MULD.R   #R_NOTEMUL, #R_STEP
+AND.C    #R_NOTEMUL, %0000000000111111 ; Modulo 64
+LOAD.OR  #R_AUDIO, #SQWAVE, #R_NOTEMUL
+BRA      #POST_AUDIO
+NOP

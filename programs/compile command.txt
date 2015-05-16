@@ -1,0 +1,1 @@
+comp_file("../programs/synthV0.2/constants.txt","../programs/synthV0.2/main_loop.txt","../programs/synthV0.2/midi_read.txt","../programs/synthV0.2/audio_out.txt")

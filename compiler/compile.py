@@ -28,8 +28,8 @@ constants = {
                "R_LT1_H":  "17",
                "R_ST1":    "18",
                "R_ST2":    "19",
-               "R_TOUCHX"  "20",
-               "R_TOUCHY"  "21",
+               "R_TOUCHX": "20",
+               "R_TOUCHY": "21",
                "SVF_IN":   "22",
                "SVF_D1":   "23",
                "SVF_D2":   "24",
@@ -143,7 +143,7 @@ def comp_file(*filenames):
                         ARG3 = parse_arg(instr_list[3]).rjust(int(OFF_LENGTH),'0')[-int(OFF_LENGTH):]
 
                      # Make sure the length of instruction is 32
-                     tempstring = OP + ARG1 + (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG3 + ARG2
+                     tempstring = OP + ARG1 + ARG3 +  (32-len(OP)-int(DEST_LENGTH)-int(SRC_LENGTH)-int(OFF_LENGTH))*'0' + ARG2
                      tempstring2 = "(\"" + tempstring + "\"),"
                      print(tempstring2)
                      tempstring3 = hex(int(tempstring,2))[2:]

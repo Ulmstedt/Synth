@@ -1,0 +1,10 @@
+&AUDIO_START
+NOT.R    #R_WAVE, #R_WAVE
+MOVE     #R_AUDIO, #R_WAVE
+
+CMPU.C   #R_NOTE, 0  ; Reset timer if a note is on
+NOP ; BCC      #SR_Z, #POST_AUDIO ;;;;;;;TEMP
+NOP
+LOAD.C   #R_ST1, 65000
+BRA      #POST_AUDIO
+NOP

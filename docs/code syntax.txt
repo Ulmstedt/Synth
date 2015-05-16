@@ -13,3 +13,6 @@ CONSTANT name, value
 $F    -- Hex
 %1111 -- Bin
 15    -- Dec
+
+För instruktioner med 3 args:
+INSTR    DEST, SRC, OFFSET
