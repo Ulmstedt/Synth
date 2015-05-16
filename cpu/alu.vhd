@@ -66,6 +66,7 @@ begin
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) - unsigned(rightIn)) when "00011",                                                        --SUB unsigned
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(signed(leftIn) - signed(rightIn)) when "00100",                                                            --SUB signed
                std_logic_vector((signed(leftIn) * signed(rightIn)) srl REG_WIDTH) when "00101",                                                                                        --MUL(signed fixed point)(result in 16 msb so make right shifts so result ends up in 16 lsb like all other)
+               std_logic_vector((signed(leftIn) * signed(rightIn)) srl REG_WIDTH-2) when "10001",                                                                                      --MUL bin
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) srl to_integer(unsigned(rightIn))) when "00110",                                          --bitshift right
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & std_logic_vector(unsigned(leftIn) sll to_integer(unsigned(rightIn))) when "00111",                                          --bitshift left
                (REG_WIDTH*2 - 1 downto REG_WIDTH => '0') & (leftIn and rightIn) when "01000",                                                                                          --AND
@@ -86,6 +87,7 @@ begin
             '1' when ALUInstr = "00011" and unsigned(temp) = 0 else                                                                                   --SUB unsigned
             '1' when ALUInstr = "00100" and signed(temp) = 0 else                                                                                     --SUB signed
             '1' when ALUInstr = "00101" and signed(temp) = 0 else                                                                                     --MUL(signed fixed point)
+            '1' when ALUInstr = "10001" and unsigned(temp) = 0 else                                                                                   --MUL bin
             '1' when ALUInstr = "00110" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --BITSHIFT RIGHT
             '1' when ALUInstr = "00111" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --BITSHIFT LEFT
             '1' when ALUInstr = "01000" and unsigned(temp(REG_WIDTH-1 downto 0)) = 0 else                                                             --AND
@@ -107,6 +109,7 @@ begin
             '1' when ALUInstr = "00011" and unsigned(leftIn) < unsigned(rightIn) else                                                                 --SUB unsigned
             '1' when ALUInstr = "00100" and temp(REG_WIDTH-1) = '1' else                                                                              --SUB signed
             '1' when ALUInstr = "00101" and temp(REG_WIDTH*2-1) = '1' else                                                                            --MUL(signed fixed point)
+            srNlast when ALUInstr = "10001" else                                                                                                      --Mul bin
             '1' when ALUInstr = "00110" and temp(REG_WIDTH-1) = '1' else                                                                              --BITSHIFT RIGHT
             '1' when ALUInstr = "00111" and temp(REG_WIDTH-1) = '1' else                                                                              --BITSHIFT LEFT
             '1' when ALUInstr = "01000" and temp(REG_WIDTH-1) = '1' else                                                                              --AND
@@ -128,9 +131,11 @@ begin
             '1' when ALUInstr = "00011" and temp(REG_WIDTH) = '1' else                                                                                --SUB unsigned
             srClast when ALUInstr = "00100" else                                                                                                      --SUB signed
             srClast when ALUInstr = "00101" else                                                                                                      --MUL(signed fixed point)
+            srClast when ALUInstr = "10001" else                                                                                                      --Mul bin
             leftIn(to_integer(unsigned(rightIn)) - 1) when ALUInstr = "00110" and to_integer(unsigned(rightIn)) < REG_WIDTH and 
-                                                           to_integer(unsigned(rightIn)) /= 0 else                                                    --BITSHIFT RIGHT
-            leftIn(REG_WIDTH - to_integer(unsigned(rightIn))) when ALUInstr = "00111" and to_integer(unsigned(rightIn)) < REG_WIDTH and 
+                                                           to_integer(unsigned(rightIn)) /= 0 else                                     
+                           
+            leftIn(REG_WIDTH - to_integer(unsigned(rightIn))) when ALUInstr = "00111" and to_integer(unsigned(rightIn)) < REG_WIDTH and               --BITSHIFT RIGHT
                                                                    to_integer(unsigned(rightIn)) /= 0 else                                            --BITSHIFT LEFT
             srClast when ALUInstr = "01000" else                                                                                                      --AND
             srClast when ALUInstr = "01001" else                                                                                                      --OR
@@ -154,6 +159,7 @@ begin
                   (leftIn(REG_WIDTH-1) = '0' and rightIn(REG_WIDTH-1) = '1' and temp(REG_WIDTH-1) = '1')) else                                        --SUB signed assume x negative and y positive, if x-y results in a positive value we have overflow. Assume x positive and y negative,
                                                                                                                                                       -- if x-y results in a negative value we have overflow
             srOlast when ALUInstr = "00101" else                                                                                                      --MUL(signed fixed point)
+            srOlast when ALUInstr = "10001" else                                                                                                      --Mul bin
             srOlast when ALUInstr = "00110" else                                                                                                      --BITSHIFT RIGHT
             srOlast when ALUInstr = "00111" else                                                                                                      --BITSHIFT LEFT
             srOlast when ALUInstr = "01000" else                                                                                                      --AND

@@ -313,6 +313,27 @@
       </SRC>
    </instr>
 
+   <!-- MUL bin -->
+   <instr name="MULD.R">
+      <OP>0010110001</OP>
+      <DEST>
+         <LENGTH>5</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>5</LENGTH>
+      </SRC>
+   </instr>
+
+   <instr name="MULD.C">
+      <OP>0011010001</OP>
+      <DEST>
+         <LENGTH>5</LENGTH>
+      </DEST>
+      <SRC>
+         <LENGTH>16</LENGTH>
+      </SRC>
+   </instr>
+
    <!-- BITSHIFT RIGHT -->
    <instr name="BSR.R">
       <OP>0010100110</OP>

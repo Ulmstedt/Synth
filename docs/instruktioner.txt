@@ -156,6 +156,16 @@ O  :  IF
 RRM:  IF
 RRT:  IF
 
+10001:  MUL unsigned-bin
+
+Påverkade statusflaggor:
+Z  :  1 om den övre hälften av bitar alla är 0 annars 0
+N  :  IF
+C  :  IF
+O  :  IF
+RRM:  IF
+RRT:  IF
+
 00110:  BSR bitshift right
 Påverkade statusflaggor:
 Z  :  1 om resultatet är 0 annars 0
