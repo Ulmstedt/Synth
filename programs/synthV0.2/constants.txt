@@ -1,7 +1,7 @@
 CONSTANT    R_NOTE, 0
 CONSTANT    R_VEL, 1
 CONSTANT    R_WAVE, 2
-CONSTANT    SQWAVE, 148
+CONSTANT    SQWAVE, 147; -----------------------------------------------------------CHGECK THISSSSS
 CONSTANT    FSTIME, 2048
 CONSTANT    R_STEP, 7
 CONSTANT    TONE, 0
