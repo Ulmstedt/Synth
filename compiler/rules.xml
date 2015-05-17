@@ -30,29 +30,6 @@
       </SRC>
    </instr>
 
-   <instr name="STORE.O">
-      <OP>11010</OP>
-      <DEST>
-         <LENGTH>11</LENGTH>
-      </DEST>
-      <SRC>
-         <LENGTH>5</LENGTH>
-      </SRC>
-      <OFFSET>
-         <LENGTH>11</LENGTH>
-      </OFFSET>
-   </instr>
-
-   <instr name="STORE.OR">
-      <OP>11011</OP>
-      <DEST>
-         <LENGTH>11</LENGTH>
-      </DEST>
-      <SRC>
-         <LENGTH>5</LENGTH>
-      </SRC>
-   </instr>
-
    <instr name="LOAD.A">
       <OP>11100</OP>
       <DEST>

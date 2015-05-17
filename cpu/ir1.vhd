@@ -57,7 +57,9 @@ begin
    ir1OP <= irOut(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH);
    
    -- Stall needed calculations
-   ir2isLoad   <= '1' when ir2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "11100"
+   ir2isLoad   <= '1' when ir2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "11100" OR
+                           ir2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "11110" OR
+                           ir2in(PMEM_WIDTH - 1 downto PMEM_WIDTH - OP_WIDTH) = "11111"
                   else '0';
    ir2reg      <= ir2in(REG_DEST_OFFSET downto REG_DEST_OFFSET - REG_BITS + 1);
    

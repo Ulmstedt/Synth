@@ -26,7 +26,9 @@ begin
 
    -- Not all ALU instructions saves back to a register, namely DO_NOTHING and CMP
    ir4ALUsaves <= '0' when ir4ALUinstr = "00000" OR   -- DO_NOTHING
-                           ir4ALUinstr = "01100" else -- CMP
+                           ir4ALUinstr = "01111" OR   -- BITTEST
+                           ir4ALUinstr = "01101" OR   -- CMP
+                           ir4ALUinstr = "01100" else -- CMPU
                   '1';
    
    doWrite <=  '1' when ir4OP = "11100"                              -- LOAD.a

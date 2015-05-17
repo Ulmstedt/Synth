@@ -8,8 +8,8 @@ use work.Constants.all;
 
 package memContent is
    constant memc : mem_t := (
-      -- Wavetables
-      ("0000000101011111"), -- C0
+      -- Wavetables (calculated in advance as: freq * wavetable_length / sample rate
+      ("0000000101011111"), -- "C0"
       ("0000000101110100"),
       ("0000000110001010"),
       ("0000000110100010"),
@@ -92,7 +92,7 @@ package memContent is
       ("1000101101011111"),
       ("1001001110100100"),
       ("1001110001110010"),
-      ("1010010110111100"), -- B6
+      ("1010010110111100"), -- "B6"
       
       -- 64 step square wave("0000000000000000"), 
       ("0000000000000000"), 
