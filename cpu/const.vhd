@@ -6,8 +6,8 @@ package Constants is
    constant MIDI_WIDTH           : natural := 8;
    constant AUDIO_WIDTH          : natural := 16;
    
-   constant MEM_HEIGHT           : natural := 2048; --currently 2^12(255 slots in memory for the tilemap)
-   constant TILE_MAP_OFFSET      : natural :=  1792; --where tile map memory starts 4096-255
+   constant MEM_HEIGHT           : natural := 1024; --currently 2^12(255 slots in memory for the tilemap)
+   constant TILE_MAP_OFFSET      : natural :=  768; --where tile map memory starts 4096-255
     
    constant REG_NUM              : natural := 32;
    constant REG_BITS             : natural := 5;

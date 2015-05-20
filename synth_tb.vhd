@@ -20,11 +20,11 @@ component Synth is
       sdin        : out std_logic;
       
       --LCDtft stuff
-      IOP         : out std_logic_vector(20 downto 1);
-      ION         : out std_logic_vector(20 downto 1);
-      TP_BUSY     : in std_logic;
-      TP_DOUT     : in std_logic;
-      TP_PENIRQ   : in std_logic;
+      --IOP         : out std_logic_vector(20 downto 1);
+      --ION         : out std_logic_vector(20 downto 1);
+      --TP_BUSY     : in std_logic;
+      --TP_DOUT     : in std_logic;
+      --TP_PENIRQ   : in std_logic;
 
       uart        : in std_logic;
       rst         : in std_logic;
@@ -62,11 +62,11 @@ BEGIN
       sclk        => sclkS,
       sdin        => sdinS,
       
-      IOP         => IOPinternal,
-      ION         => IONinternal,
-      TP_BUSY     => '1',
-      TP_DOUT     => '1',
-      TP_PENIRQ   => '1',
+      --IOP         => IOPinternal,
+      --ION         => IONinternal,
+      --TP_BUSY     => '1',
+      --TP_DOUT     => '1',
+      --TP_PENIRQ   => '1',
 
       uart        => uartS,
       rst         => rst,

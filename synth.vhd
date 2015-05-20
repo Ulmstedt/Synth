@@ -14,14 +14,14 @@ entity Synth is
       an          : out std_logic_vector(3 downto 0);
       
       --LCDtft stuff
-      IOP         : out std_logic_vector(20 downto 1):= "00000000000000000000";
-      ION         : out std_logic_vector(20 downto 1) := "00000000000000000000";
-      TP_BUSY     : in std_logic;
-      TP_DOUT     : in std_logic;
-      TP_DIN      : out std_logic;
-      TP_PENIRQ   : in std_logic;
-      TP_CS       : out std_logic;
-      TP_DCLK     : out std_logic;
+      --IOP         : out std_logic_vector(20 downto 1):= "00000000000000000000";
+      --ION         : out std_logic_vector(20 downto 1) := "00000000000000000000";
+      --TP_BUSY     : in std_logic;
+      --TP_DOUT     : in std_logic;
+      --TP_DIN      : out std_logic;
+      --TP_PENIRQ   : in std_logic;
+      --TP_CS       : out std_logic;
+      --TP_DCLK     : out std_logic;
 
       uart        : in std_logic;
       rst         : in std_logic;
@@ -96,22 +96,22 @@ architecture Behavioral of Synth is
       );
    end component;
    
-   component LCDArea is
-      port(
-         rst               : in std_logic;
-         clk               : in std_logic;
-         
-         XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
-         TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
+   --component LCDArea is
+   --   port(
+   --      rst               : in std_logic;
+   --      clk               : in std_logic;
+   --      
+   --      XCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+   --      YCountHighBits    : out std_logic_vector(HIGHER_BITS - 1 downto 0);
+   --      TileAdress        : in std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
 
-         IOPi              : out std_logic_vector(20 downto 1);
-         IONi              : out std_logic_vector(20 downto 1);
-         TP_BUSYi          : in std_logic;
-         TP_DOUTi          : in std_logic;
-         TP_PENIRQi        : in std_logic
-      );
-   end component;
+   --      IOPi              : out std_logic_vector(20 downto 1);
+   --      IONi              : out std_logic_vector(20 downto 1);
+   --      TP_BUSYi          : in std_logic;
+   --      TP_DOUTi          : in std_logic;
+   --      TP_PENIRQi        : in std_logic
+   --   );
+   --end component;
 
 
    component SVF is
@@ -132,25 +132,25 @@ architecture Behavioral of Synth is
       );
    end component;
 
-   component Touch is
-      port(
-         PENIRQ      : in std_logic;
-         BUSY        : in std_logic;
-         DOUT        : in std_logic;
-         DIN         : out std_logic;
-         DCLK        : out std_logic;
-         CS          : out std_logic;
-         coordOut    : out std_logic_vector(8 downto 0);
-         writeX      : out std_logic;
-         writeY      : out std_logic;
-         coordReady  : out std_logic;
+   --component Touch is
+   --   port(
+   --      PENIRQ      : in std_logic;
+   --      BUSY        : in std_logic;
+   --      DOUT        : in std_logic;
+   --      DIN         : out std_logic;
+   --      DCLK        : out std_logic;
+   --      CS          : out std_logic;
+   --      coordOut    : out std_logic_vector(8 downto 0);
+   --      writeX      : out std_logic;
+   --      writeY      : out std_logic;
+   --      coordReady  : out std_logic;
 
-         tmp         : out std_logic_vector(11 downto 0);
+   --      tmp         : out std_logic_vector(11 downto 0);
 
-         clk         : in std_logic;
-         rst         : in std_logic
-      );
-   end component;
+   --      clk         : in std_logic;
+   --      rst         : in std_logic
+   --   );
+   --end component;
 
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
    
@@ -267,37 +267,37 @@ begin
    );
 
 
-   LCDareai :  LCDArea port map(
-      rst               => rst,
-      clk               => clk,
-      XCountHighBits    => XCountMSBBits,
-      YCountHighBits    => YCountMSBBits,
-      TileAdress        => tileAdressfromCPU,
+   --LCDareai :  LCDArea port map(
+   --   rst               => rst,
+   --   clk               => clk,
+   --   XCountHighBits    => XCountMSBBits,
+   --   YCountHighBits    => YCountMSBBits,
+   --   TileAdress        => tileAdressfromCPU,
 
-      IOPi              => IOP,
-      IONi              => IOn,  
-      TP_BUSYi          => TP_BUSY,
-      TP_DOUTi          => TP_DOUT,
-      TP_PENIRQi        => TP_PENIRQ
-   );
+   --   IOPi              => IOP,
+   --   IONi              => IOn,  
+   --   TP_BUSYi          => TP_BUSY,
+   --   TP_DOUTi          => TP_DOUT,
+   --   TP_PENIRQi        => TP_PENIRQ
+   --);
 
-   touchc : Touch port map(
-      PENIRQ      => TP_PENIRQ,
-      BUSY        => TP_BUSY,
-      DOUT        => TP_DOUT,
-      DIN         => TP_DIN,
-      DCLK        => TP_DCLK,
-      CS          => TP_CS,
-      coordOut    => coordOutS,
-      writeX      => writeXS,
-      writeY      => writeYS,
-      coordReady  => coordReadyS,
+   --touchc : Touch port map(
+   --   PENIRQ      => TP_PENIRQ,
+   --   BUSY        => TP_BUSY,
+   --   DOUT        => TP_DOUT,
+   --   DIN         => TP_DIN,
+   --   DCLK        => TP_DCLK,
+   --   CS          => TP_CS,
+   --   coordOut    => coordOutS,
+   --   writeX      => writeXS,
+   --   writeY      => writeYS,
+   --   coordReady  => coordReadyS,
 
-      tmp         => tmpS,
+   --   tmp         => tmpS,
 
-      clk         => clk,
-      rst         => rst
-   );
+   --   clk         => clk,
+   --   rst         => rst
+   --);
 
    process(clk) begin
      if rising_edge(clk) then 
@@ -312,8 +312,8 @@ begin
                --seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";
-               --seg <= mreg1S;
-               seg <= tmpS(3 downto 0)&"1111";
+               seg <= mreg1S;
+               --seg <= tmpS(3 downto 0)&"1111";
          when "10" => 
                an <= "1101";
                seg <= mreg2S;

@@ -36,7 +36,12 @@ begin
    process(clk) is
    begin
       if rising_edge(clk) then
-         outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
+         if to_integer(unsigned(addr) mod MEM_HEIGHT) = 512 then
+            outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
+            tmpOut(REG_WIDTH/2 - 1 downto 0) <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT))(REG_WIDTH/2 - 1 downto 0);
+         else
+            outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
+         end if;
          if doWrite = '1' then
             mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
          end if;
@@ -50,17 +55,17 @@ begin
    --Antar att det gäller heltals division t e x 5/3 = 1, 5 rem 3 = 2
    -- XXXX XXXX XXXX XXXX
 
-   maxXcnt <= tileXcnt when to_integer(unsigned(tileXcnt)) <= 29 else std_logic_vector(to_unsigned(29,HIGHER_BITS));
-   maxYcnt <= tileYcnt when to_integer(unsigned(tileYcnt)) <= 16 else std_logic_vector(to_unsigned(16,HIGHER_BITS)); 
-   rema <= std_logic_vector(to_unsigned(to_integer(unsigned(maxXcnt)) rem 2, 6));
-   helpTileMem <= mem(TILE_MAP_OFFSET + to_integer(unsigned(maxYcnt)) * 15 + to_integer(unsigned(maxXcnt)) / 2);
+   --maxXcnt <= tileXcnt when to_integer(unsigned(tileXcnt)) <= 29 else std_logic_vector(to_unsigned(29,HIGHER_BITS));
+   --maxYcnt <= tileYcnt when to_integer(unsigned(tileYcnt)) <= 16 else std_logic_vector(to_unsigned(16,HIGHER_BITS)); 
+   --rema <= std_logic_vector(to_unsigned(to_integer(unsigned(maxXcnt)) rem 2, 6));
+   --helpTileMem <= mem(TILE_MAP_OFFSET + to_integer(unsigned(maxYcnt)) * 15 + to_integer(unsigned(maxXcnt)) / 2);
    
    
-   tileMapOut  <= helpTilemem(3 to 7) when rema = "000000" else
-                  helpTilemem(11 to 15) when rema = "000001"  else
-                  (others => '0');
-
-   tmpOut(REG_WIDTH/2 - 1 downto 0) <= mem(1024)(REG_WIDTH/2 - 1 downto 0);
-
+   --tileMapOut  <= helpTilemem(3 to 7) when rema = "000000" else
+   --               helpTilemem(11 to 15) when rema = "000001"  else
+   --               (others => '0');
+   tileMapOut <= (others => '0');
+   --tmpOut <= (others => '0');
+   
 end Behavioral;
 
