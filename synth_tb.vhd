@@ -42,11 +42,11 @@ end component;
    signal sdinS       : std_logic;
    signal uartS       : std_logic;
 
+   constant midi_msg_width : natural := 59;
 
-   signal midi_msg      : std_logic_vector(0 to 119) := B"0_0111_1111_1" & B"0_0111_1111_1" & B"0_0111_1111_1" &
-                                                       B"0_0000_1001_1" & B"0_0110_1100_1" & B"0_1100_0100_1" &
-                                                       B"0_0000_1001_1" & B"0_0100_0100_1" & B"0_1100_0100_1" &
-                                                       B"0_0000_1001_1" & B"0_0100_1100_1" & B"0_1100_0100_1";
+
+   signal midi_msg      : std_logic_vector(0 to midi_msg_width) := B"0_0111_1111_1" & B"0_0111_1111_1" & B"0_0111_1111_1" &
+                                                                   B"0_0000_1001_1" & B"0_0110_1100_1" & B"0_1100_0100_1";
 
    constant UART_CLK_PERIOD  		   : natural := 3200;
 
@@ -106,7 +106,7 @@ BEGIN
       wait until rising_edge(clk);
       -- Send midi message
          if i mod 3200 = 0 then
-            if n < 119 then
+            if n < midi_msg_width then
                uartS <= midi_msg(n);
             else
                uartS <= '1';

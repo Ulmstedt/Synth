@@ -16,7 +16,7 @@ LOAD.OR     #R_STEP, 1, #R_VOICES_LOOP       ; Load the step counter and increme
 ADD.C       #R_STEP, 1
 MULD.R      #R_NOTEMUL, #R_STEP              ; Do the multiplaction with freq*wavetable/samplefreq
 BITTEST.C   #R_STEP, 6                       ; Check if the 6th bit is set, thus we've stepped through a whole wave and need to reset counter
-BCC         #SR_Z, #SAVE_COUNTER
+BRA #SAVE_COUNTER;BCC         #SR_Z, #SAVE_COUNTER
 NOP
 LOAD.C      #R_STEP, 0                       ; And we reset the counter
 &SAVE_COUNTER
