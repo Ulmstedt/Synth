@@ -351,6 +351,7 @@ begin
                               ir2OP = "10100" OR
                               ir2OP = "10101" OR
                               ir2OP = "10110") AND
+                              regVal(SR_REG_OFFSET)(I) = '1' AND
                         to_integer(unsigned(ir2(PMEM_WIDTH - OP_WIDTH downto PMEM_WIDTH - OP_WIDTH - REG_BITS + 1))) = I) OR
                               to_integer(unsigned(regASel)) = SR_REG_OFFSET OR
                               to_integer(unsigned(regBSel)) = SR_REG_OFFSET else

@@ -1,1 +1,1 @@
-comp_file("../programs/synthV0.3/constants.txt","../programs/synthV0.3/main_loop.txt","../programs/synthV0.3/midi_read.txt","../programs/synthV0.3/audio_out.txt")
+comp_file("../programs/synthV0.4/constants.txt","../programs/synthV0.4/main_loop.txt","../programs/synthV0.4/midi_read.txt","../programs/synthV0.4/audio_out.txt")

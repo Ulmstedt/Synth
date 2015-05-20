@@ -3,23 +3,24 @@
 BNCC     #SR_MIDI, #POST_MIDI
 NOP
 
-MOVE     #R_NOTE, #R_MREG12   ; Store note
+MOVE     #R_NOTE, #R_MREG12            ; Store note
 AND.C    #R_NOTE, $00FF
-MOVE     #R_VEL, #R_MREG3     ; Store velocity
+MOVE     #R_VEL, #R_MREG3              ; Store velocity
 
 
 LOAD.C   #R_VOICES_LOOP, #M_VOICES
-CMPU.C   #R_VEL, 0            ; Check if velocity is 0
-BCC      #SR_Z, #CLEAR_NOTE   ; If vel != 0, we save the voice (note)key, else we clear it
+CMPU.C   #R_VEL, 0                     ; Check if velocity is 0
+BCC      #SR_Z, #CLEAR_NOTE            ; If vel != 0, we save the voice (note)key, else we clear it
 NOP
-STORE.R  #R_VOICES_LOOP, #R_NOTE ; Note pressed at offset 0
-STORE.OR #R_VOICES_LOOP, 0, 1    ; The step counter at offset 1
+STORE.OR 0, #R_NOTE, #R_VOICES_LOOP    ; Note pressed at offset 0
+LOAD.C   #R_G4,1
+STORE.OR 1, #R_G4, #R_VOICES_LOOP      ; The step counter at offset 1
 BRA #NOTE_STORED
 NOP
 &CLEAR_NOTE
-LOAD.C   #R_NOTE, 0           ; Reset note if note off
+LOAD.C   #R_G4, 0
+STORE.OR 0, #R_G4, #R_VOICES_LOOP      ; Reset note if note off
 &NOTE_STORED
 
 BRA      #POST_MIDI
 NOP
-

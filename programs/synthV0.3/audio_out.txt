@@ -1,23 +1,19 @@
 &AUDIO_START
-LOAD.C      #R_ST1, #FSTIME   ; Load timer register
+LOAD.C      #R_ST1, #FSTIME               ; Load timer register
 LOAD.C      #R_VOICES_LOOP, #M_VOICES
-LOAD.O      #R_NOTE, #R_VOICES_LOOP
-CMPU.C      #R_NOTE, 0           ; If note is 0, we don't play it
+LOAD.OR     #R_NOTE, 0, #R_VOICES_LOOP    ; Fetch the key
+CMPU.C      #R_NOTE, 0                    ; If note is 0, we don't play it
 BCC         #SR_Z, #OUTPUT_NOTHING
 
 LOAD.OR     #R_NOTEMUL, 0, #R_NOTE
 
-LOAD.OR     #R_STEP, #R_VOICES_LOOP, 1    ; Load the step counter and increment it
+LOAD.OR     #R_STEP, 1, #R_VOICES_LOOP    ; Load the step counter and increment it
 ADD.C       #R_STEP, 1
 MULD.R      #R_NOTEMUL, #R_STEP           ; Do the multiplaction with freq*wavetable/samplefreq
-BITTEST.C   #R_STEP, 6                    ; Check if the 6th bit is set, thus we've stepped through a whole wave and need to reset counter
-BCC         #SR_Z, #SAVE_COUNTER
-NOP
-LOAD.C      #R_STEP, 0                    ; And we reset the counter
-&SAVE_COUNTER
-STORE.OR    #R_VOICES_LOOP, #R_STEP, 1    ; Store the new counter back into memory
+ADD.C       #R_VOICES_LOOP, 1
+STORE.OR    0, #R_STEP, #R_VOICES_LOOP    ; Store the new counter back into memory
 
-AND.C       #R_NOTEMUL, %0000000000111111 ; Modulo 64
+AND.C       #R_NOTEMUL, %0000000000111111 ; Modulo 64 (Wave length)
 LOAD.OR     #R_AUDIO, #SQWAVE, #R_NOTEMUL
 
 &OUTPUT_NOTHING
