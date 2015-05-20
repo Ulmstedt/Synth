@@ -13,6 +13,8 @@ entity CPUArea is
       midiRdy           : in std_logic;
       srOut             : out std_logic_vector(7 downto 0);
 
+      tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
       SVFwriteDelay     : in std_logic;
       SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
@@ -52,6 +54,8 @@ architecture Behavioral of CPUArea is
          mreg2             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
          mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
          midiRdy           : in std_logic;
+
+         tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
 
          SVFwriteDelay     : in std_logic;
          SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
@@ -112,6 +116,8 @@ begin
       mreg2          => mreg2,
       mreg3          => mreg3,
       midiRdy        => midiRdy,
+
+      tmpOut         => tmpOut,
 
       SVFwriteDelay  => SVFwriteDelay,
       SVFcur         => SVFcur,

@@ -16,6 +16,8 @@ entity Memory is
       newValue    : in std_logic_vector(REG_WIDTH - 1 downto 0);
       clk         : in std_logic;
 
+      tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
       tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
@@ -57,6 +59,8 @@ begin
    tileMapOut  <= helpTilemem(3 to 7) when rema = "000000" else
                   helpTilemem(11 to 15) when rema = "000001"  else
                   (others => '0');
+
+   tmpOut(REG_WIDTH/2 - 1 downto 0) <= mem(1024)(REG_WIDTH/2 - 1 downto 0);
 
 end Behavioral;
 

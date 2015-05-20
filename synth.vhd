@@ -43,6 +43,8 @@ architecture Behavioral of Synth is
          midiRdy           : in std_logic;
          srOut             : out std_logic_vector(7 downto 0);
 
+         tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
          SVFwriteDelay     : in std_logic;
          SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
          SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
@@ -178,6 +180,8 @@ architecture Behavioral of Synth is
 
    signal srSig      : std_logic_vector(7 downto 0);
 
+   signal memTemp    : std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
    signal XCountMSBBits       : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal YCountMSBBits       : std_logic_vector(HIGHER_BITS - 1 downto 0);
    signal tileAdressfromCPU   : std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0);
@@ -197,6 +201,8 @@ begin
       mreg3          => mreg3S,
       midiRdy        => midiRdyS,
       srOut          => srSig,
+
+      tmpOut         => memTemp,
 
       SVFwriteDelay  => saveDelayS,
       SVFcur         => sampleS,
@@ -301,7 +307,8 @@ begin
          when "00" => 
                an <= "0111";
                --seg <= m1;
-               seg <= tmpS(11 downto 4);
+               --seg <= tmpS(11 downto 4);
+               seg <= memTemp;
                --seg <= (others => srSig(7));
          when "01" => 
                an <= "1011";

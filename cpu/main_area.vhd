@@ -17,6 +17,8 @@ entity MainArea is
       mreg3             : in std_logic_vector(MIDI_WIDTH - 1 downto 0);
       midiRdy           : in std_logic;
 
+      tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
       SVFwriteDelay     : in std_logic;
       SVFcur            : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       SVFdelay1in       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
@@ -128,6 +130,8 @@ architecture Behavioral of MainArea is
          rst         : in std_logic;
          clk         : in std_logic;
 
+         tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
          tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
@@ -201,6 +205,7 @@ begin
       clk         => clk,
       tileXcnt    => tileXcnt,
       tileYcnt    => tileYcnt,
+      tmpOut      => tmpOut,
       tileMapOut  => tileMapOut
    );
 

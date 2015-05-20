@@ -16,6 +16,8 @@ entity MemArea is
       rst      : in std_logic;
       clk      : in std_logic;
 
+      tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
+
       tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
       tileMapOut  : out std_logic_vector(TILE_MEM_ADRESS_BITS - 1 downto 0)
@@ -30,6 +32,8 @@ architecture Behavioral of MemArea is
          doWrite  : in std_logic;
          newValue : in std_logic_vector(REG_WIDTH - 1 downto 0);
          clk      : in std_logic;
+
+         tmpOut      : out std_logic_vector(REG_WIDTH/2 - 1 downto 0);
 
          tileXcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
          tileYcnt    : in std_logic_vector(HIGHER_BITS - 1 downto 0);
@@ -81,6 +85,8 @@ begin
       doWrite  => memWrite,
       newValue => z3,
       clk      => clk,
+      
+      tmpOut      => tmpOut,
 
       tileXcnt => tileXcnt,
       tileYcnt => tileYcnt,

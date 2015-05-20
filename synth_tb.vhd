@@ -46,7 +46,7 @@ end component;
 
 
    signal midi_msg      : std_logic_vector(0 to midi_msg_width) := B"0_0111_1111_1" & B"0_0111_1111_1" & B"0_0111_1111_1" &
-                                                                   B"0_0000_1001_1" & B"0_0110_1100_1" & B"0_1100_0100_1";
+                                                                   B"0_0000_1001_1" & B"0_1111_1100_1" & B"0_1100_0100_1";
 
    constant UART_CLK_PERIOD  		   : natural := 3200;
 
