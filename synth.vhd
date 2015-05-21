@@ -114,23 +114,23 @@ architecture Behavioral of Synth is
    --end component;
 
 
-   component SVF is
-      port(
-         sample      : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay1in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay2in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay1out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         svfType     : in std_logic_vector(1 downto 0);
-         loadFilter  : in std_logic;
-         saveDelay   : out std_logic;
-         rst         : in std_logic;
-         clk         : in std_logic
-      );
-   end component;
+   --component SVF is
+   --   port(
+   --      sample      : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      delay1in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      delay2in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      delay1out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   --      svfType     : in std_logic_vector(1 downto 0);
+   --      loadFilter  : in std_logic;
+   --      saveDelay   : out std_logic;
+   --      rst         : in std_logic;
+   --      clk         : in std_logic
+   --   );
+   --end component;
 
    --component Touch is
    --   port(
@@ -250,21 +250,21 @@ begin
    );
 
 
-   SVFc : SVF port map(
-      sample      => sampleS,
-      delay1in    => delay1outS,
-      delay2in    => delay2outS,
-      output      => outputS,
-      delay1out   => delay1inS,
-      delay2out   => delay2inS,
-      f           => fS,
-      q           => qS,
-      svfType     => svfType,
-      loadFilter  => loadFilterS,
-      saveDelay   => saveDelayS,
-      rst         => rst,
-      clk         => clk
-   );
+   --SVFc : SVF port map(
+   --   sample      => sampleS,
+   --   delay1in    => delay1outS,
+   --   delay2in    => delay2outS,
+   --   output      => outputS,
+   --   delay1out   => delay1inS,
+   --   delay2out   => delay2inS,
+   --   f           => fS,
+   --   q           => qS,
+   --   svfType     => svfType,
+   --   loadFilter  => loadFilterS,
+   --   saveDelay   => saveDelayS,
+   --   rst         => rst,
+   --   clk         => clk
+   --);
 
 
    --LCDareai :  LCDArea port map(
