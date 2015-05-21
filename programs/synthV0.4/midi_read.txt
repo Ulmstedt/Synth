@@ -50,12 +50,14 @@ CMPU.R   #R_NOTE, #R_G3                               ; Compare the current voic
 BNCC     #SR_Z, #NEXT_CLEAR_ITR                       ; If they're the same, clear this note from memory
 NOP
 LOAD.C   #R_G4, 0
+NOP
 STORE.OR 0, #R_G4, #R_VOICES_LOOP                     ; Reset note if note off
 
 &NEXT_CLEAR_ITR
 SUBU.C   #R_G5, 1                                     ; Decrement the voice counter
 ADDU.C   #R_VOICES_LOOP, #M_VOICES_SIZE               ; Increase R_VOICES_LOOP with the size of one voice in memory
 BRA      #CLEAR_NOTE
+NOP
 
 &NOTE_STORED
 BRA      #POST_MIDI

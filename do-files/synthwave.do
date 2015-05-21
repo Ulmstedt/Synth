@@ -1,9 +1,8 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate -format Literal /synth_tb/synt/sout/sound_output/sample
+add wave -noupdate -format Literal /synth_tb/synt/sout/sound_output/samplebuffer
 add wave -noupdate -format Literal /synth_tb/synt/cpu/main/mem/mem/mem
-add wave -noupdate -format Literal /synth_tb/synt/cpu/main/mem/mem/mem(1024)
-add wave -noupdate -format Literal /synth_tb/synt/cpu/main/mem/mem/mem(1025)
 add wave -noupdate -format Logic /synth_tb/synt/cpu/main/regs/st1t/finished
 add wave -noupdate -format Literal /synth_tb/synt/cpu/main/regs/ir2
 add wave -noupdate -format Literal -label ir3 /synth_tb/synt/cpu/main/ir3/reg
