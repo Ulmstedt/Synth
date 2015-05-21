@@ -1,3 +1,4 @@
+LOAD.C      #R_ST1, #FSTIME         ; Load the fs timer
 LOAD.C      #R_G0, #MAX_VOICES      ; Reset the memory, since the normal reset isn't used for the memory
 LOAD.C      #R_G2, #M_VOICES_SIZE   ; Load max voices and lenght of a voice in to registers, to bitshift
 BSL.C       #R_G0, 8                ; since MUL works on fixed point values
@@ -9,12 +10,14 @@ MUL.R       #R_G0, #R_G2            ; "max voices" * "length of one voice" is th
 NOP
 STORE.OR    #M_VOICES_RESET, #R_G1, #R_G0 ; Clear it!
 NOP
-SUB.C      #R_G0, 1                ; Decrease G0!
+SUB.C       #R_G0, 1                ; Decrease G0!
 CMPU.C      #R_G0, 0                ; End only when whole has been stepped through 
 NOP
 BNCC        #SR_Z, #RESET           
 NOP
-LOAD.C      #R_ST1, #FSTIME         ; Load the fs timer
+LOAD.C      #SVF_F, %110100101      ; Load filter constants
+LOAD.C      #SVF_Q, $2000           ; Load filter constants
+
 
 &MAINLOOP_START
 BRA         #MIDI_START

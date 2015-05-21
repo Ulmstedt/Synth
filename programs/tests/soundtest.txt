@@ -1,10 +1,12 @@
 CONSTANT upper, $0FFF
 
-LOAD.C   #SVF_F, $0020
+LOAD.C   #SVF_F, %110100101
 LOAD.C   #SVF_Q, $0100
 
 &start
 LOAD.C   #SVF_IN, #upper
+NOP
+NOP
 MOVE     #R_AUDIO, #SVF_OUT
 LOAD.C   #R_ST1, 62000
 
@@ -12,6 +14,8 @@ LOAD.C   #R_ST1, 62000
 BNCC     #SR_ST1, #pos1
 NOP
 LOAD.C   #SVF_IN, 0
+NOP
+NOP 
 MOVE     #R_AUDIO, #SVF_OUT
 LOAD.C   #R_ST1, 62000
 

@@ -1,0 +1,64 @@
+&MIDI_START
+
+BNCC     #SR_MIDI, #POST_MIDI
+NOP
+
+MOVE     #R_NOTE, #R_MREG12                           ; Store note
+AND.C    #R_NOTE, $00FF
+MOVE     #R_VEL, #R_MREG3                             ; Store velocity
+
+LOAD.C   #R_G5, #MAX_VOICES                           ; Counter used to make sure we do not exceed max voices
+
+LOAD.C   #R_VOICES_LOOP, #M_VOICES
+CMPU.C   #R_VEL, 0                                    ; Check if velocity is 0
+BCC      #SR_Z, #CLEAR_NOTE                           ; If vel != 0, we save the voice (note)key, else we clear it
+NOP
+
+&FIND_SLOT
+CMPU.C   #R_G5, 0                                     ; If the G5 counter (voice counter) has reached zero, no free slot is available
+BCC      #SR_Z, #NOTE_STORED
+NOP
+
+LOAD.OR  #R_G4, 0, #R_VOICES_LOOP                     ; Load the note in #R_VOICES_LOOP into reg 4, used to check if it's a free slot
+CMPU.C   #R_G4, 0                                     ; If R_G4 is zero, we can use this slot
+BCC      #SR_Z, #SAVE_NOTE
+NOP
+
+SUBU.C   #R_G5, 1                                     ; Decrement the voice counter
+ADDU.C   #R_VOICES_LOOP, #M_VOICES_SIZE               ; Increase R_VOICES_LOOP with the size of one voice in memory
+BRA      #FIND_SLOT
+NOP
+
+&SAVE_NOTE
+STORE.OR #M_NOTE_OFFSET, #R_NOTE, #R_VOICES_LOOP      ;slot found, save the note into memory
+LOAD.C   #R_G4, 0
+STORE.OR #M_STEP_OFFSET, #R_G4, #R_VOICES_LOOP        ; The step counter at offset 1
+LOAD.C   #R_G4, $1000
+STORE.OR #M_AMP_OFFSET, #R_G4, #R_VOICES_LOOP         ; The amplitude at offset 2
+BRA      #NOTE_STORED
+NOP
+
+
+
+&CLEAR_NOTE
+CMPU.C   #R_G5, 0                                     ; As above, when voice counter has reached zero, end
+BCC      #SR_Z, #NOTE_STORED
+NOP
+
+LOAD.OR  #R_G3, 0, #R_VOICES_LOOP                     ; Fetch this voice's key
+CMPU.R   #R_NOTE, #R_G3                               ; Compare the current voice's key with the key recieved
+BNCC     #SR_Z, #NEXT_CLEAR_ITR                       ; If they're the same, clear this note from memory
+NOP
+LOAD.C   #R_G4, 0
+NOP
+STORE.OR 0, #R_G4, #R_VOICES_LOOP                     ; Reset note if note off
+
+&NEXT_CLEAR_ITR
+SUBU.C   #R_G5, 1                                     ; Decrement the voice counter
+ADDU.C   #R_VOICES_LOOP, #M_VOICES_SIZE               ; Increase R_VOICES_LOOP with the size of one voice in memory
+BRA      #CLEAR_NOTE
+NOP
+
+&NOTE_STORED
+BRA      #POST_MIDI
+NOP

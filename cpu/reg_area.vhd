@@ -113,6 +113,10 @@ architecture Behavioral of RegArea is
    signal delay1read : std_logic;
    signal delay2read : std_logic;
 
+   -- Filter signals
+   signal runNow     : std_logic;
+   signal runLast    : std_logic;
+
 
 begin
    -- Generic Registers
@@ -363,7 +367,8 @@ begin
    begin
       if rising_edge(clk) then
 
-         SVFrun <= writeReg(22); -- If SVFin reg was written to, run the filter         
+         runNow   <= writeReg(22); -- If SVFin reg was written to, run the filter  
+         runLast  <= runNow;       -- Needs to be high two consec. clk pulses
 
          for I in SR_WIDTH - 1 downto 0 loop
             if resetSR(I) = '1' or rst = '1' then
@@ -376,6 +381,8 @@ begin
          end loop;
       end if;
    end process;
+   SVFrun <= runLast or runNow;
+   
    SRsig <= (( SRin(SR_WIDTH - 1 downto 9) &
                coordReady & midiRdy & st2done & st1done & lt1done)
             or SRlast(SR_WIDTH - 1 downto 4)) & SRin(3 downto 0);

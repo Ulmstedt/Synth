@@ -114,23 +114,23 @@ architecture Behavioral of Synth is
    --end component;
 
 
-   --component SVF is
-   --   port(
-   --      sample      : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      delay1in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      delay2in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      delay1out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   --      svfType     : in std_logic_vector(1 downto 0);
-   --      loadFilter  : in std_logic;
-   --      saveDelay   : out std_logic;
-   --      rst         : in std_logic;
-   --      clk         : in std_logic
-   --   );
-   --end component;
+   component SVF is
+      port(
+         sample      : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay1in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay2in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay1out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         delay2out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         q           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+         svfType     : in std_logic_vector(1 downto 0);
+         loadFilter  : in std_logic;
+         saveDelay   : out std_logic;
+         rst         : in std_logic;
+         clk         : in std_logic
+      );
+   end component;
 
    --component Touch is
    --   port(
@@ -173,6 +173,7 @@ architecture Behavioral of Synth is
    signal loadFilterS: std_logic;
    signal saveDelayS : std_logic;
    signal svfType    : std_logic_vector(1 downto 0);
+   signal svfClk     : std_logic := '0';
 
    signal counter_r  :  unsigned(17 downto 0) := "000000000000000000";
 
@@ -250,21 +251,21 @@ begin
    );
 
 
-   --SVFc : SVF port map(
-   --   sample      => sampleS,
-   --   delay1in    => delay1outS,
-   --   delay2in    => delay2outS,
-   --   output      => outputS,
-   --   delay1out   => delay1inS,
-   --   delay2out   => delay2inS,
-   --   f           => fS,
-   --   q           => qS,
-   --   svfType     => svfType,
-   --   loadFilter  => loadFilterS,
-   --   saveDelay   => saveDelayS,
-   --   rst         => rst,
-   --   clk         => clk
-   --);
+   SVFc : SVF port map(
+      sample      => sampleS,
+      delay1in    => delay1outS,
+      delay2in    => delay2outS,
+      output      => outputS,
+      delay1out   => delay1inS,
+      delay2out   => delay2inS,
+      f           => fS,
+      q           => qS,
+      svfType     => svfType,
+      loadFilter  => loadFilterS,
+      saveDelay   => saveDelayS,
+      rst         => rst,
+      clk         => svfClk
+   );
 
 
    --LCDareai :  LCDArea port map(
@@ -300,28 +301,28 @@ begin
    --);
 
    process(clk) begin
-     if rising_edge(clk) then 
-       counter_r <= counter_r + 1;
-
-      case counter_r(17 downto 16) is
-         when "00" => 
-               an <= "0111";
-               --seg <= m1;
-               --seg <= tmpS(11 downto 4);
-               seg <= memTemp;
-               --seg <= (others => srSig(7));
-         when "01" => 
-               an <= "1011";
-               seg <= mreg1S;
-               --seg <= tmpS(3 downto 0)&"1111";
-         when "10" => 
-               an <= "1101";
-               seg <= mreg2S;
-         when others => 
-               an <= "1110";
-               seg <= mreg3S;
-      end case;
-     end if;
+      if rising_edge(clk) then 
+         counter_r <= counter_r + 1;
+         svfClk <= not svfClk;
+         case counter_r(17 downto 16) is
+            when "00" => 
+                  an <= "0111";
+                  --seg <= m1;
+                  --seg <= tmpS(11 downto 4);
+                  seg <= memTemp;
+                  --seg <= (others => srSig(7));
+            when "01" => 
+                  an <= "1011";
+                  seg <= mreg1S;
+                  --seg <= tmpS(3 downto 0)&"1111";
+            when "10" => 
+                  an <= "1101";
+                  seg <= mreg2S;
+            when others => 
+                  an <= "1110";
+                  seg <= mreg3S;
+         end case;
+      end if;
    end process;
    
    --sclk <= '1'; -- or '1'?

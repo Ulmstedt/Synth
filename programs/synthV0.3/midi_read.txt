@@ -18,7 +18,6 @@ STORE.OR 1, #R_G4, #R_VOICES_LOOP      ; The step counter at offset 1
 BRA #NOTE_STORED
 NOP
 &CLEAR_NOTE
-NOP
 LOAD.C   #R_G4, 0
 STORE.OR 0, #R_G4, #R_VOICES_LOOP      ; Reset note if note off
 &NOTE_STORED
