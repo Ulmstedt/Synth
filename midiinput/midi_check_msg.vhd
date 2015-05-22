@@ -31,6 +31,7 @@ begin
 	with mreg1S(MIDI_WIDTH-1 downto 4) select valid <=
 	   '1' when "1000",
 	   '1' when "1001",
+      '1' when "1011",
 	   '0' when others;
    
    -- Master

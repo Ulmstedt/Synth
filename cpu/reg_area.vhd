@@ -68,7 +68,10 @@ architecture Behavioral of RegArea is
    end component;
 
    component Timer is
-      generic(timer_width : natural := REG_WIDTH);
+      generic(
+         timer_width : natural   := REG_WIDTH;
+         continuous  : boolean   := false   
+      );
       port(
          loadValue   : in std_logic_vector(timer_width - 1 downto 0);
          finished    : out std_logic;
@@ -184,7 +187,7 @@ begin
       clk      => clk
    );
    st1t : Timer
-   generic map(timer_width => REG_WIDTH)
+   generic map(timer_width => REG_WIDTH, continuous => true)
    port map(
       loadValue   => st1,
       finished    => st1done,

@@ -19,7 +19,6 @@ add wave -noupdate -format Logic /synth_tb/synt/savedelays
 add wave -noupdate -format Logic /synth_tb/synt/svfc/loadfilter
 add wave -noupdate -divider phase0
 add wave -noupdate -format Literal /synth_tb/synt/svfc/qmult
-add wave -noupdate -format Literal /synth_tb/synt/svfc/subint
 add wave -noupdate -format Literal /synth_tb/synt/svfc/sub
 add wave -noupdate -divider phase1
 add wave -noupdate -format Literal /synth_tb/synt/svfc/p1/input

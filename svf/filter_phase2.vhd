@@ -13,19 +13,19 @@ entity Filter_Phase_2 is
    port(
       -- Since the output from the register will be delayed one CP
       -- the actual delay is handled by the register, not this phase
-      input       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-      delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-      delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-      output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      input       : in integer;
+      delay_in    : in integer;
+      delay_out   : out integer;
+      output      : out integer;
       bp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0)
    );
 end Filter_Phase_2;
 
 architecture Behavioral of Filter_Phase_2 is
-   signal addition   : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal addition : integer;
 begin
-   addition    <= std_logic_vector(unsigned(input) + unsigned(delay_in));
+   addition    <= input + delay_in;
    delay_out   <= addition;
-   bp_out      <= addition;
+   bp_out      <= std_logic_vector(to_signed(addition, AUDIO_WIDTH));
    output      <= delay_in;
 end Behavioral;

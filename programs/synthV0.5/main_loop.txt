@@ -15,12 +15,12 @@ CMPU.C      #R_G0, 0                ; End only when whole has been stepped throu
 NOP
 BNCC        #SR_Z, #RESET           
 NOP
-LOAD.C      #SVF_F, %110100101      ; Load filter constants
-LOAD.C      #SVF_Q, $2000           ; Load filter constants
+STORE.C     #M_FREQ, %110100101      ; Load filter frequency with default value
+STORE.C     #M_RES,  $2000           ; Load filter resonance with default value
 
 
 &MAINLOOP_START
-BRA         #MIDI_START
+BCC         #SR_MIDI, #MIDI_START
 NOP
 &POST_MIDI
 BCC         #SR_ST1, #AUDIO_START

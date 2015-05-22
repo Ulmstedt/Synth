@@ -14,8 +14,8 @@
 -- pre-addition, then the multiplication and lastly an addition, thus the first step
 -- would take up a whole slice.
 -- 
--- The whole filter works with unsigned values, obviously, since the output to the
--- sound chip is unsigned (moving the speaker-element(s) inwards makes little sense!)
+-- The whole filter works with unsigned values, obviously, since the output to the    ######## NOPE, CHANGE THIS #########
+-- sound chip is unsigned (moving the speaker-element(s) inwards makes little sense!) ######## NOPE, CHANGE THIS #########
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -44,46 +44,50 @@ end SVF;
 architecture Behavioral of SVF is
    component Filter_Phase_1 is
       port(
-         input    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         output   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         hp_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         f        : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
+      input    : in integer;
+      output   : out integer;
+      hp_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      f        : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
       );
    end component;
 
    component Filter_Phase_2 is
       port(
-         input       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         output      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         bp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0)
+      input       : in integer;
+      delay_in    : in integer;
+      delay_out   : out integer;
+      output      : out integer;
+      bp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0)
       );
    end component;
 
    component Filter_Phase_3 is
       port(
-         input       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         lp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-         f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
+      input       : in integer;
+      delay_in    : in integer;
+      delay_out   : out integer;
+      lp_out      : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+      f           : in std_logic_vector(AUDIO_WIDTH - 1 downto 0)
       );
    end component;
    
    signal qmult      : std_logic_vector(2*AUDIO_WIDTH - 1 downto 0);
-   signal subInt     : integer;
-   signal sub        : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal sub        : integer;
 
    signal lp_out     : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal bp_out     : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal hp_out     : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
 
-   signal phase1out  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
-   signal phase2out  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
+   signal phase1out  : integer;
+   signal phase2out  : integer;
 
    signal loadedVal  : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal savePulse  : std_logic; 
+
+   signal d1outInt   : integer;
+   signal d2outInt   : integer;
+   signal d1inInt    : integer;
+   signal d2inInt    : integer;
 begin
    p1 : Filter_Phase_1 port map(
       input    => sub,
@@ -94,25 +98,30 @@ begin
 
    p2 : Filter_Phase_2 port map(
       input       => phase1out,
-      delay_in    => delay1in,
-      delay_out   => delay1out,
+      delay_in    => d1inInt,
+      delay_out   => d1outInt,
       output      => phase2out,
       bp_out      => bp_out
    );
 
    p3 : Filter_Phase_3 port map(
       input       => phase2out,
-      delay_in    => delay2in,
-      delay_out   => delay2out,
+      delay_in    => d2inInt,
+      delay_out   => d2outInt,
       lp_out      => lp_out,
       f           => f
    );
 
-   qmult    <= std_logic_vector(unsigned(q) * unsigned(phase2out));
+   qmult    <= std_logic_vector(to_signed(to_integer(unsigned(q)) * phase2out, AUDIO_WIDTH*2));
 
-   subInt   <= to_integer(unsigned(sample)) - to_integer(unsigned(lp_out)) - 
-               to_integer(unsigned(qmult(7*AUDIO_WIDTH / 4 - 1 downto 3 * AUDIO_WIDTH / 4)));
-   sub      <= std_logic_vector(to_unsigned(subInt, AUDIO_WIDTH)) when subInt > 0 else (others => '0');
+   sub      <= to_integer(signed(sample)) - to_integer(signed(lp_out)) - 
+               to_integer(signed(qmult(7*AUDIO_WIDTH / 4 - 1 downto 3 * AUDIO_WIDTH / 4)));
+
+   -- Convert to and from integer
+   delay1out   <= std_logic_vector(to_signed(d1outInt, AUDIO_WIDTH));
+   delay2out   <= std_logic_vector(to_signed(d1outInt, AUDIO_WIDTH));
+   d1inInt     <= to_integer(signed(delay1in));
+   d2inInt     <= to_integer(signed(delay2in));
 
    process(clk) is
    begin
