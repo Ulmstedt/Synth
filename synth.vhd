@@ -172,6 +172,7 @@ architecture Behavioral of Synth is
    signal qS         : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
    signal loadFilterS: std_logic;
    signal saveDelayS : std_logic;
+   signal halvedDelay: std_logic;
    signal svfType    : std_logic_vector(1 downto 0);
    signal svfClk     : std_logic := '0';
 
@@ -262,10 +263,12 @@ begin
       q           => qS,
       svfType     => svfType,
       loadFilter  => loadFilterS,
-      saveDelay   => saveDelayS,
+      saveDelay   => halvedDelay,
       rst         => rst,
       clk         => svfClk
    );
+
+   saveDelayS <= halvedDelay and not loadFilterS;
 
 
    --LCDareai :  LCDArea port map(

@@ -72,6 +72,7 @@ architecture Behavioral of SVF is
    end component;
    
    signal qmult      : std_logic_vector(2*AUDIO_WIDTH - 1 downto 0);
+   signal subInt     : integer;
    signal sub        : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
 
    signal lp_out     : std_logic_vector(AUDIO_WIDTH - 1 downto 0);
@@ -107,12 +108,11 @@ begin
       f           => f
    );
 
-   qmult <= std_logic_vector(unsigned(q) * unsigned(phase2out));
+   qmult    <= std_logic_vector(unsigned(q) * unsigned(phase2out));
 
-   sub   <= std_logic_vector(
-               unsigned(sample) - unsigned(lp_out) -
-               unsigned(qmult(7*AUDIO_WIDTH / 4 - 1 downto 3 * AUDIO_WIDTH / 4))
-            );
+   subInt   <= to_integer(unsigned(sample)) - to_integer(unsigned(lp_out)) - 
+               to_integer(unsigned(qmult(7*AUDIO_WIDTH / 4 - 1 downto 3 * AUDIO_WIDTH / 4)));
+   sub      <= std_logic_vector(to_unsigned(subInt, AUDIO_WIDTH)) when subInt > 0 else (others => '0');
 
    process(clk) is
    begin
