@@ -82,7 +82,7 @@ NOP
 
 &CC_MODWHEEL
 MOVE     #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the freq between 0 and 2, in fixed point with 
-BSL.C    #R_G4, 5                                     ; 12 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
+BSL.C    #R_G4, 8                                     ; 15 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
 STORE.R  #M_FREQ, #R_G4                               ; Save it back to memory, we shift one less to be sure
 BRA      #POST_MIDI
 NOP
@@ -91,7 +91,7 @@ NOP
 &CC_VOLUME
 LOAD.C   #R_G4, 127
 SUB.C    #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the res between 0 and 2, in fixed point with
-BSL.C    #R_G4, 5                                     ; 12 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
+BSL.C    #R_G4, 8                                     ; 15 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
 STORE.R  #M_RES, #R_G4                                ; Save it back to memory, NOTE: ideally we should invert the result since res=2 => no resonance
 BRA      #POST_MIDI
 NOP

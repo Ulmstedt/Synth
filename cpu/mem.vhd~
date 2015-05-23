@@ -46,7 +46,7 @@ begin
                if isTilemap = '0' then
                   outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
                elsif isTilemap = '1' then
-                  outputZ4 <= tilemap(to_integer(unsigned(addr) mod MEM_HEIGHT) - TILE_MAP_OFFSET);
+                  outputZ4 <= tilemap(to_integer((unsigned(addr) - TILE_MAP_OFFSET) mod TILE_MAP_HEIGHT);
                else
                end if;
             end if;
@@ -54,14 +54,14 @@ begin
                if isTilemap = '0' then
                   mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
                elsif isTilemap = '1' then
-                  tilemap(to_integer(unsigned(addr) mod MEM_HEIGHT) - TILE_MAP_OFFSET) <= newValue;
+                  tilemap(to_integer((unsigned(addr) - TILE_MAP_OFFSET) mod TILE_MAP_HEIGHT) <= newValue;
                else
                end if;
             end if;
       end if;
    end process;
 
-   isTilemap <= '1' when to_integer(unsigned(addr)) >= TILE_MAP_OFFSET else
+   isTilemap <= '1' when to_integer(unsigned(addr) mod MEM_HEIGHT) >= TILE_MAP_OFFSET else
                 '0';
    
    --varje slot i mem tar 2 tiles

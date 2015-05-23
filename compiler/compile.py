@@ -42,6 +42,7 @@ constants = {
                "SVF_OUT":  "25",
                "SVF_F":    "26",
                "SVF_Q":    "27",
+               "SVF_SETUP":"28",
                "R_MREG12": "29",
                "R_MREG3":  "30",
                "R_AUDIO":  "31"

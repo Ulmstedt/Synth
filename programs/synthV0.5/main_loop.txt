@@ -16,7 +16,7 @@ NOP
 BNCC        #SR_Z, #RESET           
 NOP
 STORE.C     #M_FREQ, %110100101      ; Load filter frequency with default value
-STORE.C     #M_RES,  $2000           ; Load filter resonance with default value
+STORE.C     #M_RES,  $7FFF           ; Load filter resonance with default value
 
 
 &MAINLOOP_START

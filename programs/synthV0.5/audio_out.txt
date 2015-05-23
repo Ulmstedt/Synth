@@ -44,7 +44,9 @@ NOP
 MOVE        #SVF_IN, #R_OSCS1                ; Load the input, thus do one filter run
 NOP
 NOP
-MOVE        #R_AUDIO, #SVF_OUT               ; Retrieve the output once it's calulated (after one delay, but extra to be sure)
+NOP
+NOP
+MOVE        #R_AUDIO, #SVF_OUT               ; Retrieve the output once it's calulated (after some delay)
 BRA         #POST_AUDIO
 NOP
 

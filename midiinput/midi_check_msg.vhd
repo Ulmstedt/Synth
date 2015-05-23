@@ -32,6 +32,7 @@ begin
 	   '1' when "1000",
 	   '1' when "1001",
       '1' when "1011",
+      '1' when "1110",
 	   '0' when others;
    
    -- Master
