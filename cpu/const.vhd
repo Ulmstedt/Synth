@@ -8,6 +8,7 @@ package Constants is
    
    constant MEM_HEIGHT           : natural := 1024; --currently 2^12(255 slots in memory for the tilemap)
    constant TILE_MAP_OFFSET      : natural :=  768; --where tile map memory starts 4096-255
+   constant TILE_MAP_HEIGHT      : natural := 255;
     
    constant REG_NUM              : natural := 32;
    constant REG_BITS             : natural := 5;

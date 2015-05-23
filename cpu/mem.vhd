@@ -6,6 +6,7 @@ use IEEE.numeric_std.all;
 use work.constants.all;
 use work.records.all;
 use work.memContent.all;
+use work.tilemapContent.all;
 
 --Z4 now inside of memory
 entity Memory is
@@ -27,26 +28,41 @@ end Memory;
 
 architecture Behavioral of Memory is
    signal mem              : mem_t := memc;
+   signal tilemap          : tilemap_t := tilemapc;
    signal rema             : std_logic_vector(5 downto 0);
    signal helpTileMem      : std_logic_vector(0 to REG_WIDTH - 1);
    signal maxXcnt          : std_logic_vector(HIGHER_BITS - 1 downto 0); -- Max 30
    signal maxYcnt          : std_logic_vector(HIGHER_BITS - 1 downto 0); -- Max 17
+   signal isTilemap        : std_logic;
    
 begin
    process(clk) is
    begin
       if rising_edge(clk) then
-         if to_integer(unsigned(addr) mod MEM_HEIGHT) = 512 then
-            outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
-            tmpOut(REG_WIDTH/2 - 1 downto 0) <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT))(REG_WIDTH/2 - 1 downto 0);
-         else
-            outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
-         end if;
-         if doWrite = '1' then
-            mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
-         end if;
+            if to_integer(unsigned(addr) mod MEM_HEIGHT) = 512 then
+               outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
+               tmpOut(REG_WIDTH/2 - 1 downto 0) <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT))(REG_WIDTH/2 - 1 downto 0);
+            else
+               if isTilemap = '0' then
+                  outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
+               elsif isTilemap = '1' then
+                  outputZ4 <= tilemap(to_integer(unsigned(addr) mod MEM_HEIGHT) - TILE_MAP_OFFSET);
+               else
+               end if;
+            end if;
+            if doWrite = '1' then
+               if isTilemap = '0' then
+                  mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
+               elsif isTilemap = '1' then
+                  tilemap(to_integer(unsigned(addr) mod MEM_HEIGHT) - TILE_MAP_OFFSET) <= newValue;
+               else
+               end if;
+            end if;
       end if;
    end process;
+
+   isTilemap <= '1' when to_integer(unsigned(addr) mod MEM_HEIGHT) >= TILE_MAP_OFFSET else
+                '0';
    
    --varje slot i mem tar 2 tiles
    --en rad på skärmen = 30 tiles
@@ -55,16 +71,16 @@ begin
    --Antar att det gäller heltals division t e x 5/3 = 1, 5 rem 3 = 2
    -- XXXX XXXX XXXX XXXX
 
-   --maxXcnt <= tileXcnt when to_integer(unsigned(tileXcnt)) <= 29 else std_logic_vector(to_unsigned(29,HIGHER_BITS));
-   --maxYcnt <= tileYcnt when to_integer(unsigned(tileYcnt)) <= 16 else std_logic_vector(to_unsigned(16,HIGHER_BITS)); 
-   --rema <= std_logic_vector(to_unsigned(to_integer(unsigned(maxXcnt)) rem 2, 6));
-   --helpTileMem <= mem(TILE_MAP_OFFSET + to_integer(unsigned(maxYcnt)) * 15 + to_integer(unsigned(maxXcnt)) / 2);
+   maxXcnt <= tileXcnt when to_integer(unsigned(tileXcnt)) <= 29 else std_logic_vector(to_unsigned(29,HIGHER_BITS));
+   maxYcnt <= tileYcnt when to_integer(unsigned(tileYcnt)) <= 16 else std_logic_vector(to_unsigned(16,HIGHER_BITS)); 
+   rema <= std_logic_vector(to_unsigned(to_integer(unsigned(maxXcnt)) rem 2, 6));
+   helpTileMem <= tilemap(to_integer(unsigned(maxYcnt)) * 15 + to_integer(unsigned(maxXcnt)) / 2);
    
    
-   --tileMapOut  <= helpTilemem(3 to 7) when rema = "000000" else
-   --               helpTilemem(11 to 15) when rema = "000001"  else
-   --               (others => '0');
-   tileMapOut <= (others => '0');
+   tileMapOut  <= helpTilemem(3 to 7) when rema = "000000" else
+                  helpTilemem(11 to 15) when rema = "000001"  else
+                  (others => '0');
+   
    --tmpOut <= (others => '0');
    
 end Behavioral;
