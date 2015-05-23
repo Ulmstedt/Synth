@@ -88,6 +88,9 @@ architecture Behavioral of SVF is
    signal d2outInt   : integer;
    signal d1inInt    : integer;
    signal d2inInt    : integer;
+
+   signal d1temp     : std_logic_vector(AUDIO_WIDTH downto 0);
+   signal d2temp     : std_logic_vector(AUDIO_WIDTH downto 0);
 begin
    p1 : Filter_Phase_1 port map(
       input    => sub,
@@ -118,8 +121,10 @@ begin
                to_integer(signed(qmult(7*AUDIO_WIDTH / 4 - 1 downto 3 * AUDIO_WIDTH / 4)));
 
    -- Convert to and from integer
-   delay1out   <= std_logic_vector(to_signed(d1outInt, AUDIO_WIDTH));
-   delay2out   <= std_logic_vector(to_signed(d1outInt, AUDIO_WIDTH));
+   d1temp      <= std_logic_vector(to_signed(d1outInt, AUDIO_WIDTH + 1));
+   delay1out   <= d1temp(AUDIO_WIDTH - 1 downto 0);
+   d2temp      <= std_logic_vector(to_signed(d2outInt, AUDIO_WIDTH + 1));
+   delay2out   <= d2temp(AUDIO_WIDTH - 1 downto 0);
    d1inInt     <= to_integer(signed(delay1in));
    d2inInt     <= to_integer(signed(delay2in));
 

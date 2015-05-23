@@ -175,6 +175,7 @@ architecture Behavioral of Synth is
    signal halvedDelay: std_logic;
    signal svfType    : std_logic_vector(1 downto 0);
    signal svfClk     : std_logic := '0';
+   signal lastLoad   : std_logic := '0';
 
    signal counter_r  :  unsigned(17 downto 0) := "000000000000000000";
 
@@ -268,7 +269,13 @@ begin
       clk         => svfClk
    );
 
-   saveDelayS <= halvedDelay and not loadFilterS;
+   process(clk) is
+   begin
+      if rising_edge(clk) then
+         lastLoad <= loadFilterS;
+         saveDelayS <= lastLoad and not loadFilterS;
+      end if;
+   end process;
 
 
    --LCDareai :  LCDArea port map(

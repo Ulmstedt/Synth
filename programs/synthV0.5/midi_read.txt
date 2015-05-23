@@ -1,7 +1,6 @@
 &MIDI_START
 MOVE     #R_MIDIMSG, #R_MREG12                        ; Retrieve the midi type portion of MREG12, but first retrieve it all
 BSR.C    #R_MIDIMSG, 12                               ; Bitshift, only interested in the highest 4 bits of the register
-AND.C    #R_MIDIMSG, $000F                            ; Mask out the lowest, just to be sure compare works only on highest bits
 
 MOVE     #R_NOTE, #R_MREG12                           ; Store note/cc number
 AND.C    #R_NOTE, $00FF
@@ -37,7 +36,7 @@ NOP
 STORE.OR #M_NOTE_OFFSET, #R_NOTE, #R_VOICES_LOOP      ; slot found, save the note into memory
 LOAD.C   #R_G4, 0
 STORE.OR #M_STEP_OFFSET, #R_G4, #R_VOICES_LOOP        ; The step counter at offset 1
-LOAD.C   #R_G4, $1000
+LOAD.C   #R_G4, #AMP_MUL
 STORE.OR #M_AMP_OFFSET, #R_G4, #R_VOICES_LOOP         ; The amplitude at offset 2
 BRA      #NOTE_STORED
 NOP
@@ -70,10 +69,10 @@ NOP
 
 
 &CC_MESSAGE
-CMPU.C   #R_VEL, #MIDI_CC_MOD                         ; Check if it's the mod wheel CC message (freq)
+CMPU.C   #R_NOTE, #MIDI_CC_MOD                        ; Check if it's the mod wheel CC message (freq)
 BCC      #SR_Z,  #CC_MODWHEEL                         ; if so, go to the routine handling that
 NOP
-CMPU.C   #R_VEL, #MIDI_CC_VOLUME                      ; Check if it's the volume CC message (resonance)
+CMPU.C   #R_NOTE, #MIDI_CC_VOLUME                     ; Check if it's the volume CC message (resonance)
 BCC      #SR_Z,  #CC_VOLUME                           ; if so, go to the routine handling that
 NOP
 
@@ -82,16 +81,17 @@ NOP
 
 
 &CC_MODWHEEL
-LOAD.C   #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the freq between 0 and 2, in fixed point with 
-BSL.C    #R_G4, 6                                     ; 12 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
-STORE.R  #M_FREQ, #R_G4                               ; Save it back to memory
+MOVE     #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the freq between 0 and 2, in fixed point with 
+BSL.C    #R_G4, 5                                     ; 12 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
+STORE.R  #M_FREQ, #R_G4                               ; Save it back to memory, we shift one less to be sure
 BRA      #POST_MIDI
 NOP
 
 
 &CC_VOLUME
-LOAD.C   #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the res between 0 and 2, in fixed point with 
-BSL.C    #R_G4, 6                                     ; 12 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
+LOAD.C   #R_G4, 127
+SUB.C    #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the res between 0 and 2, in fixed point with
+BSL.C    #R_G4, 5                                     ; 12 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
 STORE.R  #M_RES, #R_G4                                ; Save it back to memory, NOTE: ideally we should invert the result since res=2 => no resonance
 BRA      #POST_MIDI
 NOP
