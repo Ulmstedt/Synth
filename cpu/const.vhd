@@ -1,7 +1,7 @@
 package Constants is
    constant PMEM_WIDTH           : natural := 32;
    constant ADDR_WIDTH           : natural := 11;
-   constant PMEM_HEIGHT          : natural := 256;
+   constant PMEM_HEIGHT          : natural := 512;
 
    constant MIDI_WIDTH           : natural := 8;
    constant AUDIO_WIDTH          : natural := 16;

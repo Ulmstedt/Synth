@@ -39,25 +39,18 @@ begin
    process(clk) is
    begin
       if rising_edge(clk) then
-            if to_integer(unsigned(addr) mod MEM_HEIGHT) = 512 then
-               outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
-               tmpOut(REG_WIDTH/2 - 1 downto 0) <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT))(REG_WIDTH/2 - 1 downto 0);
-            else
-               if isTilemap = '0' then
-                  outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
-               elsif isTilemap = '1' then
-                  outputZ4 <= tilemap(to_integer((unsigned(addr) - TILE_MAP_OFFSET) mod TILE_MAP_HEIGHT));
-               else
-               end if;
+         if isTilemap = '0' then
+            outputZ4 <= mem(to_integer(unsigned(addr) mod MEM_HEIGHT));
+         elsif isTilemap = '1' then
+            outputZ4 <= tilemap(to_integer((unsigned(addr) - TILE_MAP_OFFSET) mod TILE_MAP_HEIGHT));
+         end if;
+         if doWrite = '1' then
+            if isTilemap = '0' then
+               mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
+            elsif isTilemap = '1' then
+               tilemap(to_integer((unsigned(addr) - TILE_MAP_OFFSET) mod TILE_MAP_HEIGHT)) <= newValue;
             end if;
-            if doWrite = '1' then
-               if isTilemap = '0' then
-                  mem(to_integer(unsigned(addr)) mod MEM_HEIGHT) <= newValue;
-               elsif isTilemap = '1' then
-                  tilemap(to_integer((unsigned(addr) - TILE_MAP_OFFSET) mod TILE_MAP_HEIGHT)) <= newValue;
-               else
-               end if;
-            end if;
+         end if;
       end if;
    end process;
 
