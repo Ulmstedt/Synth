@@ -16,6 +16,12 @@ LOAD.OR     #R_STEP, 1, #R_VOICES_LOOP       ; Load the step counter and increme
 ADD.C       #R_STEP, 1
 MULD.R      #R_NOTEMUL, #R_STEP              ; Do the multiplaction with freq*wavetable/samplefreq
 
+BITTEST.C   #R_NOTEMUL, 6                    ; Check if the 6th bit is set, thus we've stepped through a whole wave and need to reset counter
+BCC         #SR_Z, #SAVE_COUNTER
+NOP
+LOAD.C      #R_STEP, 0                       ; And we reset the counter
+&SAVE_COUNTER
+
 ADD.C       #R_VOICES_LOOP, 1
 STORE.OR    0, #R_STEP, #R_VOICES_LOOP       ; Store the new counter back into memory
 SUB.C       #R_VOICES_LOOP, 1
@@ -24,9 +30,34 @@ AND.C       #R_NOTEMUL, %0000000000111111    ; Modulo 64
 ADD.R       #R_NOTEMUL, #R_WAVE_OFFSET       ; Add the memory offset of the current wave to note multiplier
 LOAD.OR     #R_G4, #FIRST_WAVE, #R_NOTEMUL
 
-LOAD.OR     #R_G3, 2, #R_VOICES_LOOP         ; Get the amplitude multiplier
-MULD.R      #R_G4, #R_G3
+CMPU.C      #R_AMT_OF_VOICES, 3              ; Check the amount of voices that is played, and decrease
+BNCC        #SR_N, #AMP_5                    ; each voice's amplitude accordingly
+NOP 
+BITTEST.C   #R_G4, 15
+BCC         #SR_Z, #AMP_5
+BSR.C       #R_G4, 1
+OR.C        #R_G4, $8000
+BRA         #DONE_WITH_AMP 
+NOP        
 
+&AMP_5
+CMPU.C      #R_AMT_OF_VOICES, 5
+BNCC        #SR_N, #AMP_9
+NOP 
+BITTEST.C   #R_G4, 15
+BCC         #SR_Z, #AMP_9
+BSR.C       #R_G4, 2
+OR.C        #R_G4, $C000
+BRA         #DONE_WITH_AMP
+NOP
+
+&AMP_9
+BITTEST.C   #R_G4, 15
+BCC         #SR_Z, #DONE_WITH_AMP
+BSR.C       #R_G4, 4
+OR.C        #R_G4, $F000
+
+&DONE_WITH_AMP
 ADD.R       #R_OSCS1, #R_G4
 
 &OUTPUT_NOTHING

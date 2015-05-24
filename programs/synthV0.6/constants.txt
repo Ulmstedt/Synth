@@ -14,6 +14,7 @@ CONSTANT    R_MIDIMSG,                 10
 CONSTANT    R_MODIFIER,                11
 CONSTANT    R_WAVE,                    12
 CONSTANT    R_WAVE_OFFSET,             13
+CONSTANT    R_AMT_OF_VOICES,           8
 
 CONSTANT    R_VOICES_LOOP, 2
 CONSTANT    M_VOICES,      512
