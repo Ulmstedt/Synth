@@ -30,28 +30,6 @@ AND.C       #R_NOTEMUL, %0000000000111111    ; Modulo 64
 ADD.R       #R_NOTEMUL, #R_WAVE_OFFSET       ; Add the memory offset of the current wave to note multiplier
 LOAD.OR     #R_G4, #FIRST_WAVE, #R_NOTEMUL
 
-CMPU.C      #R_AMT_OF_VOICES, 3              ; Check the amount of voices that is played, and decrease
-BNCC        #SR_N, #AMP_5                    ; each voice's amplitude accordingly
-NOP 
-BITTEST.C   #R_G4, 15
-BCC         #SR_Z, #AMP_5
-BSR.C       #R_G4, 1
-OR.C        #R_G4, $8000
-BRA         #DONE_WITH_AMP 
-NOP        
-
-&AMP_5
-CMPU.C      #R_AMT_OF_VOICES, 5
-BNCC        #SR_N, #AMP_9
-NOP 
-BITTEST.C   #R_G4, 15
-BCC         #SR_Z, #AMP_9
-BSR.C       #R_G4, 2
-OR.C        #R_G4, $C000
-BRA         #DONE_WITH_AMP
-NOP
-
-&AMP_9
 BITTEST.C   #R_G4, 15
 BCC         #SR_Z, #DONE_WITH_AMP
 BSR.C       #R_G4, 4
