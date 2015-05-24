@@ -9,19 +9,53 @@ Det är ICKE case-sensitive
 
 Man kan skriva "ARG1,,,,,,,,   ,,,,,,,,,,,ARG2"
 
+
+################
+# Kommentarer  #
+################
+
 Kommentarer skrivs med "instruction ; kommentar goes here" (utan "") och måste (currently) skrivas EFTER en rad kod (Man kan alltså inte ha en rad med bara en kommentar)
 Ex:
 MOVE $A4, 1001 ; Exempelkommentar
 
-För att använda konstanter skriver man:
-CONSTANT name, value
+
+################
+#     Hopp     #
+################
+
+För att skapa konstant för hopp (skapar konstant vars värde blir rad#)
+&jumphere
+
+För att hoppa:
+BRA #jumphere
+
+Eftersom att det är konstanter måste man se upp med att ha vanliga konstanter med samma namn.
+
+
+################
+#   Talbas     #
+################
 
 $F    -- Hex
 %1111 -- Bin
 15    -- Dec
 
-För instruktioner med 3 argument:
+Instruktioner med 2 argument:
+INSTR    DEST, SRC
+
+Instruktioner med 3 argument:
 INSTR    DEST, SRC, OFFSET
+
+
+################
+#  Konstanter  #
+################
+
+För att skapa konstanter:
+CONSTANT name, value
+
+För att använda konstanter:
+INSTR, #konstant1, #konstant2
 
 Fördefinerade konstanter:
 
