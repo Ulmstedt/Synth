@@ -1,0 +1,38 @@
+CONSTANT    R_NOTE,  0
+CONSTANT    R_VEL,   1
+
+CONSTANT    FIRST_WAVE,                84
+CONSTANT    WAVE_SIZE,                 64
+CONSTANT    WAVE_SIZE_FIXED_POINT,     16384
+CONSTANT    MAX_WAVES,                 3
+CONSTANT    FSTIME,                    2048
+CONSTANT    R_STEP,                    7
+CONSTANT    TONE,                      0
+CONSTANT    R_NOTEMUL,                 6
+CONSTANT    R_OSCS1,                   9
+CONSTANT    R_MIDIMSG,                 10
+CONSTANT    R_MODIFIER,                11
+CONSTANT    R_WAVE,                    12
+CONSTANT    R_WAVE_OFFSET,             13
+
+CONSTANT    R_VOICES_LOOP, 2
+CONSTANT    M_VOICES,      512
+CONSTANT    M_VOICES_RESET,511
+CONSTANT    M_VOICES_SIZE, 10
+CONSTANT    MAX_VOICES,    10
+
+
+CONSTANT    M_NOTE_OFFSET, 0
+CONSTANT    M_STEP_OFFSET, 1
+CONSTANT    M_AMP_OFFSET,  2
+CONSTANT    AMP_MUL,       $0800
+
+CONSTANT    M_FREQ,           500
+CONSTANT    M_RES,            501
+CONSTANT    MIDI_CC,          %1011
+CONSTANT    MIDI_PB,          %1110
+CONSTANT    MIDI_CC_MOD,      1
+CONSTANT    MIDI_CC_VOLUME,   7
+CONSTANT    MODIFIER_NOTE,    %01010100
+
+CONSTANT    LCD_OFFSET,       768

@@ -1,0 +1,120 @@
+&LCD_START
+LOAD.C      #R_ST2, 65000
+
+CMPU.C      #R_WAVE, 0                             ; Print wave names
+BCC         #SR_Z, #PRINT_SQR
+NOP
+
+CMPU.C      #R_WAVE, 1
+BCC         #SR_Z, #PRINT_SIN
+NOP
+
+CMPU.C      #R_WAVE, 2
+BCC         #SR_Z, #PRINT_SAW
+NOP
+
+CMPU.C      #R_WAVE, 3
+BCC         #SR_Z, #PRINT_TRI
+NOP
+&POST_WAVE
+
+MOVE        #R_G4, #SVF_SETUP                      ; Get filter type and mask out what we're interested in
+AND.C       #R_G4, $0003
+
+CMPU.C      #R_G4, 0                               ; Print filter type
+BCC         #SR_Z, #PRINT_LP
+NOP
+
+CMPU.C      #R_G4, 1
+BCC         #SR_Z, #PRINT_HP
+NOP
+
+CMPU.C      #R_G4, 2
+BCC         #SR_Z, #PRINT_BP
+NOP
+
+CMPU.C      #R_G4, 3
+BCC         #SR_Z, #PRINT_NONE
+NOP
+&POST_FILTER_TYPE
+
+
+LOAD.A      #R_G4, #M_FREQ                         ; Fetch the filter freq from memory
+MOVE        #R_G5, #R_G4                           ; A copy
+AND.C       #R_G4, $F000
+BSR.C       #R_G4, 4
+
+MOVE        #R_G0, #R_G5
+BSR.C       #R_G0, 8
+AND.C       #R_G0, $000F
+ADD.R       #R_G4, #R_G0
+
+STORE.R     848, #R_G4
+
+
+LOAD.A      #R_G4, #M_RES                          ; Fetch the filter res from memory
+LOAD.C      #R_G5, 127
+SUB.R       #R_G5, #R_G4
+MOVE        #R_G4, #R_G5                           ; A copy
+AND.C       #R_G4, $F000
+BSR.C       #R_G4, 4
+
+MOVE        #R_G0, #R_G5
+BSR.C       #R_G0, 8
+AND.C       #R_G0, $000F
+ADD.R       #R_G4, #R_G0
+
+STORE.R     878, #R_G4
+
+BRA #POST_LCD
+NOP
+
+&PRINT_SQR
+STORE.C     788, %0001100000010110
+STORE.C     789, %0001011100011110
+BRA #POST_WAVE
+NOP
+
+&PRINT_SIN
+STORE.C     788, %0001100000010001
+STORE.C     789, %0001001100011110
+BRA #POST_WAVE
+NOP
+
+&PRINT_SAW
+STORE.C     788, %0001100000001010
+STORE.C     789, %0001110000011110
+BRA #POST_WAVE
+NOP
+
+&PRINT_TRI
+STORE.C     788, %0001100100010111
+STORE.C     789, %0001000100011110
+BRA #POST_WAVE
+NOP
+
+
+
+&PRINT_LP
+STORE.C     818, %0001001000010101
+STORE.C     819, %0001111000011110
+BRA #POST_FILTER_TYPE
+NOP
+
+&PRINT_HP
+STORE.C     818, %0001000000010101
+STORE.C     819, %0001111000011110
+BRA #POST_FILTER_TYPE
+NOP
+
+&PRINT_BP
+STORE.C     818, %0000101100010101
+STORE.C     819, %0001111000011110
+BRA #POST_FILTER_TYPE
+NOP
+
+&PRINT_NONE
+STORE.C     818, %0001001100010100
+STORE.C     819, %0001001100001110
+BRA #POST_FILTER_TYPE
+NOP

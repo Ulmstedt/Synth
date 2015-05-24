@@ -1,0 +1,165 @@
+&MIDI_START
+MOVE     #R_MIDIMSG, #R_MREG12                        ; Retrieve the midi type portion of MREG12, but first retrieve it all
+BSR.C    #R_MIDIMSG, 12                               ; Bitshift, only interested in the highest 4 bits of the register
+
+MOVE     #R_NOTE, #R_MREG12                           ; Store note/cc number
+AND.C    #R_NOTE, $00FF
+MOVE     #R_VEL, #R_MREG3                             ; Store velocity/cc data
+
+CMPU.C   #R_MIDIMSG, #MIDI_CC                         ; If equal, it's a CC message, thus go there instead
+BCC      #SR_Z, #CC_MESSAGE
+NOP
+
+CMPU.C   #R_MIDIMSG, #MIDI_PB                         ; If equal, it's a PB message, thus go there instead
+BCC      #SR_Z, #PB_MESSAGE
+NOP
+
+CMPU.C   #R_NOTE, #MODIFIER_NOTE                      ; If the note received is the modifier note, go there instead of
+BCC      #SR_Z,   #CHANGE_MODIFIER_TYPE               ; handling it as a normal key
+NOP
+
+LOAD.C   #R_G5, #MAX_VOICES                           ; Counter used to make sure we do not exceed max voices
+
+LOAD.C   #R_VOICES_LOOP, #M_VOICES
+CMPU.C   #R_VEL, 0                                    ; Check if velocity is 0
+BCC      #SR_Z, #CLEAR_NOTE                           ; If vel != 0, we save the voice (note)key, else we clear it
+NOP
+
+&FIND_SLOT
+CMPU.C   #R_G5, 0                                     ; If the G5 counter (voice counter) has reached zero, no free slot is available
+BCC      #SR_Z, #NOTE_STORED
+NOP
+
+LOAD.OR  #R_G4, 0, #R_VOICES_LOOP                     ; Load the note in #R_VOICES_LOOP into reg 4, used to check if it's a free slot
+CMPU.C   #R_G4, 0                                     ; If R_G4 is zero, we can use this slot
+BCC      #SR_Z, #SAVE_NOTE
+NOP
+
+SUBU.C   #R_G5, 1                                     ; Decrement the voice counter
+ADDU.C   #R_VOICES_LOOP, #M_VOICES_SIZE               ; Increase R_VOICES_LOOP with the size of one voice in memory
+BRA      #FIND_SLOT
+NOP
+
+&SAVE_NOTE
+STORE.OR #M_NOTE_OFFSET, #R_NOTE, #R_VOICES_LOOP      ; slot found, save the note into memory
+LOAD.C   #R_G4, 0
+STORE.OR #M_STEP_OFFSET, #R_G4, #R_VOICES_LOOP        ; The step counter at offset 1
+LOAD.C   #R_G4, #AMP_MUL
+STORE.OR #M_AMP_OFFSET, #R_G4, #R_VOICES_LOOP         ; The amplitude at offset 2
+BRA      #NOTE_STORED
+NOP
+
+
+
+&CLEAR_NOTE
+CMPU.C   #R_G5, 0                                     ; As above, when voice counter has reached zero, end
+BCC      #SR_Z, #NOTE_STORED
+NOP
+
+LOAD.OR  #R_G3, 0, #R_VOICES_LOOP                     ; Fetch this voice's key
+CMPU.R   #R_NOTE, #R_G3                               ; Compare the current voice's key with the key recieved
+BNCC     #SR_Z, #NEXT_CLEAR_ITR                       ; If they're the same, clear this note from memory
+NOP
+LOAD.C   #R_G4, 0
+NOP
+STORE.OR 0, #R_G4, #R_VOICES_LOOP                     ; Reset note if note off
+
+&NEXT_CLEAR_ITR
+SUBU.C   #R_G5, 1                                     ; Decrement the voice counter
+ADDU.C   #R_VOICES_LOOP, #M_VOICES_SIZE               ; Increase R_VOICES_LOOP with the size of one voice in memory
+BRA      #CLEAR_NOTE
+NOP
+
+&NOTE_STORED
+BRA      #POST_MIDI
+NOP
+
+
+
+&CC_MESSAGE
+CMPU.C   #R_NOTE, #MIDI_CC_MOD                        ; Check if it's the mod wheel CC message (freq)
+BCC      #SR_Z,  #CC_MODWHEEL                         ; if so, go to the routine handling that
+NOP
+CMPU.C   #R_NOTE, #MIDI_CC_VOLUME                     ; Check if it's the volume CC message (resonance)
+BCC      #SR_Z,  #CC_VOLUME                           ; if so, go to the routine handling that
+NOP
+
+BRA      #POST_MIDI                                   ; Not a CC message we're interested in, so do nothing
+NOP
+
+
+&CC_MODWHEEL
+MOVE     #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the freq between 0 and 2, in fixed point with 
+BSL.C    #R_G4, 8                                     ; 15 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
+STORE.R  #M_FREQ, #R_G4                               ; Save it back to memory, we shift one less to be sure
+BRA      #POST_MIDI
+NOP
+
+&CC_VOLUME
+LOAD.C   #R_G4, 127
+SUB.R    #R_G4, #R_VEL                                ; Retrieve the data, the data is 7 bits, with the res between 0 and 2, in fixed point with
+BSL.C    #R_G4, 8                                     ; 15 fraction points, thus bitshift it to get evenly spaced value between 0 and 2
+STORE.R  #M_RES, #R_G4                                ; Save it back to memory, NOTE: ideally we should invert the result since res=2 => no resonance
+BRA      #POST_MIDI
+NOP
+
+
+&PB_MESSAGE
+CMPU.C   #R_MODIFIER, 0                               ; Check what thing we are currently changing (changed with C5)
+BCC      #SR_Z, #CHANGE_FILTER                        ; Branch to filter if it is filter we're dealing with
+NOP
+
+CMPU.C   #R_VEL, %01111111                            ; The pitch bend wheel's max value, if reached, go to "UP_X"
+BCC      #SR_Z, #UP_WAVE
+NOP
+CMPU.C   #R_VEL, %00000000                            ; Likewise, for the lowest value, go to "DOWN_X"
+BCC      #SR_Z, #DOWN_WAVE
+NOP
+
+BRA      #POST_MIDI                                   ; Not something we're interested in (ie. not max/min)
+NOP
+
+&CHANGE_FILTER
+CMPU.C   #R_VEL, %01111111                            ; Same as for changing the wave, read above
+BCC      #SR_Z, #UP_FILTER
+NOP
+CMPU.C   #R_VEL, %00000000
+BCC      #SR_Z, #DOWN_FILTER
+NOP
+BRA      #POST_MIDI
+NOP
+
+
+
+&UP_FILTER
+ADD.C    #SVF_SETUP, 1                                ; Add one to the setup register, lowest 2 bits decide the filter type
+BRA      #POST_MIDI
+NOP
+
+&DOWN_FILTER
+SUB.C    #SVF_SETUP, 1                                ; Sub one to the setup register, lowest 2 bits decide the filter type
+BRA      #POST_MIDI
+NOP
+
+&UP_WAVE
+ADD.C    #R_WAVE, 1                                   ; Add one to wave register, selecting the current wave, and do modulo 4 
+AND.C    #R_WAVE, $0003                               ; (number of waves) to wrap back around
+BRA      #UPDATE_WAVE
+NOP
+
+&DOWN_WAVE
+SUB.C    #R_WAVE, 1                                   ; Subtract one instead, read above
+AND.C    #R_WAVE, $0003
+
+&UPDATE_WAVE
+MOVE     #R_WAVE_OFFSET, #R_WAVE                      ; Multiply (as fixed point, hence the bitshifts) the wave number with
+BSL.C    #R_WAVE_OFFSET, 8                            ; the size of one wave.
+MUL.C    #R_WAVE_OFFSET, #WAVE_SIZE_FIXED_POINT
+BRA      #POST_MIDI
+NOP
+
+&CHANGE_MODIFIER_TYPE
+NOT.R    #R_MODIFIER, #R_MODIFIER                     ; Not the modifier register, since it's only two differen't things
+BRA      #POST_MIDI                                   ; we want to be able to modify currently
+NOP
+

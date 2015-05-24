@@ -1,0 +1,55 @@
+&AUDIO_START
+LOAD.C      #R_VOICES_LOOP, #M_VOICES
+LOAD.C      #R_G5, #MAX_VOICES
+LOAD.C      #R_OSCS1, 0
+
+&AUDIO_LOOP
+
+LOAD.OR     #R_NOTE, 0, #R_VOICES_LOOP       ; Fetch the key
+CMPU.C      #R_NOTE, 0                       ; If note is 0, we don't play it
+BCC         #SR_Z, #OUTPUT_NOTHING
+NOP
+
+LOAD.OR     #R_NOTEMUL, 0, #R_NOTE
+
+LOAD.OR     #R_STEP, 1, #R_VOICES_LOOP       ; Load the step counter and increment it
+ADD.C       #R_STEP, 1
+MULD.R      #R_NOTEMUL, #R_STEP              ; Do the multiplaction with freq*wavetable/samplefreq
+
+ADD.C       #R_VOICES_LOOP, 1
+STORE.OR    0, #R_STEP, #R_VOICES_LOOP       ; Store the new counter back into memory
+SUB.C       #R_VOICES_LOOP, 1
+
+AND.C       #R_NOTEMUL, %0000000000111111    ; Modulo 64
+ADD.R       #R_NOTEMUL, #R_WAVE_OFFSET       ; Add the memory offset of the current wave to note multiplier
+LOAD.OR     #R_G4, #FIRST_WAVE, #R_NOTEMUL
+
+LOAD.OR     #R_G3, 2, #R_VOICES_LOOP         ; Get the amplitude multiplier
+MULD.R      #R_G4, #R_G3
+
+ADD.R       #R_OSCS1, #R_G4
+
+&OUTPUT_NOTHING
+
+ADD.C       #R_VOICES_LOOP, #M_VOICES_SIZE   ; Step forward the voices looper with the lenght of one voice
+SUB.C       #R_G5, 1
+CMPU.C      #R_G5, 0                         ; Check if we have stepped through all the voices, end if so
+BNCC        #SR_Z, #AUDIO_LOOP
+NOP
+
+&AUDIO_DONE
+LOAD.A      #SVF_F, #M_FREQ                  ; Fetch the filter parameters from memory, and remember to delay
+LOAD.A      #SVF_Q, #M_RES                   ; before loading the input value, since any stall won't occur as
+NOP                                          ; technically, from the CPU's point of view, the registers aren't used.
+NOP
+MOVE        #SVF_IN, #R_OSCS1                ; Load the input, thus do one filter run
+NOP
+NOP
+NOP
+NOP
+MOVE        #R_AUDIO, #SVF_OUT               ; Retrieve the output once it's calulated (after some delay)
+BRA         #POST_AUDIO
+NOP
+
+
+
