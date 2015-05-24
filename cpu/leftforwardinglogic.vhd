@@ -1,4 +1,4 @@
---left forwarding logic
+--left forwarding logic (that is left input to the alu as seen in schematic)
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -18,7 +18,7 @@ end forwardLogicLeft;
 -- selectSignal: XX
 -- 00 => D3_Out goes through
 -- 01 => Z4/D4_Out goes through
--- 1Z => B2_Out goes through
+-- 1- => B2_Out goes through
 
 architecture Behavourial of forwardLogicLeft is
    signal store_Read_Reg      : std_logic_vector(REG_BITS-1 downto 0);
@@ -132,7 +132,7 @@ begin
                            
    --Nu återstår att kolla om vi har registerberoende i IR3 och har vi det så skall selectSignal sättas till 00
    --Har vi registerberoende i IR4 så skall selectSignal sättas till 01
-   --Har vi ej reg. beroende så sätts selectSignal till 1Z
+   --Har vi ej reg. beroende så sätts selectSignal till 1-
    --I fallen då registervärdet ligger i steg 4 kollas också att det inte är beroende i steg 3 redan för då bör vi redan ha forwardat det som nu ligger i steg 4 vid förra klockcykeln för det var isåfall beroende mellan vad
    --som då fanns i steg 2 och steg 3 men nu ligger i steg 3 och 4.
    --Gör i varje koll också samma koll för OP på både IR3 och IR4 som gjordes för att sätta changeInIR3, dvs att

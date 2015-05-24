@@ -16,7 +16,7 @@ end X_COUNTER;
 
 architecture xcount of X_COUNTER is
    signal i_cnt : unsigned(XCOUNT_BITS - 1 downto 0) := "1111111111"; --internal count signal
-   signal firstTime : unsigned(5 downto 0) := "000000";
+   signal firstTime : unsigned(5 downto 0) := "000000";  --first run is a special case needed to count to THB according to manufacturer specifications
 begin
    process(clk)
    begin

@@ -1,3 +1,4 @@
+--Startup sequence and interface between Synth and LCDInputarea
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -132,6 +133,7 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
 								(state = nstate) else
 					'0';
 					
+   --Move on to next state
    SYNC_PROC: process (F_LCDclk)
    begin
       if (F_LCDclk'event and F_LCDclk = '1') then
@@ -139,6 +141,7 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
       end if;
    end process;
 
+   --STATE MACHINE for performing correct powerup sequence aswell as resetting
    NEXT_STATE_DECODE: process (state, waitCnt)
    begin
       nstate <= state;
@@ -157,7 +160,6 @@ waitCntEn <= 	'1' when (state = stPowerUp or state = stLEDWarmup or state = stLE
             end if;
          when stOn => --turn on backlight too
 				if (rst = '1') then
-               --kan behöva reseta räknarna här
 					nstate <= stLEDCooldown;
 				end if;
 			when stLEDCooldown =>

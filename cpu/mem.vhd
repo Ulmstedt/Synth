@@ -1,3 +1,4 @@
+--Here the CPU can operate on memory and tilemem
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -36,6 +37,7 @@ architecture Behavioral of Memory is
    signal isTilemap        : std_logic;
    
 begin
+   --Läs/skriv till minnet, mem implementeras som blockRAM, tilemem med LUTar
    process(clk) is
    begin
       if rising_edge(clk) then
@@ -54,6 +56,7 @@ begin
       end if;
    end process;
 
+   --om det är tilemem som vi vill åt så sätter vi denna "check" signal
    isTilemap <= '1' when to_integer(unsigned(addr) mod MEM_HEIGHT) >= TILE_MAP_OFFSET else
                 '0';
    

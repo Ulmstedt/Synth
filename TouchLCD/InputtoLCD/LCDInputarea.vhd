@@ -1,3 +1,5 @@
+--Area to organize components of LCD
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -156,7 +158,7 @@ begin
       toTileMap      => XCountHighBits,
       toTileMem      => xlsb
    );
-   
+   --drive counters with the newly acquired 10 MHz clk
    F <= newclkF;
    
 end Behaviorial;

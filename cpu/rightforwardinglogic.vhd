@@ -1,4 +1,4 @@
---right forwardingmux logic
+--right forwardingmux logic (that is right input to the alu as seen in schematic)
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -19,7 +19,7 @@ end forwardLogicRight;
 -- selectSignal: XX
 -- 00 => D3_Out goes through
 -- 01 => Z4/D4_Out goes through
--- 1Z => A2_Out goes through
+-- 1- => A2_Out goes through
 
 architecture Behavourial of forwardLogicRight is
    signal store_Read_Reg      : std_logic_vector(REG_BITS-1 downto 0);

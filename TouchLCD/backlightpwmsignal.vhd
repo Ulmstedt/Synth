@@ -1,4 +1,4 @@
---transform clk signal to pwm signal
+--transform clk signal to pwm signal to drive backlight of LCD
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -15,6 +15,8 @@ architecture Behavioral of backlightpwmsignal is
    signal temp   :  std_logic;
    signal counter: integer range 0 to 999 := 0; --(100 000 000 / 50 000)/2
 
+   
+--Produces a clock frequency of 50kHz
 begin
    process(clk)
    begin

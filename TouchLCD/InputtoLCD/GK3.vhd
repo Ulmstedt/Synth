@@ -1,3 +1,5 @@
+--tilemem data only sent if X counter is between 0-479
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -15,7 +17,6 @@ end GK3;
 architecture GK3_t of GK3 is
 
 begin  
-   toLCD <= fromTileMem when to_integer(unsigned(XCounter)) <= THA+THB-1 else --only send data when X-count 
-                                                                                                                             --is between 0-479
+   toLCD <= fromTileMem when to_integer(unsigned(XCounter)) <= THA+THB-1 else --only send data when X-count is between 0-479
             (others => '0');
 end GK3_t;
