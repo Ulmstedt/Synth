@@ -66,7 +66,7 @@ def parse_arg(arg):
 def comp_file(*filenames):
    outfile = open("binary_out.mem", "w+")
    outfile.write("@00\n")
-   rules = ET.parse('rules.xml')
+   rules = ET.parse('instructions.xml')
    root = rules.getroot()
 
    for i in range(0,2):
