@@ -1,9 +1,15 @@
+########################################
+#                                      #
+#    Syntax för compiler till synth    #
+#                                      #
+########################################
+
 INSTR ARG1, ARG2...
 Det är ICKE case-sensitive
 
-Man kan skriva "ARG1,,,,,,,,   ,,,,,,,,,,,ARG2" (cause why not)
+Man kan skriva "ARG1,,,,,,,,   ,,,,,,,,,,,ARG2"
 
-Kommentarer skrivs med "; kommentar goes here" (utan "") och måste (currently) skrivas EFTER en rad kod
+Kommentarer skrivs med "instruction ; kommentar goes here" (utan "") och måste (currently) skrivas EFTER en rad kod (Man kan alltså inte ha en rad med bara en kommentar)
 Ex:
 MOVE $A4, 1001 ; Exempelkommentar
 
@@ -14,5 +20,51 @@ $F    -- Hex
 %1111 -- Bin
 15    -- Dec
 
-För instruktioner med 3 args:
+För instruktioner med 3 argument:
 INSTR    DEST, SRC, OFFSET
+
+Fördefinerade konstanter:
+
+   # Status flags
+   "SR_Z":     "0"
+   "SR_N":     "1"
+   "SR_C":     "2"
+   "SR_O":     "3"
+   "SR_LT1":   "4"
+   "SR_ST1":   "5"
+   "SR_ST2":   "6"
+   "SR_MIDI":  "7"
+
+   # General registers
+   "R_G0":     "0"
+   "R_G1":     "1"
+   "R_G2":     "2"
+   "R_G3":     "3"
+   "R_G4":     "4"
+   "R_G5":     "5"
+   "R_G6":     "6"
+   "R_G7":     "7"
+   "R_G8":     "8"
+   "R_G9":     "9"
+   "R_G10":    "10"
+   "R_G11":    "11"
+   "R_G12":    "12"
+   "R_G13":    "13"
+
+   "R_SR":     "14"
+   "R_LT1_L":  "16"
+   "R_LT1_H":  "17"
+   "R_ST1":    "18"
+   "R_ST2":    "19"
+   "R_TOUCHX": "20"
+   "R_TOUCHY": "21"
+   "SVF_IN":   "22"
+   "SVF_D1":   "23"
+   "SVF_D2":   "24"
+   "SVF_OUT":  "25"
+   "SVF_F":    "26"
+   "SVF_Q":    "27"
+   "SVF_SETUP":"28"
+   "R_MREG12": "29"
+   "R_MREG3":  "30"
+   "R_AUDIO":  "31"
