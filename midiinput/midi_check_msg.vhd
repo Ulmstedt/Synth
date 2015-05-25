@@ -4,6 +4,10 @@ use IEEE.numeric_std.all;
 
 use work.midi_constants.all;
 
+-- This sections job is to check if the incoming MIDI messages
+-- are interesting for us, and if they are, save them to
+-- the correct registers
+
 entity CheckMsg is
    port(
       clk               : in std_logic; -- Clock
@@ -21,7 +25,7 @@ architecture Behavioral of CheckMsg is
 
    signal valid         : std_logic := '0'; -- 1 when the last message received was a valid one
    signal cntDataByte   : std_logic := '0';
-   signal readRdyS    : std_logic := '0';
+   signal readRdyS      : std_logic := '0';
    signal mreg1S        : std_logic_vector(MIDI_WIDTH - 1 downto 0) := (others => '0');
 
 
@@ -29,10 +33,10 @@ begin
 
 	-- MK3, checks if tmpReg contains a midi-msg that we are interested in
 	with mreg1S(MIDI_WIDTH-1 downto 4) select valid <=
-	   '1' when "1000",
-	   '1' when "1001",
-      '1' when "1011",
-      '1' when "1110",
+	   '1' when "1000", -- Note Off (not actually used with the current keyboard)
+	   '1' when "1001", -- Note On
+     '1' when "1011", -- Control Change
+     '1' when "1110", -- Pitch Bend
 	   '0' when others;
    
    -- Master
@@ -47,12 +51,12 @@ begin
             mreg3       <= (others => '0');
             mreg1S      <= (others => '0');
          else
-            -- Read ready is a pulse, so reset it
+            -- Read ready is a pulse, so reset it (should only be high 1 clk)
             if readRdyS = '1' then
                readRdyS <= '0';
             end if;
 
-            -- A message is received
+            -- A message is received, save to the correct register
             if msgReady = '1' then
                if tmpReg(MIDI_WIDTH - 1) = '1' then
                   cntDataByte <= '0';
@@ -64,14 +68,14 @@ begin
                      mreg3 <= tmpReg;
                      readRdyS <= '1';
                   end if;
-                  cntDataByte <= not cntDataByte;
+               cntDataByte <= not cntDataByte;
                end if;
             end if;
          end if;
 	   end if;
    end process;
    
-   mreg1       <= mreg1S;
+   mreg1 <= mreg1S;
    -- Send the readReady pulse writing the values to the registers and setting the SR flag
-   readRdy   <= readRdyS and valid;
+   readRdy <= readRdyS and valid;
 end Behavioral;

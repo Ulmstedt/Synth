@@ -4,6 +4,8 @@ use IEEE.numeric_std.all;
 
 use work.midi_constants.all;
 
+-- This section makes sure that the MIDI messages are saved to the correct registers
+
 entity MuxCounter is
    port(
       clk               : in std_logic; -- Clock

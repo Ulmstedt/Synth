@@ -4,6 +4,8 @@ use IEEE.numeric_std.all;
 
 use work.sout_constants.all;
 
+-- This component is the entire sound output handler
+
 entity SoutArea is
    port(
       clk               : in std_logic;

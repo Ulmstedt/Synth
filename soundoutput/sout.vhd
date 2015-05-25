@@ -4,6 +4,8 @@ use IEEE.numeric_std.all;
 
 use work.sout_constants.all;
 
+-- This component takes care of outputing sound to the PmodI2S
+
 entity SoundOutput is
    port(
       clk               : in std_logic; -- Clock
@@ -37,23 +39,23 @@ begin
             sdout <= '0';
             t <= '0';
          elsif sendBit = '1' then
-            if bitCounter = "000000" then
+            if bitCounter = "000000" then -- New message, invert LRCK to send to next channel (left and right)
                if lrckS = '0' then
                   lrckS <= '1';
                else
                   lrckS <= '0';
                end if;
             end if;
-            t <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter)));
+            t <= sample(SAMPLE_SIZE-1 - to_integer(unsigned(bitCounter))); -- Output the next bit
             sdout <= t;
             -- Check for when the entire sample has been sent
             if bitCounter = std_logic_vector(to_unsigned(SAMPLE_SIZE-1,SAMPLE_SIZE_WIDTH)) then
                bitCounter <= (others => '0');
                if lrckS = '1' then
-                  sample <= sampleBuffer;
+                  sample <= sampleBuffer; -- Both left and right has been sent, retrieve next sample
                end if;
             else
-               bitCounter <= std_logic_vector(unsigned(bitCounter)+1);
+               bitCounter <= std_logic_vector(unsigned(bitCounter)+1); -- Increment counter
             end if;
          end if;
       end if;

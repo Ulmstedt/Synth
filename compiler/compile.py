@@ -1,6 +1,12 @@
 from __future__ import print_function
 import xml.etree.ElementTree as ET
 
+#######################################################################
+#                                                                     #
+#   This is a python compiler for our cpu, see doc for usage guide.   #
+#                                                                     #
+#######################################################################
+
 # Constants dict
 constants = {  
                # Status flags
@@ -92,7 +98,7 @@ def comp_file(*filenames):
             instruction = instruction.split(';',1)[0] # Remove eventual comments
             instr_list = instruction.upper().replace(',',' ').split() # split string, instr_list[1] = arg1 and so on
 
-            # Check for only constants the first iteration
+            # Only check for constants the first iteration
             if instr_list[0][0] == '&':
                if i == 0:
                   constants[instr_list[0][1:].upper()] = str(instr_counter)

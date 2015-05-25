@@ -4,6 +4,8 @@ use IEEE.numeric_std.all;
 
 use work.sout_constants.all;
 
+-- This component generates the SCLK (serial clk) and MCLK (master clk) for the PmodI2S
+
 entity SoutClkgen is
    port(
       clk               : in std_logic; -- Clock
@@ -44,7 +46,7 @@ begin
             -- Generate clocks
 
             -- Master clock
-            clk_counter <= not clk_counter;
+            clk_counter <= not clk_counter; -- clk_counter is half the speed of clk (50 MHz)
             if clk_counter = '1' then
                if mclkS = '0' then
                   -- Set the pulse to start counting LRCK/SCLK when the intial delay has passed
@@ -54,11 +56,11 @@ begin
                      mclk_pulse <= '1';
                   end if;
                end if;
-               mclkS <= not mclkS;
+               mclkS <= not mclkS; -- mclk is half the speed of clk_counter (25 MHz)
                
                -- Serial clock
                if mclk_counter = "111" and mclkS = '0' then
-                  sclkS <= not sclkS;
+                  sclkS <= not sclkS; -- sclk is 1/16 of mclk
                end if;
             end if;
          end if;           
@@ -70,6 +72,3 @@ begin
    sendBit <= '1' when sclkS = '1' and mclkS = '0' and clk_counter = '1' and mclk_counter = "111" else '0';
    
 end Behavioral;
-
--- clk_counter <= std_logic_vector(unsigned(clk_counter)+1);
--- if clk_counter = std_logic_vector(to_unsigned(35,12)) then -- 2267?

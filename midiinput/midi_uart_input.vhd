@@ -4,6 +4,11 @@ use IEEE.numeric_std.all;
 
 use work.midi_constants.all;
 
+
+-- This sections job is to receive MIDI messages over UART
+-- and send a pulse when a message has been received
+
+
 entity MidiInput is
    port(
       clk         : in std_logic; -- Clock
@@ -44,12 +49,11 @@ begin
             elsif inputActive = '1' then
                -- Read a bit from uart to m1
                if clkCounter = std_logic_vector(to_unsigned(UART_CLK_PERIOD,UART_CLK_PERIOD_WIDTH)) then
-                  --m1(MIDI_WIDTH+1 - to_integer(unsigned(bitsReceived))) <= uart; -- Save the bit to the correct location in m1
                   m1(to_integer(unsigned(bitsReceived))) <= uart; -- Save the bit to the correct location in m1 (backwards)
                 -- Full UART message has been received to m1
                   if bitsReceived = std_logic_vector(to_unsigned(MIDI_WIDTH,4)+1) then
                      inputActive <= '0';
-                     msgReadyS <= '1';
+                     msgReadyS <= '1'; -- Send msg ready pulse
                      bitsReceived <= (others => '0');
                      clkCounter <= std_logic_vector(to_unsigned(UART_CLK_PERIOD/2, UART_CLK_PERIOD_WIDTH));
                      tmpReg <= m1(MIDI_WIDTH downto 1); -- Transfer message to tmpReg, excluding start/stop bits
