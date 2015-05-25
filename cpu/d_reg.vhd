@@ -4,6 +4,7 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
+-- The D register to save constant data from IR1 to use in the ALU
 entity DReg is
    port(
       ir1in    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);

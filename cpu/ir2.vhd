@@ -4,6 +4,7 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
+-- The IR2 register, simply the value from IR1
 entity IR2 is
    port(
       input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);

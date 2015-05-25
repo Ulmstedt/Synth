@@ -24,6 +24,10 @@ begin
    isJmp <= ir1(PMEM_WIDTH - 1) xor ir1(PMEM_WIDTH - 2);
    regSel <= ir1(REG_BITS - 1 downto 0);
    
+   -- Calculate the new PC2 value depending on what type of jump it is
+   -- 00: absolute address
+   -- 01: address from a register
+   -- 10: offset from current address
    process(clk)
    begin
       if rising_edge(clk) then

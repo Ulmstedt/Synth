@@ -6,6 +6,9 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
+-- IR1 register, loaded with value from the program memory
+-- Also takes care of doing the check when stalling needs
+-- to occur.
 entity IR1 is
    port(
       input    : in std_logic_vector(PMEM_WIDTH - 1 downto 0);

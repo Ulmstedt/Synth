@@ -4,6 +4,8 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
+-- A generic register that can be used elsewhere. The register length
+-- can be set with a generic, regWidth.
 entity Reg is
    generic (regWidth : natural := REG_WIDTH);
    port(
@@ -18,6 +20,8 @@ end Reg;
 architecture Behavioral of Reg is
    signal reg : std_logic_vector(input'range) := (others => '0');
 begin
+
+   -- Reset and load with new value if the input is set to high
    process(clk) is
    begin
       if rising_edge(clk) then

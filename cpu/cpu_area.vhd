@@ -4,6 +4,7 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
+-- Binds together Pmem area and the main area (with ALU and similar)
 entity CPUArea is
    port(
       audioOut          : out std_logic_vector(REG_WIDTH - 1 downto 0);

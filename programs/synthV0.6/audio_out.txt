@@ -1,5 +1,5 @@
 &AUDIO_START
-LOAD.C      #R_VOICES_LOOP, #M_VOICES
+LOAD.C      #R_VOICES_LOOP, #M_VOICES        ; Initialize looper, the number of voices and the mixer.
 LOAD.C      #R_G5, #MAX_VOICES
 LOAD.C      #R_OSCS1, 0
 
@@ -30,13 +30,13 @@ AND.C       #R_NOTEMUL, %0000000000111111    ; Modulo 64
 ADD.R       #R_NOTEMUL, #R_WAVE_OFFSET       ; Add the memory offset of the current wave to note multiplier
 LOAD.OR     #R_G4, #FIRST_WAVE, #R_NOTEMUL
 
-BITTEST.C   #R_G4, 15
-BCC         #SR_Z, #DONE_WITH_AMP
-BSR.C       #R_G4, 4
+BITTEST.C   #R_G4, 15                        ; We want to lower the amplitude of the voices by a factor 16.
+BCC         #SR_Z, #DONE_WITH_AMP            ; but since the BSR shifts in zeroes and not 1's we need to OR
+BSR.C       #R_G4, 4                         ; the result with F000 if it's a negative number.
 OR.C        #R_G4, $F000
 
 &DONE_WITH_AMP
-ADD.R       #R_OSCS1, #R_G4
+ADD.R       #R_OSCS1, #R_G4                  ; Mix this voice's output with the others.
 
 &OUTPUT_NOTHING
 

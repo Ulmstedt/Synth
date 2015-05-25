@@ -132,30 +132,9 @@ architecture Behavioral of Synth is
       );
    end component;
 
-   --component Touch is
-   --   port(
-   --      PENIRQ      : in std_logic;
-   --      BUSY        : in std_logic;
-   --      DOUT        : in std_logic;
-   --      DIN         : out std_logic;
-   --      DCLK        : out std_logic;
-   --      CS          : out std_logic;
-   --      coordOut    : out std_logic_vector(8 downto 0);
-   --      writeX      : out std_logic;
-   --      writeY      : out std_logic;
-   --      coordReady  : out std_logic;
-
-   --      tmp         : out std_logic_vector(11 downto 0);
-
-   --      clk         : in std_logic;
-   --      rst         : in std_logic
-   --   );
-   --end component;
-
    signal audio      : std_logic_vector(SAMPLE_SIZE - 1 downto 0);
    
    signal sdouts     : std_logic;
-   --signal sclkS      : std_logic;
 
    signal mreg1S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
    signal mreg2S     : std_logic_vector(MIDI_WIDTH - 1 downto 0);
@@ -269,6 +248,8 @@ begin
       clk         => svfClk
    );
 
+   -- Generate the pulse that saves values to registers
+   -- when a filter run has finished
    process(clk) is
    begin
       if rising_edge(clk) then
@@ -292,24 +273,9 @@ begin
       TP_PENIRQi        => TP_PENIRQ
    );
 
-   --touchc : Touch port map(
-   --   PENIRQ      => TP_PENIRQ,
-   --   BUSY        => TP_BUSY,
-   --   DOUT        => TP_DOUT,
-   --   DIN         => TP_DIN,
-   --   DCLK        => TP_DCLK,
-   --   CS          => TP_CS,
-   --   coordOut    => coordOutS,
-   --   writeX      => writeXS,
-   --   writeY      => writeYS,
-   --   coordReady  => coordReadyS,
-
-   --   tmp         => tmpS,
-
-   --   clk         => clk,
-   --   rst         => rst
-   --);
-
+   -- A process used to display the recieved MIDI messages
+   -- on the 7-segment display. 
+   -- Also generates the svfClk since it runs at half speed (50MHz).
    process(clk) begin
       if rising_edge(clk) then 
          counter_r <= counter_r + 1;
@@ -317,14 +283,10 @@ begin
          case counter_r(17 downto 16) is
             when "00" => 
                   an <= "0111";
-                  --seg <= m1;
-                  --seg <= tmpS(11 downto 4);
-                  seg <= memTemp;
-                  --seg <= (others => srSig(7));
+                  seg <= m1;
             when "01" => 
                   an <= "1011";
                   seg <= mreg1S;
-                  --seg <= tmpS(3 downto 0)&"1111";
             when "10" => 
                   an <= "1101";
                   seg <= mreg2S;
@@ -335,11 +297,9 @@ begin
       end if;
    end process;
    
-   --sclk <= '1'; -- or '1'?
    sdin <= sdouts;
-   -- seg <= tempIRhold(7 downto 0);
 
-   --driv med någonting bara
+   --Drive with something, unused currently
    TP_DIN <= '0';
    TP_CS <= '1';
    TP_DCLK <= '0';

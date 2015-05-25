@@ -4,6 +4,8 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
+-- An area combining all program memory related things, such as PC, jumps, stalling
+-- and the actual memory.
 entity PMemArea is
    port(
       ir1out   : out std_logic_vector(PMEM_WIDTH - 1 downto 0);
@@ -148,7 +150,10 @@ begin
    ir1out <= ir1sig;
    ir2out <= ir2sig;
    
-   -- Stall counter, branches need to stall twice to ensure correct data
+   -- Stall counter, to support for multipe stalls if it's needed,
+   -- an edge case that we instead decided not to adhere to and work
+   -- around it with NOPs instead. (writing to memory then loading 
+   -- directly after)
    process (clk) is
    begin
       if rising_edge(clk) then

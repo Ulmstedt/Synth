@@ -1,20 +1,20 @@
 &LCD_START
-LOAD.C      #R_ST2, 65000
+LOAD.C      #R_ST2, 65000                          ; Restart the timer
 
 CMPU.C      #R_WAVE, 0                             ; Print wave names
-BCC         #SR_Z, #PRINT_SQR
+BCC         #SR_Z, #PRINT_SQR                      ; 0 means square, branch there
 NOP
 
 CMPU.C      #R_WAVE, 1
-BCC         #SR_Z, #PRINT_SIN
+BCC         #SR_Z, #PRINT_SIN                      ; 1 means sin, branch there
 NOP
 
 CMPU.C      #R_WAVE, 2
-BCC         #SR_Z, #PRINT_SAW
+BCC         #SR_Z, #PRINT_SAW                      ; 2 means saw, branch there
 NOP
 
 CMPU.C      #R_WAVE, 3
-BCC         #SR_Z, #PRINT_TRI
+BCC         #SR_Z, #PRINT_TRI                      ; 3 means triangle, branch there
 NOP
 &POST_WAVE
 
@@ -22,40 +22,40 @@ MOVE        #R_G4, #SVF_SETUP                      ; Get filter type and mask ou
 AND.C       #R_G4, $0003
 
 CMPU.C      #R_G4, 0                               ; Print filter type
-BCC         #SR_Z, #PRINT_LP
+BCC         #SR_Z, #PRINT_LP                       ; 0 means LP filter, branch there
 NOP
 
 CMPU.C      #R_G4, 1
-BCC         #SR_Z, #PRINT_HP
+BCC         #SR_Z, #PRINT_HP                       ; 1 means HP filter, branch there
 NOP
 
 CMPU.C      #R_G4, 2
-BCC         #SR_Z, #PRINT_BP
+BCC         #SR_Z, #PRINT_BP                       ; 2 means BP filter, branch there
 NOP
 
 CMPU.C      #R_G4, 3
-BCC         #SR_Z, #PRINT_NONE
+BCC         #SR_Z, #PRINT_NONE                     ; 3 means no filter, branch there
 NOP
 &POST_FILTER_TYPE
 
 
 LOAD.A      #R_G4, #M_FREQ                         ; Fetch the filter freq from memory
-MOVE        #R_G5, #R_G4                           ; A copy
-AND.C       #R_G4, $F000
-BSR.C       #R_G4, 4
+MOVE        #R_G5, #R_G4                           ; A copy to use for later
+AND.C       #R_G4, $F000                           ; Mask out highest 4 bits
+BSR.C       #R_G4, 4                               ; Bitshift down 4 step
 
-MOVE        #R_G0, #R_G5
-BSR.C       #R_G0, 8
-AND.C       #R_G0, $000F
-ADD.R       #R_G4, #R_G0
+MOVE        #R_G0, #R_G5                           ; Now mask out the next 4 bits
+BSR.C       #R_G0, 8                               ; All this is done since the memory is 8bits/character (2 characters per memory slot)
+AND.C       #R_G0, $000F                           ; and we want to display the two most significant values
+ADD.R       #R_G4, #R_G0                           ; on the display
 
-STORE.R     848, #R_G4
+STORE.R     848, #R_G4                             ; Store the result in memory to update
 
 
 LOAD.A      #R_G4, #M_RES                          ; Fetch the filter res from memory
-LOAD.C      #R_G5, $7F00
-SUB.R       #R_G5, #R_G4
-MOVE        #R_G4, #R_G5                           ; A copy
+LOAD.C      #R_G5, $7F00                           ; Load "127 00" since we want to invert the resonance value (127 is it's max)
+SUB.R       #R_G5, #R_G4                           ; The rest works the same as above with frequency.
+MOVE        #R_G4, #R_G5                           
 AND.C       #R_G4, $F000
 BSR.C       #R_G4, 4
 
@@ -70,25 +70,25 @@ BRA #POST_LCD
 NOP
 
 &PRINT_SQR
-STORE.C     788, %0001100000010110
+STORE.C     788, %0001100000010110                 ; Store "SQR " where we want it in memory
 STORE.C     789, %0001011100011110
 BRA #POST_WAVE
 NOP
 
 &PRINT_SIN
-STORE.C     788, %0001100000010001
+STORE.C     788, %0001100000010001                 ; Store "SIN " where we want it in memory
 STORE.C     789, %0001001100011110
 BRA #POST_WAVE
 NOP
 
 &PRINT_SAW
-STORE.C     788, %0001100000001010
+STORE.C     788, %0001100000001010                 ; Store "SAW " where we want it in memory
 STORE.C     789, %0001110000011110
 BRA #POST_WAVE
 NOP
 
 &PRINT_TRI
-STORE.C     788, %0001100100010111
+STORE.C     788, %0001100100010111                 ; Store "TRI " where we want it in memory
 STORE.C     789, %0001000100011110
 BRA #POST_WAVE
 NOP
@@ -96,25 +96,25 @@ NOP
 
 
 &PRINT_LP
-STORE.C     818, %0001001000010101
+STORE.C     818, %0001001000010101                 ; Store "LP  " where we want it in memory
 STORE.C     819, %0001111000011110
 BRA #POST_FILTER_TYPE
 NOP
 
 &PRINT_HP
-STORE.C     818, %0001000000010101
+STORE.C     818, %0001000000010101                 ; Store "HP  " where we want it in memory
 STORE.C     819, %0001111000011110
 BRA #POST_FILTER_TYPE
 NOP
 
 &PRINT_BP
-STORE.C     818, %0000101100010101
+STORE.C     818, %0000101100010101                 ; Store "BP  " where we want it in memory
 STORE.C     819, %0001111000011110
 BRA #POST_FILTER_TYPE
 NOP
 
 &PRINT_NONE
-STORE.C     818, %0001001100010100
+STORE.C     818, %0001001100010100                 ; Store "NONE" where we want it in memory
 STORE.C     819, %0001001100001110
 BRA #POST_FILTER_TYPE
 NOP

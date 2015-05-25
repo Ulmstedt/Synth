@@ -11,8 +11,6 @@ use work.FilterConstants.all;
 
 entity Filter_Phase_3 is
    port(
-      -- Since the output from the register will be delayed one CP
-      -- the actual delay is handled by the register, not this phase
       input       : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       delay_in    : in std_logic_vector(AUDIO_WIDTH - 1 downto 0);
       delay_out   : out std_logic_vector(AUDIO_WIDTH - 1 downto 0);

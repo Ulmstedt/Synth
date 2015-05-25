@@ -117,6 +117,8 @@ begin
       mreg3          => mreg3,
       midiRdy        => midiRdy,
 
+      tmpOut         => tmpOut,
+
       SVFwriteDelay  => SVFwriteDelay,
       SVFcur         => SVFcur,
       SVFdelay1in    => SVFdelay1in,

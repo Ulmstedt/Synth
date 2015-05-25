@@ -5,7 +5,9 @@ use IEEE.numeric_std.all;
 
 use work.Constants.all;
 
---A2 and B2 are now in here as regAOut and regBOut
+-- The registry area holding all the registers and various things related to them.
+-- It's a fairly extensive file, but most is just various component initializations.
+-- Also holds the timers.
 entity RegArea is
    port(
       pmemSel           : in std_logic_vector(REG_BITS - 1 downto 0);
@@ -350,7 +352,8 @@ begin
    regAOut <= regVal(to_integer(unsigned(regASel)));
    regBOut <= regVal(to_integer(unsigned(regBSel)));
 
-   -- Set the bit that should be reset if the current instruction reads a SR flag.
+   -- Set the bit that should be reset if the current instruction reads a SR flag, for
+   -- sr flags that reset on read.
    rstsr : for I in SR_WIDTH - 1 downto 0 generate
       resetSR(I) <= '1' when ((ir2OP = "10000" OR
                               ir2OP = "10001" OR
@@ -366,6 +369,9 @@ begin
                            
    end generate rstsr;
 
+   -- A process used to keep last value of SR registers unless they've been read.
+   -- ie. set "lastSR" to the value it had last, unless the signal above indicates
+   -- it's been read.
    process (clk) is
    begin
       if rising_edge(clk) then
@@ -386,6 +392,9 @@ begin
    end process;
    SVFrun <= runLast or runNow;
    
+   -- Generate the SR signal (new value to save into the SR register)
+   -- using the signals caluclated above, OR:ing in new values to update
+   -- on pulses.
    SRsig <= (( SRin(SR_WIDTH - 1 downto 9) &
                coordReady & midiRdy & st2done & st1done & lt1done)
             or SRlast(SR_WIDTH - 1 downto 4)) & SRin(3 downto 0);
@@ -410,7 +419,7 @@ begin
                      OR ir2OP = "00101" else    -- ALUINST.r
                ir2(LOAD_WRO_OFFSET downto LOAD_WRO_OFFSET - REG_BITS + 1)
                   when  ir2OP = "11111" else    -- LOAD.wro
-               ir2(STORE_WOFR_OFFSET downto STORE_WOFR_OFFSET - REG_BITS + 1) -- wrong offset?
+               ir2(STORE_WOFR_OFFSET downto STORE_WOFR_OFFSET - REG_BITS + 1)
                   when  ir2OP = "11011" else    -- STORE.wofr
                (others => '0');
    

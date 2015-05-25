@@ -6,22 +6,18 @@ use work.constants.all;
 use work.records.all;
 use work.pmemContent.all;
 
+-- The memory, since it's a static memory (the program memory can't be
+-- changed in runtime) it only gets the line the PC points to.
+-- Note: since PC is synchronous with CLK, this does not need to be
 entity pMemory is
    port(
       addr     : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
       instr    : out std_logic_vector(PMEM_WIDTH - 1 downto 0)
-      --clk      : in std_logic
    );
 end pMemory;
 
 architecture Behavioral of pMemory is
    signal  mem : pmem_t := pmemc;
 begin
-   --process(clk) is
-   --begin
-   --   if rising_edge(clk) then
-   --      instr <= mem(to_integer(unsigned(addr)) mod PMEM_HEIGHT);
-   --   end if;
-   --end process;
    instr <= mem(to_integer(unsigned(addr)) mod PMEM_HEIGHT);
 end Behavioral;

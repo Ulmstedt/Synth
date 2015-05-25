@@ -1,9 +1,9 @@
--- A State Variable Filter designed after http://ni.com/white-paper/3476/en/#toc2
+-- A State Variable Filter designed after figure 1 in http://ni.com/white-paper/3476/en/#toc2
 -- This part does the initial addition and multiplication with q of phase 2 output
 -- See the comment of the respective phase to read what they individually do.
 -- A brief note on the multiplications:
 --    Since the filter is designed with fixed-point the multiplication scraps
---    the lowest 16 bits. This will lead to some noice addition since the
+--    the lowest 16 bits. This will lead to some noice added since the
 --    multiplications are just approximate, but floating point is beyond the 
 --    scope of this project (and even float will lead to noice). 
 --
@@ -12,10 +12,17 @@
 -- to be used for a DSP slice since three additions (rather subtractions) are
 -- done in the same step, the DSP slices on the NEXYS3 is structured with first one
 -- pre-addition, then the multiplication and lastly an addition, thus the first step
--- would take up a whole slice.
+-- would take up a whole slice. However, the compiler do fix it to use DSPs, albeit 
+-- not optimally.
 -- 
--- The whole filter works with unsigned values, obviously, since the output to the
--- sound chip is unsigned (moving the speaker-element(s) inwards makes little sense!)
+-- The whole filter works with signed values, since the output to the
+-- sound chip is signed.
+--
+-- Since the output from registers are delayed one CLK the actual delay is 
+-- handled by the registers themself.
+--
+-- Runs at half speed because there was a part in phase3 that couldn't be
+-- feasable to do in 100MHz.
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -114,6 +121,8 @@ begin
                (signed(qmult(AUDIO_WIDTH * 2 - 1 downto AUDIO_WIDTH)))
             );
 
+   -- Send a pulse when we're done computing, slightly depricated at the
+   -- moment.
    process(clk) is
    begin
       if rising_edge(clk) then
@@ -133,6 +142,7 @@ begin
    end process;
    
    saveDelay <= savePulse;
+   -- Set the output depending on the type
    output <= lp_out when svfType = "00" else
              hp_out when svfType = "01" else
              bp_out when svfType = "10" else

@@ -4,13 +4,7 @@ use IEEE.numeric_std.all;
 
 use work.constants.all;
 
--- 
--- nextPCType
---  00 : incr
---  01 : goto addr
---  10 : stall (keep pc)
---  11 : reset to start addr
-
+-- The PC pointing at the next value to be loaded into IR1 from memory
 entity PCReg is
    port(
       nextPCType  : in std_logic_vector(1 downto 0);
@@ -23,6 +17,11 @@ end PCReg;
 architecture Behavioral of PCReg is
    signal pc     : std_logic_vector(ADDR_WIDTH - 1 downto 0) := (others => '0');
 begin
+   -- Set the next pc according to what nextPcType says should happen:
+   --  00 : incr +1
+   --  01 : goto addr nextPc
+   --  10 : stall (keep pc)
+   --  11 : reset to start addr
    process(clk) is
    begin
       if rising_edge(clk) then
